@@ -1,4 +1,4 @@
-## IEAM 4.0, OpenCV and TensorFlow Lite based Object Classification
+## IEAM 4.0 - OpenCV and TensorFlow Lite based Object Classification
 
 ### Introduction
 
