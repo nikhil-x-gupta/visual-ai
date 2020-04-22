@@ -37,7 +37,7 @@ Publish business-policy
 
 ### ENVIRONMENT variables
 
-Must define following ENVIRONMENT variables to build application, add policies and register edge node.
+Must define following ENVIRONMENT variables to build application, add policies and register edge node. Preferebly save in the script directory and use when invoke device registration. 
 
 Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different developers to use the same exchange without clobering over each other.
 
