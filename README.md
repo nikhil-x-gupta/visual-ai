@@ -9,7 +9,7 @@ A python based implementation using two containers with detection time below < 0
 
 ### Build, Publish and Use in a shared IEAM environment
 
-Using a shared instance creates several challenges when services, patterns and policies need to be published in a common exchange without multiple developers clobbering over each other.
+Using a shared single tenant instance creates several challenges when services, patterns and policies need to be published in a common exchange under one org structure without multiple developers clobbering over each other.
 
 ### Issues
 
