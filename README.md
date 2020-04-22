@@ -2,7 +2,7 @@
 
 ### Introduction
 
-A python based implementation using two containers with detection time below < 0.5 sec without any GPU accelerator on Intel NUC.
+A python based implementation using two containers with detection time below < 0.4 sec without any GPU accelerator on Intel NUC using coco_ssd_mobilenet_v1_1.0 model
 
 - Image capture and classification
 - Http and kafka message bridge
