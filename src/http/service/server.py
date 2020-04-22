@@ -1,3 +1,11 @@
+# 
+# server.py
+#
+# http to kafka event stream
+#
+# Sanjeev Gupta, April 2020
+#
+
 from flask import Flask
 from flask import request
 import json

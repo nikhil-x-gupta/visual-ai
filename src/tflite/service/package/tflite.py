@@ -1,3 +1,14 @@
+#
+# tflite.py
+#
+# Config      : Configuration and handling of enviroment variables
+# Detector    : Machine inferencing and annotation data
+# OpenCV      : Image porcessing
+# VideoStream : Image capture
+#
+# Sanjeev Gupta, April 2020
+#
+
 from threading import Thread
 import base64
 import cv2
@@ -265,5 +276,6 @@ class VideoStream:
 
 
 
+                
 
         

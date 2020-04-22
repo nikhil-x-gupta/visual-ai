@@ -1,3 +1,14 @@
+#
+# tflite_webcam_image.py
+#
+# OpenCV - image capture and image manipulation 
+# TensorFlow Lite - object classification using coco_ssd_mobilenet_v1_1.0 model
+# Kafka - send inferred meta data and annotated image to event stream
+#
+# Sanjeev Gupta, April 2020
+#
+
+
 import os
 import time
 
@@ -36,5 +47,4 @@ while True:
     # Update framerate
     opencv.updateFrameRate()
 
-# Clean up
 videostream.stop()

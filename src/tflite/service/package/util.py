@@ -1,3 +1,8 @@
+#
+# util.py
+#
+# Sanjeev Gupta, April 2020
+
 import requests
 
 def inference_publish_kafka(url, inference_data_json):
