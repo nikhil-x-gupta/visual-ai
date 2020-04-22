@@ -51,13 +51,13 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
     export HZN_EXCHANGE_NODE_AUTH="<UNIQUE-NODE-ANME>:<node-token>"
     export APP_NODE_NAME=<UNIQUE-NODE-ANME>
 
-### Application specific
+#### Application specific
 
     export DEVICE_ID=<unique-device-id>
     export DEVICE_NAME="<short device name"
     export SHOW_OVERLAY=true # false to hide OVERLAY
 
-### Event Streams
+#### Event Streams
 
     export EVENTSTREAMS_BASIC_TOPIC=<your-event-stream-topic>
     export EVENTSTREAMS_ENHANCED_TOPIC=<your-event-stream-topic>
