@@ -7,11 +7,11 @@ A python based implementation using two containers with detection time below < 0
 - Image capture and classification
 - Http and kafka message bridge
 
-### Build, Publish and Use in a shared IEAM environment
+#### Build, Publish and Use in a shared IEAM environment
 
 Using a shared single tenant instance creates several challenges when services, patterns and policies need to be published in a common exchange under one org structure without multiple developers clobbering over each other.
 
-### Issues
+#### Issues
 
 - Developers need to identify their service, pattern and policies among many similar assets (concept of owner)
 - Developers may have project for demo, dev, test and more ( group the assets)
