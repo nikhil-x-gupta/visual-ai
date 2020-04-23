@@ -6,6 +6,7 @@ A python based implementation using two containers with detection time below < 0
 
 - Image capture and classification
 - Http and kafka message bridge
+- MJPEG based streaming available on http:<edge-device-ip-address:5000> 
 
 #### Build, Publish and Use in a shared IEAM environment
 
