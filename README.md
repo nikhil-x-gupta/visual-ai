@@ -2,16 +2,16 @@
 
 ### Introduction
 
-A python based implementation using two containers with detection time below < 0.5 sec without any GPU accelerator on Intel NUC.
+A python based implementation using two containers with detection time below < 0.4 sec without any GPU accelerator on Intel NUC using coco_ssd_mobilenet_v1_1.0 model
 
 - Image capture and classification
 - Http and kafka message bridge
 
-### Build, Publish and Use in a shared IEAM environment
+#### Build, Publish and Use in a shared IEAM environment
 
-Using a shared instance creates several challenges when services, patterns and policies need to be published in a common exchange without multiple developers clobbering over each other.
+Using a shared single tenant instance creates several challenges when services, patterns and policies need to be published in a common exchange under one org structure without multiple developers clobbering over each other.
 
-### Issues
+#### Issues
 
 - Developers need to identify their service, pattern and policies among many similar assets (concept of owner)
 - Developers may have project for demo, dev, test and more ( group the assets)
@@ -37,7 +37,7 @@ Publish business-policy
 
 ### ENVIRONMENT variables
 
-Must define following ENVIRONMENT variables to build application, add policies and register edge node.
+Must define following ENVIRONMENT variables to build application, add policies and register edge node. Preferebly save in the script directory and use when invoke device registration. 
 
 Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different developers to use the same exchange without clobering over each other.
 
@@ -51,13 +51,13 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
     export HZN_EXCHANGE_NODE_AUTH="<UNIQUE-NODE-ANME>:<node-token>"
     export APP_NODE_NAME=<UNIQUE-NODE-ANME>
 
-### Application specific
+#### Application specific
 
     export DEVICE_ID=<unique-device-id>
     export DEVICE_NAME="<short device name"
     export SHOW_OVERLAY=true # false to hide OVERLAY
 
-### Event Streams
+#### Event Streams
 
     export EVENTSTREAMS_BASIC_TOPIC=<your-event-stream-topic>
     export EVENTSTREAMS_ENHANCED_TOPIC=<your-event-stream-topic>
