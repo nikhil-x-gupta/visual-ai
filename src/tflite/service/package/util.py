@@ -5,7 +5,7 @@
 
 import requests
 
-def inference_publish_kafka(url, inference_data_json):
+def inference_publish(url, inference_data_json):
     req = {}
     try:
         header = {"Content-type": "application/json", "Accept": "text/plain"} 

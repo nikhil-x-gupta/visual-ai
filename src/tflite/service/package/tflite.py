@@ -32,6 +32,9 @@ class Config:
     def getPublishPayloadKafkaUrl(self):
         return os.environ['HTTP_PUBLISH_KAFKA_URL']
 
+    def getPublishPayloadStreamUrl(self):
+        return os.environ['HTTP_PUBLISH_STREAM_URL']
+
     def getMinConfidenceThreshold(self):
         return float(os.environ['MIN_CONFIDENCE_THRESHOLD'])
 

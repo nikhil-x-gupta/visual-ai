@@ -20,5 +20,16 @@ RUN pip3 install flask requests
 
 # DO NOT CHANGE the script name from server.py to http.py. It breaks the docker run 
 WORKDIR /
+
+RUN mkdir static templates
+
+COPY service/static/test-image-1.jpg static/
+COPY service/static/test-image-2.jpg static/
+COPY service/static/test-image-3.jpg static/
+COPY service/static/test-image-4.jpg static/
+
+COPY service/templates/index.html templates/
+COPY service/templates/stream.html templates/
+
 COPY service/server.py .
 CMD /usr/local/bin/python3 ./server.py
