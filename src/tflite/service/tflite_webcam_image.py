@@ -44,9 +44,11 @@ while True:
     inference_data_json = detector.getInferenceDataJSON(config, inference_interval, entities_dict, current_frame)
 
     # Publish the result to kafka event stream
-    #    util.inference_publish(config.getPublishPayloadKafkaUrl(), inference_data_json)
+    if config.shouldPublishKafka():
+        util.inference_publish(config.getPublishPayloadKafkaUrl(), inference_data_json)
 
-    util.inference_publish(config.getPublishPayloadStreamUrl(), inference_data_json)
+    if config.shouldPublishStream():
+        util.inference_publish(config.getPublishPayloadStreamUrl(), inference_data_json)
 
     # Update framerate
     opencv.updateFrameRate()

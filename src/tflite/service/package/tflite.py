@@ -41,6 +41,12 @@ class Config:
     def shouldShowOverlay(self):
         return os.environ['SHOW_OVERLAY'] == 'true'
 
+    def shouldPublishKafka(self):
+        return os.environ['PUBLISH_KAFKA'] == 'true'
+
+    def shouldPublishStream(self):
+        return os.environ['PUBLISH_STREAM'] == 'true'
+    
     def getResolution(self):
         return self.resolution
 

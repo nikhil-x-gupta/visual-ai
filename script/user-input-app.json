@@ -18,6 +18,8 @@
             "DEVICE_ID"                : "$DEVICE_ID",
             "DEVICE_NAME"              : "$DEVICE_NAME",
 	    "SHOW_OVERLAY"             : $SHOW_OVERLAY,
+	    "PUBLISH_KAFKA"            : $PUBLISH_KAFKA,
+	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,
 	    "MIN_CONFIDENCE_THRESHOLD" : 0.6
 	}
     }
