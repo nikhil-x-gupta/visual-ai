@@ -47,6 +47,12 @@ class Config:
     def shouldPublishStream(self):
         return os.environ['PUBLISH_STREAM'] == 'true'
     
+    def shouldDetectFace(self):
+        return os.environ['DETECT_FACE'] == 'true'
+
+    def shouldBlurFace(self):
+        return os.environ['BLUR_FACE'] == 'true'
+
     def getResolution(self):
         return self.resolution
 
@@ -195,12 +201,16 @@ class OpenCV:
         frame_rgb = cv2.cvtColor(frame_current, cv2.COLOR_BGR2RGB)
         frame_resize = cv2.resize(frame_rgb, (detector.getWidth(), detector.getHeight()))
 
+        face_frames = None
+        if config.shouldDetectFace() or config.shouldBlurFace():
+            face_frames = faceDetector(frame_current)
+            
         # Condition and Normalize pixel values
         frame_norm = numpy.expand_dims(frame_resize, axis=0)
         if detector.getFloatingModel():
             frame_norm = (numpy.float32(frame_norm) - config.getInputMean()) / config.getInputStd()
 
-        return frame_current, frame_norm
+        return frame_current, frame_norm, face_frames
 
     def faceDetector(frame_current):
         face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -211,7 +221,7 @@ class OpenCV:
 
         return face_frames
 
-    def updateFrame(self, config, detector, opencv, frame_current, boxes, classes, scores, num):
+    def updateFrame(self, config, detector, opencv, frame_current, boxes, classes, scores, num, face_frames):
         entities_dict = {}
         for i in range(len(scores)):
             if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
@@ -249,15 +259,14 @@ class OpenCV:
                 detail_dict['confidence'] = float('{0:.2f}'.format(scores[i]))
                 details.append(detail_dict)
 
-#                for (x,y,w,h) in faces:
-#                    cv2.rectangle(frame_current, (x,y), (x+w,y+h), (255,0,0), 2)
-#                    roi_gray = gray[y:y+h, x:x+w]
-#                    roi_color = img[y:y+h, x:x+w]
-#                    eyes = eye_cascade.detectMultiScale(roi_gray)
-#                    for (ex,ey,ew,eh) in eyes:
-#                        cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-
-
+                if face_frames is not None:
+                    for (x,y,w,h) in face_frames:
+                        cv2.rectangle(frame_current, (x,y), (x+w,y+h), (255,0,0), 2)
+                        roi_gray = gray[y:y+h, x:x+w]
+                        roi_color = img[y:y+h, x:x+w]
+                        eyes = eye_cascade.detectMultiScale(roi_gray)
+                        for (ex,ey,ew,eh) in eyes:
+                            cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
 
         # Color BGR
         if config.shouldShowOverlay():

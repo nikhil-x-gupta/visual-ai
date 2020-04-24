@@ -20,6 +20,8 @@
 	    "SHOW_OVERLAY"             : $SHOW_OVERLAY,
 	    "PUBLISH_KAFKA"            : $PUBLISH_KAFKA,
 	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,
+	    "DETECT_FACE"              : $DETECT_FACE,
+	    "BLUR_FACE"                : $BLUR_FACE,
 	    "MIN_CONFIDENCE_THRESHOLD" : 0.6
 	}
     }
