@@ -57,6 +57,8 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
     export DEVICE_ID=<unique-device-id>
     export DEVICE_NAME="<short device name"
     export SHOW_OVERLAY=true # false to hide OVERLAY
+    export PUBLISH_KAFKA=false # To send kafka stream
+    export PUBLISH_STREAM=true # to send local mjpeg stream and view in browser
 
 #### Event Streams
 
