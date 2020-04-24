@@ -10,7 +10,7 @@ import os
 import requests
 import subprocess
 import uuid
-
+import threading
 import time
 
 EVENTSTREAMS_BROKER_URLS = os.environ['EVENTSTREAMS_BROKER_URLS']
@@ -21,37 +21,41 @@ PUBLISH_KAFKA_COMMAND = ' kafkacat -P -b ' + EVENTSTREAMS_BROKER_URLS + ' -X api
 
 server = Flask(__name__)
 
-def generate_stream_MJEPG_XXX():
-    global g_stream_frame, g_lock
+g_stream_frame = None
+g_lock = threading.Lock()
 
-    g_stream_frame = None
+def generate_stream_MJEPG_WIP():
+    global g_stream_frame, g_lock
     
-    count = 1
+    count = 0
     while True:
-        if g_stream_frame is None:
-            time.sleep(0.1)            
-            return
-        else:
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + g_stream_frame + b'\r\n')
+        with g_lock:
+            if g_stream_frame is None:
+                image_name = 'test-image-' + str(count) + '.jpg'
+                image_path = os.path.join('/static', image_name)
+                with open(image_path, "rb") as image:
+                    frame_read = image.read()
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + frame_read + b'\r\n')
+                time.sleep(0.1)            
+                return
+            else:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + g_stream_frame + b'\r\n')
 
 def generate_stream_MJEPG():
     global g_stream_frame, g_lock
 
-    g_stream_frame = None
+#    g_stream_frame = None
     
-    count = 1 
+    count = 0
     while True:
         if g_stream_frame is None:
-            IMAGE_NAME = 'test-image-' + str(count) + '.jpg'
-            image_path = os.path.join('/static', IMAGE_NAME)
-
+            image_name = 'test-image-' + str(count) + '.jpg'
+            image_path = os.path.join('/static', image_name)
             if (count > 4):
-                count = 1
-
-            print (image_path)
+                count = 0
             time.sleep(1)
-
             with open(image_path, "rb") as image:
                 frame_read = image.read()
                 yield (b'--frame\r\n'
@@ -81,9 +85,11 @@ def index():
 # Used by client to publish MJPEG streaming content
 @server.route('/publish/stream', methods=['POST'])
 def publish_stream():
-    global g_stream_frame
+    global g_stream_frame, g_lock
     if request.headers['Content-Type'] == 'application/json':
-        g_stream_frame = base64.b64decode(request.json["detect"]["image"])
+        with g_lock:
+            g_stream_frame = base64.b64decode(request.json["detect"]["image"])
+
     return ""
 
 @server.route('/publish/kafka', methods=['POST'])

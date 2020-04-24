@@ -27,6 +27,7 @@ time.sleep(1)
 
 while True:
     # Get frame from the videostream
+    #current_frame, frame_normalized, face_frames = opencv.getFrame(config, detector, videostream)
     current_frame, frame_normalized = opencv.getFrame(config, detector, videostream)
 
     # Perform the actual inferencing with the initilized detector . tflite
@@ -36,6 +37,7 @@ while True:
     boxes, classes, scores, num = detector.getResults()
     
     # Annotate the frame with class boundaries
+    # entities_dict = opencv.updateFrame(config, detector, opencv, current_frame, boxes, classes, scores, num, face_frames)
     entities_dict = opencv.updateFrame(config, detector, opencv, current_frame, boxes, classes, scores, num)
     
     # Get full payload in json

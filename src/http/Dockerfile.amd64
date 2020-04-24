@@ -23,6 +23,7 @@ WORKDIR /
 
 RUN mkdir static templates
 
+COPY service/static/test-image-0.jpg static/
 COPY service/static/test-image-1.jpg static/
 COPY service/static/test-image-2.jpg static/
 COPY service/static/test-image-3.jpg static/

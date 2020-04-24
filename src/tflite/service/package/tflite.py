@@ -196,6 +196,15 @@ class OpenCV:
 
         return frame_current, frame_norm
 
+    def faceDetector(frame_current):
+        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+        frame_gray = cv2.cvtColor(frame_current, cv2.COLOR_BGR2GRAY)
+
+        face_frames = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        return face_frames
+
     def updateFrame(self, config, detector, opencv, frame_current, boxes, classes, scores, num):
         entities_dict = {}
         for i in range(len(scores)):
@@ -233,6 +242,16 @@ class OpenCV:
                 detail_dict['cy'] = int(ymin + h/2)
                 detail_dict['confidence'] = float('{0:.2f}'.format(scores[i]))
                 details.append(detail_dict)
+
+#                for (x,y,w,h) in faces:
+#                    cv2.rectangle(frame_current, (x,y), (x+w,y+h), (255,0,0), 2)
+#                    roi_gray = gray[y:y+h, x:x+w]
+#                    roi_color = img[y:y+h, x:x+w]
+#                    eyes = eye_cascade.detectMultiScale(roi_gray)
+#                    for (ex,ey,ew,eh) in eyes:
+#                        cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+
+
 
         # Color BGR
         if config.shouldShowOverlay():
