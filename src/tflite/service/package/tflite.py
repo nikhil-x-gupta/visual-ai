@@ -185,6 +185,8 @@ class OpenCV:
         self.frame_rate  = 1 # seed value. Will get updated
         self.tickFrequency = cv2.getTickFrequency()
         self.t1 = cv2.getTickCount()
+        self.face_cascade = cv2.CascadeClassifier('/usr/local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+        self.eye_cascade = cv2.CascadeClassifier('/usr/local/lib/python3.7/site-packages/cv2/data/haarcascade_eye.xml')
         
     def getFrameRate(self):
         return self.frame_rate
@@ -194,6 +196,12 @@ class OpenCV:
         time1 = (t2 - self.t1)/self.tickFrequency
         self.frame_rate = 1/time1
     
+    def faceDetector(self, frame_current):
+        frame_gray = cv2.cvtColor(frame_current, cv2.COLOR_BGR2GRAY)
+        frame_faces = self.face_cascade.detectMultiScale(frame_gray, 1.3, 5)
+        
+        return frame_faces, frame_gray
+
     def getFrame(self, config, detector, videostream):
         self.t1 = cv2.getTickCount()
         frame_read = videostream.read()
@@ -201,27 +209,19 @@ class OpenCV:
         frame_rgb = cv2.cvtColor(frame_current, cv2.COLOR_BGR2RGB)
         frame_resize = cv2.resize(frame_rgb, (detector.getWidth(), detector.getHeight()))
 
-        face_frames = None
+        frame_faces = None
+        frame_gray = None
         if config.shouldDetectFace() or config.shouldBlurFace():
-            face_frames = faceDetector(frame_current)
+            frame_faces, frame_gray = self.faceDetector(frame_current)
             
         # Condition and Normalize pixel values
         frame_norm = numpy.expand_dims(frame_resize, axis=0)
         if detector.getFloatingModel():
             frame_norm = (numpy.float32(frame_norm) - config.getInputMean()) / config.getInputStd()
 
-        return frame_current, frame_norm, face_frames
+        return frame_current, frame_norm, frame_faces, frame_gray
 
-    def faceDetector(frame_current):
-        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-        frame_gray = cv2.cvtColor(frame_current, cv2.COLOR_BGR2GRAY)
-
-        face_frames = face_cascade.detectMultiScale(gray, 1.3, 5)
-
-        return face_frames
-
-    def updateFrame(self, config, detector, opencv, frame_current, boxes, classes, scores, num, face_frames):
+    def updateFrame(self, config, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num):
         entities_dict = {}
         for i in range(len(scores)):
             if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
@@ -259,14 +259,17 @@ class OpenCV:
                 detail_dict['confidence'] = float('{0:.2f}'.format(scores[i]))
                 details.append(detail_dict)
 
-                if face_frames is not None:
-                    for (x,y,w,h) in face_frames:
-                        cv2.rectangle(frame_current, (x,y), (x+w,y+h), (255,0,0), 2)
-                        roi_gray = gray[y:y+h, x:x+w]
-                        roi_color = img[y:y+h, x:x+w]
-                        eyes = eye_cascade.detectMultiScale(roi_gray)
-                        for (ex,ey,ew,eh) in eyes:
-                            cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+                if frame_faces is not None:
+                    for (x, y, w, h) in frame_faces:
+                        if config.shouldBlurFace():
+                            cv2.ellipse(frame_current, (int(x + w/2), int(y + h/2)), (int(0.6 * w), int(0.8 * h)), 0, 0, 360, (128, 128, 128), -1)
+                        elif config.shouldDetectFace():
+                            cv2.rectangle(frame_current, (x, y), (x+w, y+h), (192, 192, 192), 2)
+                            roi_gray = frame_gray[y:y+h, x:x+w]
+                            roi_color = frame_current[y:y+h, x:x+w]
+                            eyes = self.eye_cascade.detectMultiScale(roi_gray)
+                            for (ex, ey, ew, eh) in eyes:
+                                cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (64, 128, 192), 2)
 
         # Color BGR
         if config.shouldShowOverlay():
