@@ -23,6 +23,19 @@ fn_chk_env() {
     fi
 }
 
+fn_register_with_mms_pattern() {
+    echo "Registering with pattern... "
+
+    . $envvar
+
+    fn_chk_env
+
+    ARCH=`hzn architecture`
+
+    hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
+    hzn register --pattern "${HZN_ORG_ID}/pattern-${EDGE_OWNER}.${EDGE_DEPLOY}.mms-${ARCH}" --input-file user-input-app.json --policy=../policy/node_policy_privileged.json
+}
+
 fn_register_with_pattern() {
     echo "Registering with pattern... "
 
@@ -57,7 +70,7 @@ fn_unregister() {
     hzn unregister -vrD
 }
 
-while getopts 'e:rupl' option; do
+while getopts 'e:ruplm' option; do
   case "$option" in
     h) usage
        exit 1
@@ -69,6 +82,8 @@ while getopts 'e:rupl' option; do
     u) unregister=1
        ;;
     p) pattern=1
+       ;;
+    m) mmspattern=1
        ;;
     l) policy=1
        ;;
@@ -95,6 +110,8 @@ fi
 if [ ! -z $register ]; then
     if [ ! -z $pattern ]; then
 	fn_register_with_pattern
+    elif [ ! -z $mmspattern ]; then
+	fn_register_with_mms_pattern
     elif [ ! -z $policy ]; then
 	fn_register_with_policy
     else

@@ -14,7 +14,7 @@ export ARCH ?= $(shell hzn architecture)
 
 # ----------------------------------------------------------------------------
 
-#all: build push publish-service add-business-policy
+# all: build push publish-service add-business-policy
 
 # Build the docker container
 build:
@@ -26,7 +26,7 @@ push:
 
 # Publish a Horizon service (per service.json) and pull image to get its sha256
 publish-service:
-	hzn exchange service publish -f horizon/service.json --pull-image
+	hzn exchange service publish -f horizon/service.definition.json --pull-image
 
 add-business-policy:
 	hzn exchange business addpolicy -f horizon/biz_policy_$(IMAGE_NAME).json biz_$(IMAGE_NAME)_$(ARCH)_$(SERVICE_VERSION)_$(EDGE_DEPLOY)_$(EDGE_OWNER)

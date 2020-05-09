@@ -8,7 +8,6 @@
 # Sanjeev Gupta, April 2020
 #
 
-
 import os
 import time
 
@@ -23,10 +22,13 @@ detector = Detector(config)
 opencv = OpenCV()
 videostream = VideoStream(config).start()
 
+# Start mmsPoller in a different thread
+config.mmsPoller()
+
 time.sleep(1)
 
 while True:
-    # Get frame from the videostream
+    # Get a frame in different states
     frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(config, detector, videostream)
 
     # Perform the actual inferencing with the initilized detector . tflite

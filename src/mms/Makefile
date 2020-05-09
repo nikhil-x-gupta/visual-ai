@@ -1,5 +1,6 @@
-# Makefile : http : A flask based local http server for REST calls
-# ----------------------------------------------------------------------------
+#
+# Makefile : curl : A helper container to run curl in a shell
+# -----------------------------------------------------------
 
 # Check all necessary environment variables
 -include ../../env.check.mk
@@ -11,6 +12,8 @@ export ARCH ?= $(shell hzn architecture)
 -include .hzn.json.tmp.mk
 
 # ----------------------------------------------------------------------------
+
+# all: build push publish-service
 
 # Build the docker container
 build:
@@ -24,13 +27,14 @@ push:
 publish-service:
 	hzn exchange service publish -f horizon/service.definition.json --pull-image
 
-add-business-policy:
-	hzn exchange business addpolicy -f biz_policy_$(IMAGE_NAME).json biz_$(IMAGE_NAME)_$(ARCH)_$(SERVICE_VERSION)_$(EDGE_DEPLOY)_$(EDGE_OWNER)
-
 # Remove the local container image
 clean:
 	@docker rmi $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) 2>/dev/null || :
 	@rm -f .hzn.json.tmp.mk
+
+# ------Test MMS publish -------------------------------------------------------------
+test-mms-publish:
+	hzn mms object publish -m horizon/object.json -f horizon/config.json
 
 # ----------------------------------------------------------------------------
 # This imports the variables from hzn.json

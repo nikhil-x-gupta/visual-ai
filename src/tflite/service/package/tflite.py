@@ -17,11 +17,18 @@ import json
 import numpy
 import os
 import time
+import requests
 
 class Config:
     def __init__(self, resolution=(640, 480), framerate=30):
         self.resolution = resolution
         self.framerate = framerate
+        self.env_dict = {}
+        self.env_dict['SHOW_OVERLAY'] = os.environ['SHOW_OVERLAY'] 
+        self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] 
+        self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] 
+        self.env_dict['DETECT_FACE'] = os.environ['DETECT_FACE'] 
+        self.env_dict['BLUR_FACE'] = os.environ['BLUR_FACE'] 
 
     def getDeviceId(self):
         return os.environ['DEVICE_ID']
@@ -29,6 +36,10 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME']
     
+    def getMMSConfigProvideUrl(self):
+        #return os.environ['MMS_HTTP_CONFIG_PROVIDER']
+        return "http://192.168.200.41:7778/mmsconfig"
+
     def getPublishPayloadKafkaUrl(self):
         return os.environ['HTTP_PUBLISH_KAFKA_URL']
 
@@ -39,19 +50,24 @@ class Config:
         return float(os.environ['MIN_CONFIDENCE_THRESHOLD'])
 
     def shouldShowOverlay(self):
-        return os.environ['SHOW_OVERLAY'] == 'true'
+        return self.env_dict['SHOW_OVERLAY'] == 'true'
+        #return os.environ['SHOW_OVERLAY'] == 'true'
 
     def shouldPublishKafka(self):
-        return os.environ['PUBLISH_KAFKA'] == 'true'
+        return self.env_dict['PUBLISH_KAFKA'] == 'true'
+        #return os.environ['PUBLISH_KAFKA'] == 'true'
 
     def shouldPublishStream(self):
-        return os.environ['PUBLISH_STREAM'] == 'true'
+        return self.env_dict['PUBLISH_STREAM'] == 'true'
+        #return os.environ['PUBLISH_STREAM'] == 'true'
     
     def shouldDetectFace(self):
-        return os.environ['DETECT_FACE'] == 'true'
+        return self.env_dict['DETECT_FACE']  == 'true'
+        #return os.environ['DETECT_FACE'] == 'true'
 
     def shouldBlurFace(self):
-        return os.environ['BLUR_FACE'] == 'true'
+        return self.env_dict['BLUR_FACE']  == 'true'
+        #return os.environ['BLUR_FACE'] == 'true'
 
     def getResolution(self):
         return self.resolution
@@ -92,6 +108,46 @@ class Config:
     def getInputStd(self):
         return 127.5
 
+    def mmsConfig(self):
+        url = self.getMMSConfigProvideUrl()
+        try:
+            resp = requests.get(url)
+            dict = resp.json()
+            print (dict)
+            if dict['mms_action'] == 'updated':
+                value_dict = dict['value']
+                if 'SHOW_OVERLAY' in value_dict:
+                    self.env_dict['SHOW_OVERLAY'] = value_dict['SHOW_OVERLAY']
+
+                if 'PUBLISH_KAFKA' in value_dict:
+                    self.env_dict['PUBLISH_KAFKA'] = value_dict['PUBLISH_KAFKA']
+
+                if 'PUBLISH_STREAM' in value_dict:
+                    self.env_dict['PUBLISH_STREAM'] = value_dict['PUBLISH_STREAM']
+
+                if 'DETECT_FACE' in value_dict:
+                    self.env_dict['DETECT_FACE'] = value_dict['DETECT_FACE']
+
+                if 'BLUR_FACE' in value_dict:
+                    self.env_dict['BLUR_FACE'] = value_dict['BLUR_FACE']
+
+        except requests.exceptions.HTTPError as errh:
+            print ("Http Error:", errh)
+        except requests.exceptions.ConnectionError as errc:
+            print ("Error Connecting:", errc)
+        except requests.exceptions.Timeout as errt:
+            print ("Timeout Error:", errt)
+        except requests.exceptions.RequestException as err:
+            print ("OOps: Something Else", err)
+
+    def mmsProcessor(self):
+        while True:
+            time.sleep(1)
+            self.mmsConfig()
+        
+    def mmsPoller(self):
+        Thread(target=self.mmsProcessor, args=()).start()
+            
 class Detector:
     def __init__(self, config):
         spec = importlib.util.find_spec('tflite_runtime')

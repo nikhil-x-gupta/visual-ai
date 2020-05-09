@@ -1,3 +1,5 @@
+# Makefile: A tensorflow lite and OpenCV based videostream object classification
+#
 
 # Checks required environment variables
 -include env.check.mk
@@ -5,16 +7,19 @@
 # You must always use the Horizon name for architecture (`hzn architecture`)
 export ARCH ?= $(shell hzn architecture)
 
-# build, push, publish service all
-
 all: publish publish-pattern add-business-policy
 
-publish: publish-http publish-tflite 
+publish: publish-http publish-mms publish-tflite 
 
 publish-http:
 	make -C src/http
 	make -C src/http push
 	make -C src/http publish-service
+
+publish-mms:
+	make -C src/mms
+	make -C src/mms push
+	make -C src/mms publish-service
 
 publish-tflite:
 	make -C src/tflite
@@ -26,3 +31,7 @@ publish-pattern:
 
 add-business-policy:
 	make -C src/tflite add-business-policy
+
+
+
+

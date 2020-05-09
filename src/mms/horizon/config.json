@@ -1,0 +1,7 @@
+{
+    "SHOW_OVERLAY"   : "true",
+    "DETECT_FACE"    : "true",
+    "BLUR_FACE"      : "true",
+    "PUBLISH_KAFKA"  : "false",
+    "PUBLISH_STREAM" : "true"
+}
