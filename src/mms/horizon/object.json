@@ -1,9 +1,9 @@
 {
     "objectID": "config.json", 
-    "objectType": "$HZN_DEVICE_ID.tflite-mms",
-    "destinationOrgID": "$HZN_ORG_ID",
-    "destinationID": "$HZN_DEVICE_ID",  
-    "destinationType": "pattern-$EDGE_OWNER.$EDGE_DEPLOY.tflite-$ARCH",
+    "objectType": "tflite-mmsconfig",
+    "destinationOrgID": "mycluster",
+    "destinationID": "",  
+    "destinationType": "pattern-$EDGE_OWNER.$EDGE_DEPLOY.tflite-amd64",
     "destinationsList": null, 
     "expiration": "", 
     "version": "",    

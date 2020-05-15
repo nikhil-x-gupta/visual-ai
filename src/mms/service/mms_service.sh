@@ -16,13 +16,13 @@ fn_parse_mms_request MMS_ACTION
 OBJECT_TYPE=""
 OBJECT_ID=""
 if [ "$MMS_ACTION" = "mmsconfig" ]; then 
-    OBJECT_TYPE="$HZN_DEVICE_ID.tflite-mms"
+    OBJECT_TYPE="tflite-mmsconfig"
     OBJECT_ID=config.json
 elif [ "$MMS_ACTION" = "mmsmodel" ]; then 
-    OBJECT_TYPE="$HZN_DEVICE_ID.tflite-model-mms"
+    OBJECT_TYPE="tflite-mmsmodel"
     OBJECT_ID=model.json
 else
-    OBJECT_TYPE="$HZN_DEVICE_ID.tflite-mms"
+    OBJECT_TYPE="tflite-mmsconfig"
     OBJECT_ID=config.json
 fi
 

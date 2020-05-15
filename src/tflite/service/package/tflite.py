@@ -37,8 +37,8 @@ class Config:
         return os.environ['DEVICE_NAME']
     
     def getMMSConfigProvideUrl(self):
-        #return os.environ['MMS_HTTP_CONFIG_PROVIDER']
-        return "http://192.168.200.41:7778/mmsconfig"
+        url = "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
+        return url
 
     def getPublishPayloadKafkaUrl(self):
         return os.environ['HTTP_PUBLISH_KAFKA_URL']
@@ -113,7 +113,7 @@ class Config:
         try:
             resp = requests.get(url)
             dict = resp.json()
-            print (dict)
+            # print (dict)
             if dict['mms_action'] == 'updated':
                 value_dict = dict['value']
                 if 'SHOW_OVERLAY' in value_dict:

@@ -17,6 +17,7 @@
 	"variables": {
             "DEVICE_ID"                : "$DEVICE_ID",
             "DEVICE_NAME"              : "$DEVICE_NAME",
+	    "DEVICE_IP_ADDRESS"        : "$DEVICE_IP_ADDRESS",
 	    "SHOW_OVERLAY"             : $SHOW_OVERLAY,
 	    "PUBLISH_KAFKA"            : $PUBLISH_KAFKA,
 	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,
