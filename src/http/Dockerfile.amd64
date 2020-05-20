@@ -18,10 +18,20 @@ RUN make -C /kafkacat-master bin-install
 
 RUN pip3 install flask requests
 
+# TODO
+# Required to make IEAM instance connection and make direct API calls to CSS and exchange
+# Install correct ca-certificate for site. Certificates give following error.
+# SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain
+# Python application requests call calls with verify=Flase
+#COPY agent-install.site.cr
+#COPY agent-install.ca.crt /usr/local/share/ca-certificates/
+#RUN /usr/sbin/update-ca-certificates
+
 # DO NOT CHANGE the script name from server.py to http.py. It breaks the docker run 
 WORKDIR /
 
 RUN mkdir static templates
+RUN mkdir -p static/css
 
 COPY service/static/test-image-0.jpg static/
 COPY service/static/test-image-1.jpg static/
@@ -31,6 +41,8 @@ COPY service/static/test-image-4.jpg static/
 
 COPY service/templates/index.html templates/
 COPY service/templates/stream.html templates/
+
+COPY service/static/css/style.css static/css/
 
 COPY service/server.py .
 CMD /usr/local/bin/python3 ./server.py
