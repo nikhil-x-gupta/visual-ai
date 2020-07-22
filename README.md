@@ -2,7 +2,7 @@
 
 ### Introduction
 
-A python based implementation using two containers with detection time below < 0.4 sec without any GPU accelerator on Intel NUC using coco_ssd_mobilenet_v1_1.0 model
+A python based implementation using three containers with detection time below < 0.4 sec without any GPU accelerator on Intel NUC using coco_ssd_mobilenet_v1_1.0 model
 
 - Image capture and classification
 - Http and kafka message bridge
@@ -27,18 +27,18 @@ Start with reviewing Makefile for targets.
 Build and publish images to docker and services to exchange. Can be executed again and again.
 
     make
+    
+Publish deploy-policy
+
+    make deploy-policy
 
 Publish pattern
 
     make publish-pattern
 
-Publish business-policy
-
-    make add-business-policy
-
 ### ENVIRONMENT variables
 
-Must define following ENVIRONMENT variables to build application, add policies and register edge node. Preferebly save in the script directory and use when invoke device registration. 
+Must define following ENVIRONMENT variables to build application, add policies and register edge node. Preferebly save in the script directory and use when invoking device registration. 
 
 Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different developers to use the same exchange without clobering over each other.
 
@@ -56,7 +56,17 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
 
     export DEVICE_ID=<unique-device-id>
     export DEVICE_NAME="<short device name"
+    export DEVICE_IP_ADDRESS=`hostname -i`
+    
+    export APP_IEAM_API_CSS_OBJECTS=https://`grep -viE '^$|^#' /etc/default/horizon |  grep HZN_EXCHANGE_URL | cut -d'=' -f2 | cut -d'/' -f3`/edge-css/api/v1/objects
+    export APP_APIKEY_PASSWORD=<api-key-provided-to-you>
+    export APP_MMS_OBJECT_ID_CONFIG="config.json"
+    export APP_MMS_OBJECT_TYPE_CONFIG="tflite-mmsconfig"
+    export APP_MMS_OBJECT_SERVICE_NAME_CONFIG="$EDGE_OWNER.$EDGE_DEPLOY.mms"
+    
     export SHOW_OVERLAY=true # false to hide OVERLAY
+    export DETECT_FACE=false
+    export BLUR_FACE=true
     export PUBLISH_KAFKA=false # To send kafka stream
     export PUBLISH_STREAM=true # to send local mjpeg stream and view in browser
 
