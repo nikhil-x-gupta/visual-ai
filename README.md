@@ -1,4 +1,4 @@
-## IEAM 4.0 - OpenCV and TensorFlow Lite based Object Classification
+## IBM Edge Application Manager (IEAM) - OpenCV and TensorFlow Lite based Object Classification
 
 ### Introduction
 
@@ -7,6 +7,7 @@ A python based implementation using three containers with detection time below <
 - Image capture and classification
 - Http and kafka message bridge
 - MJPEG based streaming available on http:<edge-device-ip-address:5000> 
+- A simple  Web UI to interactivly upload config using MMS to edge nodes.
 
 #### Build, Publish and Use in a shared IEAM environment
 
