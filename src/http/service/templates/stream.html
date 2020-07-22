@@ -1,41 +1,52 @@
-<html>
+<html ng-app="VisualApp">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{url_for('static', filename='js/app.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   </head>
-  <body>
-    <h1>IEAM 4.0 - Object Classification</h1>
+  <body ng-controller="FormCtrl">
+    <h1>IEAM - OpenCV TensorFlow Lite Object Classification</h1>
     <div col="12"><img width="640" heigh="480" src="{{ url_for('stream_video') }}"/></div>
-    <h1>OpenCV TensorFlow Lite</h1>
-    <div id="config-form" col="16">
-      <form action="update/config" class="container">
-	<label class="container">Overlay
-	  <input name="overlay" type="checkbox" checked="checked">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">Detect Face
-	  <input name="face" type="checkbox">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">Blur Face
-	  <input name="blur" type="checkbox">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">Publish Kafka
-	  <input name="kafka" type="checkbox">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">Publish Stream
-	  <input name="stream" type="checkbox">
-	  <span class="checkmark"></span>
-	</label>
-	<button type="submit" class="btn" onclick="reconfigure()">Reconfigure</button>
-      </form>
-    </div>
-    <div id="stdout" col="6">
+    <h1></h1>
+    <div class="row">
+      <div class="column" style="background-color:#555;">
+	<form class="container">
+	  <label class="container">Overlay
+	    <input type="checkbox" ng-model="panel.overlay">
+	    <span class="checkmark"></span>
+	  </label>
+	  <label class="container">Detect Face
+	    <input type="checkbox" ng-model="panel.face"/>
+	    <span class="checkmark"></span>
+	  </label>
+	  <label class="container">Blur Face
+	    <input type="checkbox" ng-model="panel.blur">
+	    <span class="checkmark"></span>
+	  </label>
+	  <label class="container">Publish Kafka
+	    <input type="checkbox" ng-model="panel.kafka">
+	    <span class="checkmark"></span>
+	  </label>
+	  <label class="container">Publish Stream
+	    <input type="checkbox" ng-model="panel.stream">
+	    <span class="checkmark"></span>
+	  </label>
+	  <button ng-click="reset()" class="btn" style="background-color:33DD33;">Reset</button>
+	</form>
+      </div>
+      <div class="column" style="background-color:#555;">
+	<div class="container">
+	  <p>
+	  {% raw %}
+	  <pre>{{panel | json}}</pre>
+	  {{ panel.message }}
+	  {% endraw %}
+	  </p>
+	  <button ng-click="apply()" class="btn">Apply</button>
+	</div>
+      </div>
     </div>
   </body>
 </html>
-
 

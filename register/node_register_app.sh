@@ -33,7 +33,7 @@ fn_register_with_mms_pattern() {
     ARCH=`hzn architecture`
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
-    hzn register --pattern "${HZN_ORG_ID}/pattern-${EDGE_OWNER}.${EDGE_DEPLOY}.mms-${ARCH}" --input-file user-input-app.json --policy=../policy/node_policy_privileged.json
+    hzn register --pattern "${HZN_ORG_ID}/pattern-${EDGE_OWNER}.${EDGE_DEPLOY}.mms-${ARCH}" --input-file user-input-app.json --policy=node_policy_privileged.json
 }
 
 fn_register_with_pattern() {
@@ -46,7 +46,7 @@ fn_register_with_pattern() {
     ARCH=`hzn architecture`
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
-    hzn register --pattern "${HZN_ORG_ID}/pattern-${EDGE_OWNER}.${EDGE_DEPLOY}.tflite-${ARCH}" --input-file user-input-app.json --policy=../policy/node_policy_privileged.json
+    hzn register --pattern "${HZN_ORG_ID}/pattern-${EDGE_OWNER}.${EDGE_DEPLOY}.tflite-${ARCH}" --input-file user-input-app.json --policy=node_policy_privileged.json
 }
 
 fn_register_with_policy() {
@@ -57,7 +57,7 @@ fn_register_with_policy() {
     fn_chk_env
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
-    hzn register --policy=../policy/node_policy.json --input-file user-input-app.json
+    hzn register --policy=node_policy.json --input-file user-input-app.json
 }
 
 fn_unregister() {

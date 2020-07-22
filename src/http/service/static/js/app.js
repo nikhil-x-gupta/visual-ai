@@ -1,12 +1,36 @@
-function reconfigure() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-	    document.getElementById("stdout").innerHTML = this.responseText;
-	}
-    };
-    xhttp.open("POST", "", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("");
-}
+(function () {
+    'use strict';
+
+    var app = angular.module('VisualApp', []);
+    app.controller('FormCtrl', ['$scope', '$http', function($scope, $http) {
+        $scope.panel = {};
+      
+        $scope.apply = function() {
+            var json = angular.toJson($scope.panel);
+            console.log("config json:" + json);
+
+	    var config = {
+		headers : { 'Content-Type': 'application/json', "Accept": "text/plain" }
+	    };
+
+	    $http.post('/update/config', json, config).then(function (response) {
+		console.log("response:" + response);
+	    }, function(error) {
+		console.log("error:" + error);
+	    });
+        };
+
+        $scope.reset = function() {
+            $scope.panel.overlay = true;
+	    $scope.panel.face = true;
+            $scope.panel.blur = true;
+            $scope.panel.kafka = false;
+            $scope.panel.stream = true;
+        };
+
+        $scope.reset();
+
+      }]);
+}());
+
 

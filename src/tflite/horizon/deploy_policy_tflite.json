@@ -1,6 +1,6 @@
 {
-    "label": "biz-policy-tflite-$ARCH",
-    "description": "A biz policy for tflite on $ARCH",
+    "label": "deploy-policy-tflite-$ARCH",
+    "description": "A deploy policy for tflite on $ARCH",
     "service": {
 	"name": "$EDGE_OWNER.$EDGE_DEPLOY.tflite",
 	"org": "$HZN_ORG_ID",
@@ -17,7 +17,7 @@
     "constraints": [
 	"owner == $EDGE_OWNER",
 	"deploy == $EDGE_DEPLOY",
-	"tflite == 1.0.0"
+	"tflite == true"
     ],
     "userInput": [
 	{

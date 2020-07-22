@@ -18,6 +18,7 @@ import numpy
 import os
 import time
 import requests
+import datetime
 
 class Config:
     def __init__(self, resolution=(640, 480), framerate=30):
@@ -36,7 +37,7 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME']
     
-    def getMMSConfigProvideUrl(self):
+    def getMMSConfigProviderUrl(self):
         url = "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
         return url
 
@@ -51,23 +52,18 @@ class Config:
 
     def shouldShowOverlay(self):
         return self.env_dict['SHOW_OVERLAY'] == 'true'
-        #return os.environ['SHOW_OVERLAY'] == 'true'
 
     def shouldPublishKafka(self):
         return self.env_dict['PUBLISH_KAFKA'] == 'true'
-        #return os.environ['PUBLISH_KAFKA'] == 'true'
 
     def shouldPublishStream(self):
         return self.env_dict['PUBLISH_STREAM'] == 'true'
-        #return os.environ['PUBLISH_STREAM'] == 'true'
     
     def shouldDetectFace(self):
         return self.env_dict['DETECT_FACE']  == 'true'
-        #return os.environ['DETECT_FACE'] == 'true'
 
     def shouldBlurFace(self):
         return self.env_dict['BLUR_FACE']  == 'true'
-        #return os.environ['BLUR_FACE'] == 'true'
 
     def getResolution(self):
         return self.resolution
@@ -109,11 +105,10 @@ class Config:
         return 127.5
 
     def mmsConfig(self):
-        url = self.getMMSConfigProvideUrl()
+        url = self.getMMSConfigProviderUrl()
         try:
             resp = requests.get(url)
             dict = resp.json()
-            # print (dict)
             if dict['mms_action'] == 'updated':
                 value_dict = dict['value']
                 if 'SHOW_OVERLAY' in value_dict:
@@ -327,17 +322,19 @@ class OpenCV:
                             for (ex, ey, ew, eh) in eyes:
                                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (64, 128, 192), 2)
 
+
+        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (15, 20), cv2.FONT_HERSHEY_PLAIN, 1, (192, 192, 0), 1, cv2.LINE_AA)
         # Color BGR
         if config.shouldShowOverlay():
             overlay = frame_current.copy()
-            cv2.rectangle(overlay, (15, 10), (250, 110), (64, 64, 64), -1)
+            cv2.rectangle(overlay, (15, 20), (250, 120), (64, 64, 64), -1)
             alpha = 0.7
             cv2.addWeighted(overlay, alpha, frame_current, 1 - alpha, 0, frame_current)
 
-            cv2.putText(frame_current, '{tool}'.format(tool = config.getTool()), (30, 30), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 2, cv2.LINE_AA)
-            cv2.putText(frame_current, '{device_name}'.format(device_name = config.getDeviceName()), (30, 60), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-            cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(detector.getInferenceInterval()), (30, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-            cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(opencv.getFrameRate()), (30, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+            cv2.putText(frame_current, '{tool}'.format(tool = config.getTool()), (30, 40), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 2, cv2.LINE_AA)
+            cv2.putText(frame_current, '{device_name}'.format(device_name = config.getDeviceName()), (30, 70), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+            cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(detector.getInferenceInterval()), (30, 90), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+            cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(opencv.getFrameRate()), (30, 110), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
 
         return entities_dict 
         
@@ -369,9 +366,3 @@ class VideoStream:
                 return
             else:
                 (self.grabbed, self.frame) = self.stream.read()
-
-
-
-                
-
-        
