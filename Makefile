@@ -7,7 +7,7 @@
 
 export ARCH ?= $(shell hzn architecture)
 
-all: publish publish-pattern deploy-policy
+all: publish deploy-policy
 
 publish: publish-http publish-mms publish-tflite 
 
