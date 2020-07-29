@@ -27,8 +27,8 @@ publish-tflite:
 	make -C src/tflite publish-service
 
 deploy-policy:
-	make -C src/tflite deploy-policy
 	make -C src/mms deploy-policy
+	make -C src/tflite deploy-policy
 
 publish-pattern:
 	hzn exchange pattern publish -f pattern/pattern-arch.json
