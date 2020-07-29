@@ -9,15 +9,12 @@ export ARCH ?= $(shell hzn architecture)
 
 all: publish deploy-policy
 
-publish: publish-http publish-rtsp publish-mms publish-tflite 
+publish: publish-http publish-mms publish-tflite 
 
 publish-http:
 	make -C src/http
 	make -C src/http push
 	make -C src/http publish-service
-
-publish-rtsp:
-	make -C src/rtsp publish-service
 
 publish-mms:
 	make -C src/mms
@@ -31,7 +28,6 @@ publish-tflite:
 
 deploy-policy:
 	make -C src/mms deploy-policy
-	make -C src/rtsp deploy-policy
 	make -C src/tflite deploy-policy
 
 publish-pattern:
