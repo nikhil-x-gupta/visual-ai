@@ -28,6 +28,9 @@ RUN pip3 install requests
 
 RUN rm -rf /var/lib/apt/lists/*
 
+# site-packages doesn't exist but required files are in dist-packages
+RUN ln -s /usr/local/lib/python3.7/dist-packages /usr/local/lib/python3.7/site-packages
+
 WORKDIR /
 RUN mkdir -p model
 RUN cd /model; wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
