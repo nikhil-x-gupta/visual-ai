@@ -39,8 +39,10 @@ RUN rm /model/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
 
 WORKDIR /
 RUN mkdir -p package
-COPY service/tflite_webcam_image.py .
+COPY service/tflite_video_object_classifier.py .
 COPY service/package/*.py package/
 
 WORKDIR /
-CMD /usr/bin/python3 tflite_webcam_image.py
+CMD /usr/bin/python3 tflite_video_object_classifier.py
+
+
