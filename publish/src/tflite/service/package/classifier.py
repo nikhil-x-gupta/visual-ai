@@ -6,26 +6,30 @@ from package import OpenCV
 from package import VideoStream
 from package import util
 
-class VideoObjectClassifer:
-    def __init__(self, config, stream):
+class VideoObjectClassifier:
+    def __init__(self, config, source):
+        self.videostreams = []
         self.config = config
-        self.stream = stream
-
-    def process(self):
         self.detector = Detector(self.config)
         self.opencv = OpenCV()
-        self.videostream = VideoStream(self.config, self.stream).start()
+        self.videostreams.append(VideoStream(self.config, source))
+
+    def addStream(self, source):
+        self.videostreams.append(VideoStream(self.config, source))
+
+    def process(self, sequence):
+        self.videostreams[sequence].start()
         time.sleep(1)
         while True:
             # Get a frame in different states
-            frame_current, frame_normalized, frame_faces, frame_gray = self.opencv.getFrame(self.config, self.detector, self.videostream)
+            frame_current, frame_normalized, frame_faces, frame_gray = self.opencv.getFrame(self.config, self.detector, self.videostreams[sequence])
 
             # Perform the actual inferencing with the initilized detector . tflite
             inference_interval = self.detector.infer(frame_normalized)
 
             # Get results
             boxes, classes, scores, num = self.detector.getResults()
-    
+
             # Annotate the frame with class boundaries
             entities_dict = self.opencv.updateFrame(self.config, self.detector, self.opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
     
@@ -42,4 +46,10 @@ class VideoObjectClassifer:
             # Update framerate
             self.opencv.updateFrameRate()
 
-        self.videostream.stop()
+        self.videostreams[sequence].stop()
+
+    # TODO
+    def processThread(self, sequence):
+        Thread(target=self.process, args=(sequence)).start()
+
+        

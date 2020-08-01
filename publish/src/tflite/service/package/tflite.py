@@ -340,12 +340,12 @@ class OpenCV:
         
 class VideoStream:
     def __init__(self, config, source):
-        self.stream = cv2.VideoCapture(source)
-        ret = self.stream.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
-        ret = self.stream.set(3, config.getResolutionWidth())
-        ret = self.stream.set(4, config.getResolutionHeight())
+        self.videoCapture = cv2.VideoCapture(source)
+        ret = self.videoCapture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+        ret = self.videoCapture.set(3, config.getResolutionWidth())
+        ret = self.videoCapture.set(4, config.getResolutionHeight())
 
-        (self.grabbed, self.frame) = self.stream.read()
+        (self.grabbed, self.frame) = self.videoCapture.read()
 
         self.stopped = False
 
@@ -362,7 +362,8 @@ class VideoStream:
     def update(self):
         while True:
             if self.stopped:
-                self.stream.release()
+                self.videoCapture.release()
                 return
             else:
-                (self.grabbed, self.frame) = self.stream.read()
+                (self.grabbed, self.frame) = self.videoCapture.read()
+                time.sleep(0.01)

@@ -11,7 +11,7 @@
 import time
 
 from package import Config
-from package import VideoObjectClassifer
+from package import VideoObjectClassifier
 
 if __name__ == '__main__':
     config = Config(resolution=(640, 480), framerate=30)
@@ -19,5 +19,10 @@ if __name__ == '__main__':
     config.mmsPoller()
     time.sleep(1)
 
-    VideoObjectClassifer(config, 1).process()
+    videoObjectClassifier = VideoObjectClassifier(config, 0)
+    videoObjectClassifier.addStream(1)
+
+    videoObjectClassifier.process(0)
+
+    #VideoObjectClassifer(config, 1).processThread()
 
