@@ -25,6 +25,11 @@ publish-service:
 deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/deploy_policy_$(IMAGE_NAME).json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME)_$(ARCH)
 
+
+#-------------------------------
+test-docker-run:
+	 docker run -it  --device=/dev/video0:/dev/video0 --env-file ENV_FILE $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) /bin/bash
+
 # Remove the local container image
 clean:
 	-docker rmi $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) 2> /dev/null || :
