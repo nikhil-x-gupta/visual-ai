@@ -339,8 +339,8 @@ class OpenCV:
         return entities_dict 
         
 class VideoStream:
-    def __init__(self, config):
-        self.stream = cv2.VideoCapture(0)
+    def __init__(self, config, source):
+        self.stream = cv2.VideoCapture(source)
         ret = self.stream.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
         ret = self.stream.set(3, config.getResolutionWidth())
         ret = self.stream.set(4, config.getResolutionHeight())
