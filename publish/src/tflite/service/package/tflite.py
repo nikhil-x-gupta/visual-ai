@@ -381,4 +381,4 @@ class VideoStream:
                 return
             else:
                 (self.grabbed, self.frame) = self.videoCapture.read()
-                time.sleep(0.01)
+                time.sleep(0.02)
