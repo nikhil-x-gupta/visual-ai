@@ -201,7 +201,7 @@ class Detector:
 
         return boxes, classes, scores, num
 
-    def getInferenceDataJSON(self, config, inference_interval, entities_dict, current_frame):
+    def getInferenceDataJSON(self, config, inference_interval, entities_dict, current_frame, video_sources):
         entities = []
         for key in entities_dict:
             entity_dict = {}
@@ -209,10 +209,25 @@ class Detector:
             entity_dict["details"] = entities_dict[key]
             entities.append(entity_dict)
 
-        # Convert image into serialized base64 encoded string
-        retval, buffer = cv2.imencode('.jpg', current_frame)
-        infered_b64_frame = (base64.b64encode(buffer)).decode('utf8')
+        if len(video_sources) == 1:
+            retval, buffer = cv2.imencode('.jpg', current_frame)
+        elif len(video_sources) == 2:
+            currentFrames = []
+            for videoSource in video_sources:
+                currentFrames.append(videoSource.frame_current)
 
+            h_current_frame = cv2.hconcat(currentFrames)
+            retval, buffer = cv2.imencode('.jpg', h_current_frame)
+        else:
+            currentFrames = []
+            for videoSource in video_sources:
+                currentFrames.append(videoSource.frame_current)
+
+            h_current_frame = cv2.hconcat(currentFrames)
+            retval, buffer = cv2.imencode('.jpg', h_current_frame)
+            
+        infered_b64_frame = (base64.b64encode(buffer)).decode('utf8')
+            
         # Create inference payload
         inference_dict = {}
         inference_dict['deviceid'] = config.getDeviceId()

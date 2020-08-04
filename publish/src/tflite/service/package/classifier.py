@@ -24,7 +24,7 @@ class VideoObjectClassifier:
         self.videoSources = []
         self.config = config
         self.videoSources.append(VideoSource(name, source))
-
+       
     def addVideoSource(self, name, source):
         self.videoSources.append(VideoSource(name, source))
 
@@ -50,7 +50,7 @@ class VideoObjectClassifier:
             videoSource.entities_dict = opencv.updateFrame(self.config, detector, opencv, videoSource.frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
     
             # Get full payload in json
-            inference_data_json = detector.getInferenceDataJSON(self.config, videoSource.inference_interval, videoSource.entities_dict, videoSource.frame_current)
+            inference_data_json = detector.getInferenceDataJSON(self.config, videoSource.inference_interval, videoSource.entities_dict, videoSource.frame_current, self.videoSources)
 
             # Publish the result to kafka event stream
             if self.config.shouldPublishKafka():

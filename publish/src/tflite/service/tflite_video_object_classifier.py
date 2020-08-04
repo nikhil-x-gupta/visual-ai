@@ -19,12 +19,10 @@ if __name__ == '__main__':
     config.mmsPoller()
 
     videoObjectClassifier = VideoObjectClassifier(config, "Camera 0", 0)
-
-    # For one camera. For multiple cameras keep it commented. Use threads below
-    # videoObjectClassifier.process(0)
-
-    # For additional camera add them as new source and process each one in different thread, WIP
-    videoObjectClassifier.addVideoSource("Camera 1",1)
     videoObjectClassifier.processThread(0)
+
+    # For additional camera add them as new source and process each one in different thread
+    videoObjectClassifier.addVideoSource("Camera 1", 1)
     videoObjectClassifier.processThread(1)
+
 
