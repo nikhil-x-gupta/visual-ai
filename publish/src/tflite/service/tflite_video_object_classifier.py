@@ -14,15 +14,15 @@ from package import Config
 from package import VideoObjectClassifier
 
 if __name__ == '__main__':
-    config = Config(resolution=(640, 480), framerate=30)
 
+    config = Config(resolution=(640, 480), framerate=30)
     config.mmsPoller()
-    time.sleep(1)
 
     videoObjectClassifier = VideoObjectClassifier(config, 0)
-    videoObjectClassifier.addStream(1)
-
     videoObjectClassifier.process(0)
 
-    #VideoObjectClassifer(config, 1).processThread()
+    # For additional camera add them as new source and process each one in different thread, WIP
+    #videoObjectClassifier.addSource(1)
+    #videoObjectClassifier.processThread(0)
+    #videoObjectClassifier.processThread(1)
 
