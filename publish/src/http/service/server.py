@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import Response
 from flask import render_template
-#from flask import send_file
 from flask import request
 
 import base64
@@ -12,8 +11,6 @@ import subprocess
 import uuid
 import threading
 import time
-
-import logging
 
 EVENTSTREAMS_BROKER_URLS = os.environ['EVENTSTREAMS_BROKER_URLS']
 EVENTSTREAMS_API_KEY = os.environ['EVENTSTREAMS_API_KEY']
@@ -36,7 +33,7 @@ server = Flask(__name__)
 g_stream_frame = None
 g_lock = threading.Lock()
 
-def generate_stream_MJEPG_WIP():
+def generate_stream_MJPEG_WIP():
     global g_stream_frame, g_lock
     
     count = 0
@@ -55,11 +52,9 @@ def generate_stream_MJEPG_WIP():
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + g_stream_frame + b'\r\n')
 
-def generate_stream_MJEPG():
+def generate_stream_MJPEG():
     global g_stream_frame, g_lock
 
-#    g_stream_frame = None
-    
     count = 0
     while True:
         if g_stream_frame is None:
@@ -76,13 +71,10 @@ def generate_stream_MJEPG():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + g_stream_frame + b'\r\n')
 
-#            time.sleep(2)
-#            g_stream_frame = None
-
 # Stream resource url_for. To be called in HTML as <img width="640" heigh="480" src="{{ url_for('stream_video') }}"/>
 @server.route('/stream_video')
 def stream_video():
-    return Response(generate_stream_MJEPG(), mimetype = "multipart/x-mixed-replace; boundary=frame")
+    return Response(generate_stream_MJPEG(), mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 # End point for the host as http://<ip-address>:5000/stream 
 @server.route('/stream')
