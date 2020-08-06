@@ -18,11 +18,11 @@ if __name__ == '__main__':
     config = Config(resolution=(640, 480), framerate=30)
     config.mmsPoller()
 
-    videoObjectClassifier = VideoObjectClassifier(config, "Camera 0", 0)
+    videoObjectClassifier = VideoObjectClassifier(config, "USB Camera 1", 0)
     videoObjectClassifier.processThread(0)
 
     # For additional camera add them as new source and process each one in different thread
-    videoObjectClassifier.addVideoSource("Camera 1", 1)
+    videoObjectClassifier.addVideoSource("USB Cam 2", 1)
     videoObjectClassifier.processThread(1)
 
 

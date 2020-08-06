@@ -15,6 +15,9 @@ class VideoSource:
         self.source = source
         self.frame_annotated = None
         
+    def getName(self):
+        return self.name
+
     def getSource(self):
         return self.source
 
@@ -46,7 +49,7 @@ class VideoObjectClassifier:
             boxes, classes, scores, num = detector.getResults()
 
             # Annotate the frame with class boundaries
-            entities_dict = opencv.updateFrame(self.config, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
+            entities_dict = opencv.updateFrame(self.config, videoSource.getName(), detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
             
             videoSource.frame_annotated = frame_current.copy()
     

@@ -283,7 +283,7 @@ class OpenCV:
 
         return frame_current, frame_norm, frame_faces, frame_gray
 
-    def updateFrame(self, config, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num):
+    def updateFrame(self, config, src_name, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num):
         entities_dict = {}
         for i in range(len(scores)):
             if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
@@ -334,18 +334,25 @@ class OpenCV:
                                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (64, 128, 192), 2)
 
 
-        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (15, 20), cv2.FONT_HERSHEY_PLAIN, 1, (192, 192, 0), 1, cv2.LINE_AA)
+        alpha = 0.8
+        title = frame_current.copy()
+        h, w = frame_current.shape[:2]
+        cv2.rectangle(title, (5, 2), (w-5, 25), (64, 64, 64), -1)
+        cv2.addWeighted(title, alpha, frame_current, 1 - alpha, 0, frame_current)
+        cv2.putText(frame_current, src_name, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (192, 192, 192), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 195, 20), cv2.FONT_HERSHEY_PLAIN, 1, (192, 192, 192), 1, cv2.LINE_AA)
+
         # Color BGR
         if config.shouldShowOverlay():
             overlay = frame_current.copy()
-            cv2.rectangle(overlay, (15, 20), (250, 120), (64, 64, 64), -1)
-            alpha = 0.7
+            cv2.rectangle(overlay, (5, 30), (230, 120), (64, 64, 64), -1)
+            alpha = 0.6
             cv2.addWeighted(overlay, alpha, frame_current, 1 - alpha, 0, frame_current)
 
-            cv2.putText(frame_current, '{tool}'.format(tool = config.getTool()), (30, 40), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 2, cv2.LINE_AA)
-            cv2.putText(frame_current, '{device_name}'.format(device_name = config.getDeviceName()), (30, 70), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-            cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(detector.getInferenceInterval()), (30, 90), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-            cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(opencv.getFrameRate()), (30, 110), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+            cv2.putText(frame_current, '{tool}'.format(tool = config.getTool()), (10, 50), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 2, cv2.LINE_AA)
+            cv2.putText(frame_current, '{device_name}'.format(device_name = config.getDeviceName()), (10, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+            cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(detector.getInferenceInterval()), (10, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+            cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(opencv.getFrameRate()), (10, 120), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
         return entities_dict 
         
 class VideoStream:
