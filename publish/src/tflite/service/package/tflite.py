@@ -211,21 +211,17 @@ class Detector:
 
         if len(video_sources) == 1:
             retval, buffer = cv2.imencode('.jpg', current_frame)
-        elif len(video_sources) == 2:
-            currentFrames = []
-            for videoSource in video_sources:
-                currentFrames.append(videoSource.frame_current)
-
-            h_current_frame = cv2.hconcat(currentFrames)
-            retval, buffer = cv2.imencode('.jpg', h_current_frame)
         else:
-            currentFrames = []
+            lastFrames = []
             for videoSource in video_sources:
-                currentFrames.append(videoSource.frame_current)
+                if videoSource.frame_annotated is not None:
+                    lastFrames.append(videoSource.frame_annotated)
+                else:
+                    lastFrames.append(current_frame)
+                    
+            concat_frame = cv2.hconcat(lastFrames)
+            retval, buffer = cv2.imencode('.jpg', concat_frame)
 
-            h_current_frame = cv2.hconcat(currentFrames)
-            retval, buffer = cv2.imencode('.jpg', h_current_frame)
-            
         infered_b64_frame = (base64.b64encode(buffer)).decode('utf8')
             
         # Create inference payload
@@ -350,7 +346,6 @@ class OpenCV:
             cv2.putText(frame_current, '{device_name}'.format(device_name = config.getDeviceName()), (30, 70), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
             cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(detector.getInferenceInterval()), (30, 90), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
             cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(opencv.getFrameRate()), (30, 110), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-
         return entities_dict 
         
 class VideoStream:

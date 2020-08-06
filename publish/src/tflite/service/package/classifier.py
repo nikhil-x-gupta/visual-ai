@@ -1,4 +1,5 @@
 import time
+import numpy as np
 
 from threading import Thread
 
@@ -12,10 +13,8 @@ class VideoSource:
     def __init__(self, name, source):
         self.name = name
         self.source = source
-        self.frame_current = None
-        self.entities_dict = None
-        self.inference_interval = None
-
+        self.frame_annotated = None
+        
     def getSource(self):
         return self.source
 
@@ -38,19 +37,21 @@ class VideoObjectClassifier:
         time.sleep(1)
         while True:
             # Get a frame in different states
-            videoSource.frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, detector, videoStream)
+            frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, detector, videoStream)
 
             # Perform the actual inferencing with the initilized detector . tflite
-            videoSource.inference_interval = detector.infer(frame_normalized)
+            inference_interval = detector.infer(frame_normalized)
 
             # Get results
             boxes, classes, scores, num = detector.getResults()
 
             # Annotate the frame with class boundaries
-            videoSource.entities_dict = opencv.updateFrame(self.config, detector, opencv, videoSource.frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
+            entities_dict = opencv.updateFrame(self.config, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
+            
+            videoSource.frame_annotated = frame_current.copy()
     
             # Get full payload in json
-            inference_data_json = detector.getInferenceDataJSON(self.config, videoSource.inference_interval, videoSource.entities_dict, videoSource.frame_current, self.videoSources)
+            inference_data_json = detector.getInferenceDataJSON(self.config, inference_interval, entities_dict, frame_current, self.videoSources)
 
             # Publish the result to kafka event stream
             if self.config.shouldPublishKafka():
