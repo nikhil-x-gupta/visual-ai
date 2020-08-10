@@ -20,6 +20,7 @@ if __name__ == '__main__':
 
     nsources = len(sources)
 
+    viewcols = 1
     if nsources > 1:
         config.mmsPoller()
 
