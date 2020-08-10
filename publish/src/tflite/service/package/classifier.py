@@ -54,7 +54,7 @@ class VideoObjectClassifier:
             videoSource.frame_annotated = frame_current.copy()
     
             # Get full payload in json
-            inference_data_json = detector.getInferenceDataJSON(self.config, inference_interval, entities_dict, frame_current, self.videoSources)
+            inference_data_json = detector.getInferenceDataJSON(self.config, inference_interval, entities_dict, frame_current, self.videoSources, 2)
 
             # Publish the result to kafka event stream
             if self.config.shouldPublishKafka():

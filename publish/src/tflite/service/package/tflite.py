@@ -12,24 +12,35 @@
 from threading import Thread
 import base64
 import cv2
+import datetime
 import importlib.util
 import json
-import numpy
+import numpy 
+import math 
 import os
 import time
 import requests
-import datetime
 
 class Config:
     def __init__(self, resolution=(640, 480), framerate=30):
         self.resolution = resolution
         self.framerate = framerate
+
+        b_frame_border = 8
+        bg_color = [96, 86, 96]
+        b_frame = numpy.zeros([self.resolution[1] - 2 * b_frame_border, self.resolution[0] - 2 * b_frame_border, 3], dtype=numpy.uint8)
+        b_frame[:] = (127, 127, 127) # gray fill
+        self.blankFrame = cv2.copyMakeBorder(b_frame, b_frame_border, b_frame_border, b_frame_border, b_frame_border, cv2.BORDER_CONSTANT, value=bg_color)
+
         self.env_dict = {}
         self.env_dict['SHOW_OVERLAY'] = os.environ['SHOW_OVERLAY'] 
         self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] 
         self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] 
         self.env_dict['DETECT_FACE'] = os.environ['DETECT_FACE'] 
         self.env_dict['BLUR_FACE'] = os.environ['BLUR_FACE'] 
+
+    def getBlankFrame(self):
+        return self.blankFrame
 
     def getDeviceId(self):
         return os.environ['DEVICE_ID']
@@ -201,7 +212,7 @@ class Detector:
 
         return boxes, classes, scores, num
 
-    def getInferenceDataJSON(self, config, inference_interval, entities_dict, current_frame, video_sources):
+    def getInferenceDataJSON(self, config, inference_interval, entities_dict, current_frame, video_sources, ncols):
         entities = []
         for key in entities_dict:
             entity_dict = {}
@@ -209,19 +220,28 @@ class Detector:
             entity_dict["details"] = entities_dict[key]
             entities.append(entity_dict)
 
-        if len(video_sources) == 1:
-            retval, buffer = cv2.imencode('.jpg', current_frame)
-        else:
-            lastFrames = []
-            for videoSource in video_sources:
-                if videoSource.frame_annotated is not None:
-                    lastFrames.append(videoSource.frame_annotated)
+        nsrc = len(video_sources)
+        nrows = math.trunc((nsrc-1) / ncols) + 1
+        rowFrames = []
+        for r in range (0, nrows):
+            colFrames = []
+            for c in range(0, ncols):
+                v = r * ncols + c
+                if v < nsrc:
+                    videoSource = video_sources[v]
+                    if videoSource.frame_annotated is not None:
+                        colFrames.append(videoSource.frame_annotated)
+                    else:
+                        colFrames.append(config.getBlankFrame())
                 else:
-                    lastFrames.append(current_frame)
-                    
-            concat_frame = cv2.hconcat(lastFrames)
-            #concat_frame = cv2.vconcat(lastFrames)
-            retval, buffer = cv2.imencode('.jpg', concat_frame)
+                    colFrames.append(config.getBlankFrame())
+
+            hframe = cv2.hconcat(colFrames)
+            rowFrames.append(hframe)
+
+        fullFrame = cv2.vconcat(rowFrames)
+
+        retval, buffer = cv2.imencode('.jpg', fullFrame)
 
         infered_b64_frame = (base64.b64encode(buffer)).decode('utf8')
             

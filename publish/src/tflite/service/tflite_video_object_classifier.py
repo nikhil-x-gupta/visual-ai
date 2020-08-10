@@ -25,4 +25,7 @@ if __name__ == '__main__':
     videoObjectClassifier.addVideoSource("USB Cam 2", 1)
     videoObjectClassifier.processThread(1)
 
+    videoObjectClassifier.addVideoSource("USB Cam 3", 2)
+    videoObjectClassifier.processThread(2)
+
 
