@@ -18,19 +18,27 @@ if __name__ == '__main__':
     config = Config(resolution=(640, 480), framerate=30)
     sources = config.discoverVideoDeviceSources(8) # Max number of /dev/videoX to discover for
 
-    if len(sources) > 1:
+    nsources = len(sources)
+
+    if nsources > 1:
         config.mmsPoller()
+
+        if nsources == 1:
+            viewcols = 1
+        else:
+            viewcols = 2
         
-    ncamera = 1
     videoObjectClassifier = None
+
+    index = 0
     for source in sources:
         if videoObjectClassifier is None:
-            videoObjectClassifier = VideoObjectClassifier(config, "Camera " + str(ncamera), source)
+            videoObjectClassifier = VideoObjectClassifier(config, viewcols, "Camera " + str(index + 1), source)
         else:
-            videoObjectClassifier.addVideoSource("Camera " + str(ncamera), source)
+            videoObjectClassifier.addVideoSource("Camera " + str(index + 1), source)
 
-        videoObjectClassifier.processThread(source)
+        videoObjectClassifier.processThread(index)
 
-        ncamera += 1
+        index += 1
         
 

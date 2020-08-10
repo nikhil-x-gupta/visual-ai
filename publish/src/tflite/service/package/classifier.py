@@ -22,16 +22,17 @@ class VideoSource:
         return self.source
 
 class VideoObjectClassifier:
-    def __init__(self, config, name, source):
+    def __init__(self, config, viewcols, name, source):
         self.videoSources = []
         self.config = config
+        self.viewcols = viewcols
         self.videoSources.append(VideoSource(name, source))
        
     def addVideoSource(self, name, source):
         self.videoSources.append(VideoSource(name, source))
 
-    def process(self, sequence):
-        videoSource = self.videoSources[sequence]
+    def process(self, index):
+        videoSource = self.videoSources[index]
         videoStream = VideoStream(self.config, videoSource.getSource())
         detector = Detector(self.config)
         opencv = OpenCV()
@@ -54,7 +55,7 @@ class VideoObjectClassifier:
             videoSource.frame_annotated = frame_current.copy()
     
             # Get full payload in json
-            inference_data_json = detector.getInferenceDataJSON(self.config, inference_interval, entities_dict, frame_current, self.videoSources, 2)
+            inference_data_json = detector.getInferenceDataJSON(self.config, inference_interval, entities_dict, frame_current, self.videoSources, self.viewcols)
 
             # Publish the result to kafka event stream
             if self.config.shouldPublishKafka():
@@ -68,7 +69,7 @@ class VideoObjectClassifier:
 
         videoStream.stop()
 
-    def processThread(self, sequence):
-        Thread(target=self.process, args=(sequence,)).start()
+    def processThread(self, index):
+        Thread(target=self.process, args=(index,)).start()
 
         
