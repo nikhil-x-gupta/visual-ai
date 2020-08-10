@@ -16,16 +16,21 @@ from package import VideoObjectClassifier
 if __name__ == '__main__':
 
     config = Config(resolution=(640, 480), framerate=30)
-    config.mmsPoller()
+    sources = config.discoverVideoDeviceSources(8) # Max number of /dev/videoX to discover for
 
-    videoObjectClassifier = VideoObjectClassifier(config, "USB Camera 1", 0)
-    videoObjectClassifier.processThread(0)
+    if len(sources) > 1:
+        config.mmsPoller()
+        
+    ncamera = 1
+    videoObjectClassifier = None
+    for source in sources:
+        if videoObjectClassifier is None:
+            videoObjectClassifier = VideoObjectClassifier(config, "Camera " + str(ncamera), source)
+        else:
+            videoObjectClassifier.addVideoSource("Camera " + str(ncamera), source)
 
-    # For additional camera add them as new source and process each one in different thread
-    videoObjectClassifier.addVideoSource("USB Cam 2", 1)
-    videoObjectClassifier.processThread(1)
+        videoObjectClassifier.processThread(source)
 
-    videoObjectClassifier.addVideoSource("USB Cam 3", 2)
-    videoObjectClassifier.processThread(2)
-
+        ncamera += 1
+        
 

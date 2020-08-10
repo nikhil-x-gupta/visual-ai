@@ -42,6 +42,16 @@ class Config:
     def getBlankFrame(self):
         return self.blankFrame
 
+    def discoverVideoDeviceSources(self, bound):
+        deviceSources = []
+        for source in range(0, bound):
+            vcap = cv2.VideoCapture(source)
+            if vcap.read()[0]:
+                deviceSources.append(source)
+                vcap.release()
+
+        return deviceSources
+
     def getDeviceId(self):
         return os.environ['DEVICE_ID']
     
