@@ -49,6 +49,9 @@ class Config:
         x = x[1].strip("/")
         return x
 
+    def getViewColumn(self):
+        return int(os.environ['VIEW_COLUMN'])
+
     def getBlankFrame(self):
         return self.blankFrame
 
@@ -232,7 +235,7 @@ class Detector:
 
         return boxes, classes, scores, num
 
-    def getInferenceDataJSON(self, config, inference_interval, entities_dict, video_sources, ncols):
+    def getInferenceDataJSON(self, config, inference_interval, entities_dict, video_sources):
         entities = []
         for key in entities_dict:
             entity_dict = {}
@@ -240,6 +243,7 @@ class Detector:
             entity_dict["details"] = entities_dict[key]
             entities.append(entity_dict)
 
+        ncols = config.getViewColumn()
         nsrc = len(video_sources)
         nrows = math.trunc((nsrc-1) / ncols) + 1
         rowFrames = []
