@@ -50,8 +50,13 @@ class VideoObjectClassifier:
             boxes, classes, scores, num = detector.getResults()
 
             # Annotate the frame with class boundaries
-            entities_dict = opencv.updateFrame(self.config, videoSource.getName(), detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
+            entities_dict = opencv.annotateFrame(self.config, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num)
             
+            if self.config.shouldShowOverlay():
+                opencv.addOverlay(frame_current, self.config.getTool(), self.config.getDeviceName(), inference_interval, opencv.getFrameRate())
+
+            opencv.addTitleStatus(frame_current, self.config.shouldPublishKafka(), videoSource.getName())
+
             videoSource.frame_annotated = frame_current.copy()
     
             # Get full payload in json

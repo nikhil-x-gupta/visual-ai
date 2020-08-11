@@ -314,7 +314,7 @@ class OpenCV:
 
         return frame_current, frame_norm, frame_faces, frame_gray
 
-    def updateFrame(self, config, src_name, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num):
+    def annotateFrame(self, config, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num):
         entities_dict = {}
         for i in range(len(scores)):
             if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
@@ -364,29 +364,36 @@ class OpenCV:
                             for (ex, ey, ew, eh) in eyes:
                                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (64, 128, 192), 2)
 
+        return entities_dict 
+        
+    def addOverlay(self, frame_current, tool, device_name, inference_interval, frame_rate): 
+        alpha = 0.6
+        overlay = frame_current.copy()
+        cv2.rectangle(overlay, (2, 30), (215, 125), (64, 64, 64), -1)
+        cv2.addWeighted(overlay, alpha, frame_current, 1 - alpha, 0, frame_current)
+        cv2.putText(frame_current, '{tool}'.format(tool=tool), (5, 50), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame_current, '{device_name}'.format(device_name=device_name), (5, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(inference_interval), (5, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(frame_rate), (5, 120), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
 
-        alpha = 0.8
+    def addTitleStatus(self, frame_current, shouldPublishKafka, src_name):
+        pub_kafka = "Publish Kafka: "
+        if shouldPublishKafka:
+            pub_kafka += "YES"
+        else:
+            pub_kafka += "NO"
+
+        alpha = 0.7
         title = frame_current.copy()
         h, w = frame_current.shape[:2]
         cv2.rectangle(title, (2, 2), (w-2, 25), (64, 64, 64), -1)
+        cv2.rectangle(title, (2, h-27), (w-2, h-2), (64, 64, 64), -1)
         cv2.addWeighted(title, alpha, frame_current, 1 - alpha, 0, frame_current)
-        cv2.putText(frame_current, src_name, (5, 20), cv2.FONT_HERSHEY_PLAIN, 1, (192, 192, 192), 1, cv2.LINE_AA)
-        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 190, 20), cv2.FONT_HERSHEY_PLAIN, 1, (192, 192, 192), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, src_name, (5, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 190, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, pub_kafka, (5, h-5), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
 
-        # Color BGR
-        if config.shouldShowOverlay():
-            overlay = frame_current.copy()
-            cv2.rectangle(overlay, (2, 30), (215, 125), (64, 64, 64), -1)
-            alpha = 0.6
-            cv2.addWeighted(overlay, alpha, frame_current, 1 - alpha, 0, frame_current)
-
-            cv2.putText(frame_current, '{tool}'.format(tool = config.getTool()), (5, 50), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 2, cv2.LINE_AA)
-            cv2.putText(frame_current, '{device_name}'.format(device_name = config.getDeviceName()), (5, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-            cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(detector.getInferenceInterval()), (5, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-            cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(opencv.getFrameRate()), (5, 120), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-
-        return entities_dict 
-        
+    
 class VideoStream:
     def __init__(self, config, source):
         self.videoCapture = cv2.VideoCapture(source)
