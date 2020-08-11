@@ -272,12 +272,19 @@ class Detector:
         else:
            status_text += "NO"
             
+        if nsrc == 1:
+            font_scale = 1
+            status_x = 60
+        else:
+            font_scale = 2
+            status_x = 120
+
         alpha = 0.7
         status = fullFrame.copy()
         h, w = fullFrame.shape[:2]
         cv2.rectangle(status, (2, h-28), (w-2, h-2), (64, 64, 64), -1)
         cv2.addWeighted(status, alpha, fullFrame, 1 - alpha, 0, fullFrame)
-        cv2.putText(fullFrame, status_text, (120, h-5), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 192), 1, cv2.LINE_AA)
+        cv2.putText(fullFrame, status_text, (status_x, h-5), cv2.FONT_HERSHEY_PLAIN, font_scale, (255, 255, 192), 1, cv2.LINE_AA)
 
         retval, buffer = cv2.imencode('.jpg', fullFrame)
 
