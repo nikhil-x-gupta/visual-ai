@@ -34,10 +34,20 @@ class Config:
 
         self.env_dict = {}
         self.env_dict['SHOW_OVERLAY'] = os.environ['SHOW_OVERLAY'] 
-        self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] 
-        self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] 
         self.env_dict['DETECT_FACE'] = os.environ['DETECT_FACE'] 
         self.env_dict['BLUR_FACE'] = os.environ['BLUR_FACE'] 
+        self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] 
+        self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] 
+
+    def getRTSPStreams(self):
+        rtspStr = os.environ['RTSP_STREAMS'] 
+        rtspStr = rtspStr.replace(" ", "")
+        return rtspStr.split(",")
+
+    def getRTSPIP(self, rtsp):
+        x = rtsp.split(":")
+        x = x[1].strip("/")
+        return x
 
     def getBlankFrame(self):
         return self.blankFrame

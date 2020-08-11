@@ -33,13 +33,18 @@ if __name__ == '__main__':
 
     index = 0
     for source in sources:
+        sourceName = "Camera " + str(index + 1) + "    /dev/video" + str(source)
         if videoObjectClassifier is None:
-            videoObjectClassifier = VideoObjectClassifier(config, viewcols, "Camera " + str(index + 1), source)
+            videoObjectClassifier = VideoObjectClassifier(config, viewcols, sourceName, source)
         else:
-            videoObjectClassifier.addVideoSource("Camera " + str(index + 1), source)
+            videoObjectClassifier.addVideoSource(sourceName, source)
 
         videoObjectClassifier.processThread(index)
-
         index += 1
         
+    rtspStreams = config.getRTSPStreams()
+    for rtspStream in rtspStreams:
+        videoObjectClassifier.addVideoSource("Camera " + str(index + 1) + "    RTSP " + config.getRTSPIP(rtspStream), rtspStream)
+        videoObjectClassifier.processThread(index)
+        index += 1
 

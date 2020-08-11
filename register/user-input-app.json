@@ -28,6 +28,7 @@
 	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,
 	    "DETECT_FACE"              : $DETECT_FACE,
 	    "BLUR_FACE"                : $BLUR_FACE,
+	    "RTSP_STREAMS"             : "$RTSP_STREAMS",
 	    "MIN_CONFIDENCE_THRESHOLD" : 0.6
 	}
     }
