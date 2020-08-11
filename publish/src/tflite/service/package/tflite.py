@@ -251,6 +251,34 @@ class Detector:
 
         fullFrame = cv2.vconcat(rowFrames)
 
+        bgColor = [15, 15, 15]
+        fullFrame = cv2.copyMakeBorder(fullFrame, 0, 60, 0, 0, cv2.BORDER_CONSTANT, value=bgColor)
+
+        status_text = "Detect Face: "
+        if config.shouldDetectFace():
+            status_text += "YES"
+        else:
+            status_text += "NO "
+
+        status_text += "      Blur Face: "
+        if config.shouldBlurFace():
+            status_text += "YES"
+        else:
+            status_text += "NO "
+            
+        status_text += "       Publish Kafka: "
+        if config.shouldPublishKafka():
+            status_text += "YES"
+        else:
+           status_text += "NO"
+            
+        alpha = 0.7
+        status = fullFrame.copy()
+        h, w = fullFrame.shape[:2]
+        cv2.rectangle(status, (2, h-28), (w-2, h-2), (64, 64, 64), -1)
+        cv2.addWeighted(status, alpha, fullFrame, 1 - alpha, 0, fullFrame)
+        cv2.putText(fullFrame, status_text, (120, h-5), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 192), 1, cv2.LINE_AA)
+
         retval, buffer = cv2.imencode('.jpg', fullFrame)
 
         infered_b64_frame = (base64.b64encode(buffer)).decode('utf8')
@@ -367,10 +395,10 @@ class OpenCV:
         alpha = 0.7
         title = frame_current.copy()
         h, w = frame_current.shape[:2]
-        cv2.rectangle(title, (2, 2), (w-2, 25), (64, 64, 64), -1)
+        cv2.rectangle(title, (0, 0), (w, 25), (64, 64, 64), -1)
         cv2.addWeighted(title, alpha, frame_current, 1 - alpha, 0, frame_current)
-        cv2.putText(frame_current, src_name, (5, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 190, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, src_name, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv2.LINE_AA)
+        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 200, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
 
         return entities_dict 
         
@@ -383,20 +411,6 @@ class OpenCV:
         cv2.putText(frame_current, '{device_name}'.format(device_name=device_name), (5, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
         cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(inference_interval), (5, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
         cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(frame_rate), (5, 120), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-
-    def addStatus(self, frame_current, shouldPublishKafka):
-        pub_kafka = "Publish Kafka: "
-        if shouldPublishKafka:
-            pub_kafka += "YES"
-        else:
-            pub_kafka += "NO"
-
-        alpha = 0.7
-        status = frame_current.copy()
-        h, w = frame_current.shape[:2]
-        cv2.rectangle(status, (2, h-27), (w-2, h-2), (64, 64, 64), -1)
-        cv2.addWeighted(status, alpha, frame_current, 1 - alpha, 0, frame_current)
-        cv2.putText(frame_current, pub_kafka, (5, h-5), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
     
 class VideoStream:
     def __init__(self, config, source):

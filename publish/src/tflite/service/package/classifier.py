@@ -57,8 +57,6 @@ class VideoObjectClassifier:
 
             videoSource.frame_annotated = frame_current.copy()
     
-            #opencv.addStatus(frame_current, self.config.shouldPublishKafka())
-
             # Get full payload in json
             inference_data_json = detector.getInferenceDataJSON(self.config, inference_interval, entities_dict, self.videoSources, self.viewcols)
 
