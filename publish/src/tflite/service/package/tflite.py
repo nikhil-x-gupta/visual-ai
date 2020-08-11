@@ -222,7 +222,7 @@ class Detector:
 
         return boxes, classes, scores, num
 
-    def getInferenceDataJSON(self, config, inference_interval, entities_dict, current_frame, video_sources, ncols):
+    def getInferenceDataJSON(self, config, inference_interval, entities_dict, video_sources, ncols):
         entities = []
         for key in entities_dict:
             entity_dict = {}
@@ -314,7 +314,7 @@ class OpenCV:
 
         return frame_current, frame_norm, frame_faces, frame_gray
 
-    def annotateFrame(self, config, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, num):
+    def annotateFrame(self, config, detector, opencv, frame_current, src_name, frame_faces, frame_gray, boxes, classes, scores, num):
         entities_dict = {}
         for i in range(len(scores)):
             if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
@@ -364,6 +364,14 @@ class OpenCV:
                             for (ex, ey, ew, eh) in eyes:
                                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (64, 128, 192), 2)
 
+        alpha = 0.7
+        title = frame_current.copy()
+        h, w = frame_current.shape[:2]
+        cv2.rectangle(title, (2, 2), (w-2, 25), (64, 64, 64), -1)
+        cv2.addWeighted(title, alpha, frame_current, 1 - alpha, 0, frame_current)
+        cv2.putText(frame_current, src_name, (5, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 190, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
+
         return entities_dict 
         
     def addOverlay(self, frame_current, tool, device_name, inference_interval, frame_rate): 
@@ -376,7 +384,7 @@ class OpenCV:
         cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(inference_interval), (5, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
         cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(frame_rate), (5, 120), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
 
-    def addTitleStatus(self, frame_current, shouldPublishKafka, src_name):
+    def addStatus(self, frame_current, shouldPublishKafka):
         pub_kafka = "Publish Kafka: "
         if shouldPublishKafka:
             pub_kafka += "YES"
@@ -384,15 +392,11 @@ class OpenCV:
             pub_kafka += "NO"
 
         alpha = 0.7
-        title = frame_current.copy()
+        status = frame_current.copy()
         h, w = frame_current.shape[:2]
-        cv2.rectangle(title, (2, 2), (w-2, 25), (64, 64, 64), -1)
-        cv2.rectangle(title, (2, h-27), (w-2, h-2), (64, 64, 64), -1)
-        cv2.addWeighted(title, alpha, frame_current, 1 - alpha, 0, frame_current)
-        cv2.putText(frame_current, src_name, (5, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 190, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.rectangle(status, (2, h-27), (w-2, h-2), (64, 64, 64), -1)
+        cv2.addWeighted(status, alpha, frame_current, 1 - alpha, 0, frame_current)
         cv2.putText(frame_current, pub_kafka, (5, h-5), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
-
     
 class VideoStream:
     def __init__(self, config, source):
