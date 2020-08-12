@@ -1,3 +1,4 @@
+
 <html ng-app="VisualApp">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -6,9 +7,9 @@
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   </head>
   <body ng-controller="FormCtrl">
-    <h1>IEAM - OpenCV TensorFlow Lite Object Classification</h1>
-    <div col="12"><img width="640" heigh="480" src="{{ url_for('stream_video') }}"/></div>
-    <h1></h1>
+    <h1>IEAM - OpenCV TensorFlow Lite</h1>
+    <div col="12"><img width="1280" heigh="960" src="{{ url_for('stream_video') }}"/></div>
+    <h1>Object Detection</h1>
     <div class="row">
       <div class="column" style="background-color:#555;">
 	<form class="container">

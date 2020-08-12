@@ -27,9 +27,9 @@ class Config:
         self.framerate = framerate
 
         b_frame_border = 8
-        bg_color = [96, 86, 96]
+        bg_color = [32, 32, 32]
         b_frame = numpy.zeros([self.resolution[1] - 2 * b_frame_border, self.resolution[0] - 2 * b_frame_border, 3], dtype=numpy.uint8)
-        b_frame[:] = (127, 127, 127) # gray fill
+        b_frame[:] = (48, 48, 48) # gray fill
         self.blankFrame = cv2.copyMakeBorder(b_frame, b_frame_border, b_frame_border, b_frame_border, b_frame_border, cv2.BORDER_CONSTANT, value=bg_color)
 
         self.env_dict = {}
@@ -286,12 +286,13 @@ class Detector:
         else:
            status_text += "NO"
             
-        if nsrc == 1:
+        if ncols == 1:
             font_scale = 1
             status_x = 60
         else:
             font_scale = 2
-            status_x = 120
+            ht, wd, ch = config.getBlankFrame().shape
+            status_x = int((ncols * wd - 1040)/2)
 
         alpha = 0.7
         status = fullFrame.copy()
