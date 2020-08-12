@@ -235,94 +235,6 @@ class Detector:
 
         return boxes, classes, scores, num
 
-    def getInferenceDataJSON(self, config, inference_interval, entities_dict, video_sources):
-        entities = []
-        for key in entities_dict:
-            entity_dict = {}
-            entity_dict["eclass"] = key
-            entity_dict["details"] = entities_dict[key]
-            entities.append(entity_dict)
-
-        ncols = config.getViewColumn()
-        nsrc = len(video_sources)
-        nrows = math.trunc((nsrc-1) / ncols) + 1
-        rowFrames = []
-        for r in range (0, nrows):
-            colFrames = []
-            for c in range(0, ncols):
-                v = r * ncols + c
-                if v < nsrc:
-                    videoSource = video_sources[v]
-                    if videoSource.frame_annotated is not None:
-                        colFrames.append(videoSource.frame_annotated)
-                    else:
-                        colFrames.append(config.getBlankFrame())
-                else:
-                    colFrames.append(config.getBlankFrame())
-
-            hframe = cv2.hconcat(colFrames)
-            rowFrames.append(hframe)
-
-        fullFrame = cv2.vconcat(rowFrames)
-
-        bgColor = [15, 15, 15]
-        fullFrame = cv2.copyMakeBorder(fullFrame, 0, 60, 0, 0, cv2.BORDER_CONSTANT, value=bgColor)
-
-        status_text = "Detect Face: "
-        if config.shouldDetectFace():
-            status_text += "YES"
-        else:
-            status_text += "NO "
-
-        status_text += "      Blur Face: "
-        if config.shouldBlurFace():
-            status_text += "YES"
-        else:
-            status_text += "NO "
-            
-        status_text += "       Publish Kafka: "
-        if config.shouldPublishKafka():
-            status_text += "YES"
-        else:
-           status_text += "NO"
-            
-        if ncols == 1:
-            font_scale = 1
-            status_x = 60
-        else:
-            font_scale = 2
-            ht, wd, ch = config.getBlankFrame().shape
-            status_x = int((ncols * wd - 1040)/2)
-
-        alpha = 0.7
-        status = fullFrame.copy()
-        h, w = fullFrame.shape[:2]
-        cv2.rectangle(status, (2, h-28), (w-2, h-2), (64, 64, 64), -1)
-        cv2.addWeighted(status, alpha, fullFrame, 1 - alpha, 0, fullFrame)
-        cv2.putText(fullFrame, status_text, (status_x, h-5), cv2.FONT_HERSHEY_PLAIN, font_scale, (255, 255, 192), 1, cv2.LINE_AA)
-
-        retval, buffer = cv2.imencode('.jpg', fullFrame)
-
-        infered_b64_frame = (base64.b64encode(buffer)).decode('utf8')
-            
-        # Create inference payload
-        inference_dict = {}
-        inference_dict['deviceid'] = config.getDeviceId()
-        inference_dict['devicename'] = config.getDeviceName()
-        inference_dict['tool'] = config.getTool()
-        inference_dict['date'] = int(time.time())
-        inference_dict['camtime'] = 0
-        inference_dict['time'] = round(inference_interval, 3)
-        inference_dict['count'] = len(entities)
-        inference_dict['entities'] = entities
-        inference_dict['image'] = infered_b64_frame
-
-        inference_data = {}
-        inference_data['detect'] = inference_dict
-        inference_data_json = json.dumps(inference_data);
-
-        return inference_data_json
-
 class OpenCV:
     def __init__(self):
         self.frame_rate  = 1 # seed value. Will get updated
@@ -434,6 +346,94 @@ class OpenCV:
         cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(inference_interval), (5, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
         cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(frame_rate), (5, 120), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
     
+    def getInferenceDataJSON(self, config, inference_interval, entities_dict, video_sources):
+        entities = []
+        for key in entities_dict:
+            entity_dict = {}
+            entity_dict["eclass"] = key
+            entity_dict["details"] = entities_dict[key]
+            entities.append(entity_dict)
+
+        ncols = config.getViewColumn()
+        nsrc = len(video_sources)
+        nrows = math.trunc((nsrc-1) / ncols) + 1
+        rowFrames = []
+        for r in range (0, nrows):
+            colFrames = []
+            for c in range(0, ncols):
+                v = r * ncols + c
+                if v < nsrc:
+                    videoSource = video_sources[v]
+                    if videoSource.frame_annotated is not None:
+                        colFrames.append(videoSource.frame_annotated)
+                    else:
+                        colFrames.append(config.getBlankFrame())
+                else:
+                    colFrames.append(config.getBlankFrame())
+
+            hframe = cv2.hconcat(colFrames)
+            rowFrames.append(hframe)
+
+        fullFrame = cv2.vconcat(rowFrames)
+
+        bgColor = [15, 15, 15]
+        fullFrame = cv2.copyMakeBorder(fullFrame, 0, 60, 0, 0, cv2.BORDER_CONSTANT, value=bgColor)
+
+        status_text = "Detect Face: "
+        if config.shouldDetectFace():
+            status_text += "YES"
+        else:
+            status_text += "NO "
+
+        status_text += "      Blur Face: "
+        if config.shouldBlurFace():
+            status_text += "YES"
+        else:
+            status_text += "NO "
+            
+        status_text += "       Publish Kafka: "
+        if config.shouldPublishKafka():
+            status_text += "YES"
+        else:
+           status_text += "NO"
+            
+        if ncols == 1:
+            font_scale = 1
+            status_x = 60
+        else:
+            font_scale = 2
+            ht, wd, ch = config.getBlankFrame().shape
+            status_x = int((ncols * wd - 1040)/2)
+
+        alpha = 0.7
+        status = fullFrame.copy()
+        h, w = fullFrame.shape[:2]
+        cv2.rectangle(status, (2, h-28), (w-2, h-2), (64, 64, 64), -1)
+        cv2.addWeighted(status, alpha, fullFrame, 1 - alpha, 0, fullFrame)
+        cv2.putText(fullFrame, status_text, (status_x, h-5), cv2.FONT_HERSHEY_PLAIN, font_scale, (255, 255, 192), 1, cv2.LINE_AA)
+
+        retval, buffer = cv2.imencode('.jpg', fullFrame)
+
+        infered_b64_frame = (base64.b64encode(buffer)).decode('utf8')
+            
+        # Create inference payload
+        inference_dict = {}
+        inference_dict['deviceid'] = config.getDeviceId()
+        inference_dict['devicename'] = config.getDeviceName()
+        inference_dict['tool'] = config.getTool()
+        inference_dict['date'] = int(time.time())
+        inference_dict['camtime'] = 0
+        inference_dict['time'] = round(inference_interval, 3)
+        inference_dict['count'] = len(entities)
+        inference_dict['entities'] = entities
+        inference_dict['image'] = infered_b64_frame
+
+        inference_data = {}
+        inference_data['detect'] = inference_dict
+        inference_data_json = json.dumps(inference_data);
+
+        return inference_data_json
+
 class VideoStream:
     def __init__(self, config, source):
         self.videoCapture = cv2.VideoCapture(source)
