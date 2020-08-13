@@ -1,4 +1,3 @@
-
 <html ng-app="VisualApp">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,44 +8,59 @@
   <body ng-controller="FormCtrl">
     <h1>IEAM - OpenCV TensorFlow Lite</h1>
     <div col="12"><img width="1280" heigh="960" src="{{ url_for('stream_video') }}"/></div>
-    <h1>Object Detection</h1>
+    <h3>Object Detection</h3>
     <div class="row">
-      <div class="column" style="background-color:#555;">
-	<form class="container">
-	  <label class="container">Overlay
+      <form class="container">
+	<span class="section">Configuration:</span>
+        <div class="left-panel">
+	  <label class="label">Overlay
 	    <input type="checkbox" ng-model="panel.overlay">
 	    <span class="checkmark"></span>
 	  </label>
-	  <label class="container">Detect Face
+	  <label class="label">Detect Face
 	    <input type="checkbox" ng-model="panel.face"/>
 	    <span class="checkmark"></span>
 	  </label>
-	  <label class="container">Blur Face
+	  <label class="label">Blur Face
 	    <input type="checkbox" ng-model="panel.blur">
 	    <span class="checkmark"></span>
 	  </label>
-	  <label class="container">Publish Kafka
+	  <label class="label">Publish Kafka
 	    <input type="checkbox" ng-model="panel.kafka">
 	    <span class="checkmark"></span>
 	  </label>
-	  <label class="container">Publish Stream
+	  <label class="label">Publish Stream
 	    <input type="checkbox" ng-model="panel.stream">
 	    <span class="checkmark"></span>
 	  </label>
-	  <button ng-click="reset()" class="btn" style="background-color:33DD33;">Reset</button>
-	</form>
-      </div>
-      <div class="column" style="background-color:#555;">
-	<div class="container">
-	  <p>
-	  {% raw %}
-	  <pre>{{panel | json}}</pre>
-	  {{ panel.message }}
-	  {% endraw %}
-	  </p>
-	  <button ng-click="apply()" class="btn">Apply</button>
+        </div>
+        <div class="mid-panel">
+	  <div class="label" style="padding-left:5px;margin-top:0px;">
+	    <p>
+	    {% raw %}
+	    <pre style="color:turquoise;cursor:default;">{{panel | json}}</pre>
+	    {{ panel.message }}
+	    {% endraw %}
+	    </p>
+	  </div>
 	</div>
-      </div>
+        <div class="btn-panel">
+	  <button ng-click="reset()" class="btn-reset">Reset</button>
+	  <button ng-click="apply()" class="btn-apply">Apply</button>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <form class="container">
+	<span class="section"><hr/></span>
+	<span class="section">Model Upload(MMS):</span>
+	<div class="file-upload-panel">
+	  <input type="file" class="btn-browse" style="width:auto;">
+	</div>
+        <div class="btn-panel" style="float:right;">
+	  <button ng-click="upload()" class="btn-apply" style="margin-top:0px;">Upload</button>
+        </div>
+      </form>
     </div>
   </body>
 </html>
