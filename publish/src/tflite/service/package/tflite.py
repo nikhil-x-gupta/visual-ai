@@ -75,6 +75,10 @@ class Config:
         url = "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
         return url
 
+    def getMMSModelProviderUrl(self):
+        url = "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsmodel"
+        return url
+
     def getPublishPayloadKafkaUrl(self):
         return os.environ['HTTP_PUBLISH_KAFKA_URL']
 
@@ -169,13 +173,38 @@ class Config:
         except requests.exceptions.RequestException as err:
             print ("OOps: Something Else", err)
 
-    def mmsProcessor(self):
+    def mmsModel(self):
+        url = self.getMMSModelProviderUrl()
+        try:
+            resp = requests.get(url)
+            dict = resp.json()
+            if dict['mms_action'] == 'updated':
+                value_dict = dict['value']
+
+        except requests.exceptions.HTTPError as errh:
+            print ("Http Error:", errh)
+        except requests.exceptions.ConnectionError as errc:
+            print ("Error Connecting:", errc)
+        except requests.exceptions.Timeout as errt:
+            print ("Timeout Error:", errt)
+        except requests.exceptions.RequestException as err:
+            print ("OOps: Something Else", err)
+
+    def mmsConfigProcessor(self):
         while True:
             time.sleep(1)
             self.mmsConfig()
-        
-    def mmsPoller(self):
-        Thread(target=self.mmsProcessor, args=()).start()
+
+    def mmsModelProcessor(self):
+        while True:
+            time.sleep(1)
+            self.mmsModel()
+            
+    def mmsConfigPoller(self):
+        Thread(target=self.mmsConfigProcessor, args=()).start()
+
+    def mmsModelPoller(self):
+        Thread(target=self.mmsModelProcessor, args=()).start()
             
 class Detector:
     def __init__(self, config):

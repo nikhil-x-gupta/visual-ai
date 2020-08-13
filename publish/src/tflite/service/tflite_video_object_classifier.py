@@ -21,7 +21,7 @@ if __name__ == '__main__':
     nsources = len(sources)
 
     if nsources > 1:
-        config.mmsPoller()
+        config.mmsConfigPoller()
 
     videoObjectClassifier = None
 
