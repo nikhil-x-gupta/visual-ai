@@ -27,6 +27,7 @@
             "DEVICE_NAME"              : "$DEVICE_NAME",
 	    "DEVICE_IP_ADDRESS"        : "$DEVICE_IP_ADDRESS",
 	    "RTSP_STREAMS"             : "$RTSP_STREAMS",
+	    "APP_BIND_HORIZON_DIR"     : "$APP_BIND_HORIZON_DIR",
 	    "SHOW_OVERLAY"             : $SHOW_OVERLAY,
 	    "PUBLISH_KAFKA"            : $PUBLISH_KAFKA,
 	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,

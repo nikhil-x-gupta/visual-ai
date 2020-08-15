@@ -39,6 +39,21 @@ class Config:
         self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] 
         self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] 
 
+        # leading / only for the first path. NO leading / in sub paths
+        self.defaultModelDir = os.path.join(os.environ['APP_BIND_HORIZON_DIR'], "tflite/model")
+        self.defaultModel = "detect.tflite"
+        self.defaultLabelmap = "labelmap.txt"
+
+        self.modelObjectType = None
+        self.modelObjectId = None
+        self.modelNet = None
+        self.modelFmwk = None
+        self.modelVersion = None
+
+        self.modelDir = None
+        self.model = None
+        self.labelmap = None
+
     def getRTSPStreams(self):
         rtspStr = os.environ['RTSP_STREAMS'] 
         rtspStr = rtspStr.replace(" ", "")
@@ -119,27 +134,19 @@ class Config:
         return "OpenCV TensorFlow Lite"
 
     def getModelDir(self):
-        return "model"
-
-    def getModelMountDir(self):
-        return "/var/tmp/horizon/tflite/model"
+        return self.defaultModelDir if self.modelDir is None else self.modelDir
 
     def getModel(self):
-        return "detect.tflite"
+        return self.defaultModel if self.model is None else self.model
 
     def getLabelmap(self):
-        return "labelmap.txt"
-
-    def getCwd(self):
-        return os.getcwd()
+        return self.defaultLabelmap if self.labelmap is None else self.labelmap
 
     def getModelPath(self):
-        #return os.path.join(self.getCwd(), self.getModelDir(), self.getModel())
-        return os.path.join(self.getModelMountDir(), self.getModel())
+        return os.path.join(self.getModelDir(), self.getModel())
 
     def getLabelmapPath(self):
-        #return os.path.join(self.getCwd(), self.getModelDir(), self.getLabelmap())
-        return os.path.join(self.getModelMountDir(), self.getLabelmap())
+        return os.path.join(self.getModelDir(), self.getLabelmap())
 
     def getInputMean(self):
         return 127.5
@@ -147,6 +154,9 @@ class Config:
     def getInputStd(self):
         return 127.5
 
+    def getStatusText(self):
+        return "Default" if self.modelObjectId is None else self.modelObjectId
+    
     def mmsConfig(self):
         url = self.getMMSConfigProviderUrl()
         try:
@@ -178,6 +188,7 @@ class Config:
         except requests.exceptions.RequestException as err:
             print ("OOps: Something Else", err)
 
+    #{"mms_action":"updated","value":{"OBJECT_TYPE":"tflite-mmsmodel","OBJECT_ID":"mobilenet-tflite-1.0.0-mms.tar.gz","MODEL_NET":"mobilenet","MODEL_FMWK":"tflite","MODEL_VERSION":"1.0.0","MODEL_DIR":"/var/tmp/horizon/tflite-mmsmodel/mobilenet/tflite/1.0.0/files","FILES":"detect.tflite labelmap.txt"}}
     def mmsModel(self):
         url = self.getMMSModelProviderUrl()
         try:
@@ -185,6 +196,19 @@ class Config:
             dict = resp.json()
             if dict['mms_action'] == 'updated':
                 value_dict = dict['value']
+                self.modelObjectType = value_dict['OBJECT_TYPE']
+                self.modelObjectId = value_dict['OBJECT_ID']
+                self.modelNet = value_dict['MODEL_NET']
+                self.modelFmwk = value_dict['MODEL_FMWK']
+                self.modelVersion = value_dict['MODEL_VERSION']
+                self.modelDir = value_dict['MODEL_DIR']
+
+                files = value_dict['FILES'].split(" ")
+                for file in files:
+                    if(file.startswith("labelmap.")):
+                        self.labelmap = file
+                    elif(file.endswith(".tflite")):
+                        self.model = file
 
         except requests.exceptions.HTTPError as errh:
             print ("Http Error:", errh)
@@ -367,6 +391,7 @@ class OpenCV:
         cv2.addWeighted(title, alpha, frame_current, 1 - alpha, 0, frame_current)
         cv2.putText(frame_current, src_name, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv2.LINE_AA)
         cv2.putText(frame_current, '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 200, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(frame_current, config.getStatusText(), (10, h-20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
         return entities_dict 
         
