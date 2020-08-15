@@ -14,7 +14,7 @@ MMS_ACTION=""
 
 fn_parse_mms_request MMS_ACTION
 
-MODEL_PATH="/var/tmp/horizon"
+MODEL_PATH=$APP_BIND_HORIZON_DIR
 MODEL_NET=""
 MODEL_FMWK=""
 MODEL_VERSION=""

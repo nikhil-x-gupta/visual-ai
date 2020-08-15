@@ -14,8 +14,9 @@
 		"image": "${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION",
                 "privileged": true,
 		"network": "host",
+		"environment": ["APP_BIND_HORIZON_DIR=$APP_BIND_HORIZON_DIR"],
 		"binds": [
-		    "/var/tmp/horizon:/var/tmp/horizon:rw"
+		    "$APP_BIND_HORIZON_DIR:$APP_BIND_HORIZON_DIR:rw"
                 ],
 		"ports": [
 		    {

@@ -12,7 +12,7 @@ export ARCH ?= $(shell hzn architecture)
 
 # Build the docker container
 build:
-	docker build -t $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) -f ./Dockerfile.$(ARCH) .
+	 envsubst < ./Dockerfile.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) . -f -
 
 # Push the docker container to the DockerHub registry
 push:
