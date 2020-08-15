@@ -20,6 +20,20 @@
 	    });
         };
 
+        $scope.upload = function() {
+	    var model = "model"; 
+
+	    var config = {
+		headers : { 'Content-Type': 'application/json', "Accept": "text/plain" }
+	    };
+
+	    $http.post('/update/upload', model, config).then(function (response) {
+		console.log("response:" + response);
+	    }, function(error) {
+		console.log("error:" + error);
+	    });
+        };
+	
         $scope.reset = function() {
             $scope.panel.overlay = true;
 	    $scope.panel.face = true;

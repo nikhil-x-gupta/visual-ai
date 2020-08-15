@@ -121,6 +121,9 @@ class Config:
     def getModelDir(self):
         return "model"
 
+    def getModelMountDir(self):
+        return "/var/tmp/horizon/tflite/model"
+
     def getModel(self):
         return "detect.tflite"
 
@@ -131,10 +134,12 @@ class Config:
         return os.getcwd()
 
     def getModelPath(self):
-        return os.path.join(self.getCwd(), self.getModelDir(), self.getModel())
+        #return os.path.join(self.getCwd(), self.getModelDir(), self.getModel())
+        return os.path.join(self.getModelMountDir(), self.getModel())
 
     def getLabelmapPath(self):
-        return os.path.join(self.getCwd(), self.getModelDir(), self.getLabelmap())
+        #return os.path.join(self.getCwd(), self.getModelDir(), self.getLabelmap())
+        return os.path.join(self.getModelMountDir(), self.getLabelmap())
 
     def getInputMean(self):
         return 127.5

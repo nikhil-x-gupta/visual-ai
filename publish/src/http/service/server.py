@@ -28,6 +28,10 @@ object_id_cfg = os.environ['APP_MMS_OBJECT_ID_CONFIG']
 object_type_cfg = os.environ['APP_MMS_OBJECT_TYPE_CONFIG']
 object_service_name_cfg = os.environ['APP_MMS_OBJECT_SERVICE_NAME_CONFIG']
 
+object_id_model = os.environ['APP_MMS_OBJECT_ID_MODEL']
+object_type_model = os.environ['APP_MMS_OBJECT_TYPE_MODEL']
+object_service_name_model = os.environ['APP_MMS_OBJECT_SERVICE_NAME_MODEL']
+
 server = Flask(__name__)
 
 g_stream_frame = None
@@ -120,7 +124,7 @@ def object_type_pattern(obj_id, obj_type, dest_org_id, dest_type, dest_id):
 
     return dict
 
-def object_type_config_policy(org_id, obj_service_name, obj_id, obj_type):
+def object_type_policy(org_id, obj_service_name, obj_id, obj_type):
     obj_type_d = {}
 
     service_d = {}
@@ -151,7 +155,7 @@ def object_type_config_policy(org_id, obj_service_name, obj_id, obj_type):
 @server.route('/update/config', methods=['POST'])
 def update_config_policy():
     if request.headers['Content-Type'] == 'application/json':
-        obj_type_d = object_type_config_policy(hzn_org_id, object_service_name_cfg, object_id_cfg, object_type_cfg)
+        obj_type_d = object_type_policy(hzn_org_id, object_service_name_cfg, object_id_cfg, object_type_cfg)
 
         config_d = {}
 
@@ -223,5 +227,18 @@ def css_status():
 
     return response
 
+@server.route('/update/model', methods=['POST'])
+def update_model_policy():
+    if request.headers['Content-Type'] == 'application/json':
+        print("updating model")
+        obj_type_d = object_type_policy(hzn_org_id, object_service_name_model, object_id_model, object_type_model)
+
+        config_d = {}
+
+        obj_type_json_str = json.dumps(obj_type_d)
+        config_json_str = json.dumps(config_d)
+
+
+    
 if __name__ == '__main__':
     server.run(debug=True, host='0.0.0.0')

@@ -12,13 +12,17 @@
 	"services": {
 	    "$SERVICE_NAME": {
 		"image": "${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION",
+                "privileged": true,
+		"network": "host",
+		"binds": [
+		    "/var/tmp/horizon:/var/tmp/horizon:rw"
+                ],
 		"ports": [
 		    {
 			"HostPort": "7778:7778/tcp",
 			"HostIP": "0.0.0.0"
 		    }
-		],
-		"network": "host"
+		]
 	    }
 	}
     }

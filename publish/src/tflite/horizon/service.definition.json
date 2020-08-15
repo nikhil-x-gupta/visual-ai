@@ -28,7 +28,10 @@
         "services": {
             "$SERVICE_NAME": {
                 "image": "${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION",
-                "privileged": true
+                "privileged": true,
+		"binds": [
+		    "/var/tmp/horizon:/var/tmp/horizon:rw"
+                ]
             }
         }
     }
