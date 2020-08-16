@@ -54,6 +54,9 @@ class Config:
         self.model = None
         self.labelmap = None
 
+        self.modelUpdatedAt = datetime.datetime.now()
+        self.shouldRefreshModel = None
+
     def getRTSPStreams(self):
         rtspStr = os.environ['RTSP_STREAMS'] 
         rtspStr = rtspStr.replace(" ", "")
@@ -155,7 +158,12 @@ class Config:
         return 127.5
 
     def getStatusText(self):
-        return "Default" if self.modelObjectId is None else self.modelObjectId
+        #   return "Default" if self.modelObjectId is None else self.modelObjectId
+        ts = self.modelUpdatedAt.strftime("%Y-%m-%d %H:%M:%S")
+        if self.modelObjectId is None:
+            return "Default" + " " + ts
+        else:
+            return self.modelObjectId + " " + ts
     
     def mmsConfig(self):
         url = self.getMMSConfigProviderUrl()
@@ -209,6 +217,9 @@ class Config:
                         self.labelmap = file
                     elif(file.endswith(".tflite")):
                         self.model = file
+
+                self.shouldRefreshModel = resp
+                self.modelUpdatedAt = datetime.datetime.now()
 
         except requests.exceptions.HTTPError as errh:
             print ("Http Error:", errh)

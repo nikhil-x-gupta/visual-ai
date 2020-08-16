@@ -69,6 +69,10 @@ class VideoObjectClassifier:
             # Update framerate
             opencv.updateFrameRate()
 
+            if self.config.shouldRefreshModel is not None:
+                detector = Detector(self.config)
+                self.config.shouldRefreshModel = None
+
         videoStream.stop()
 
     def processThread(self, index):
