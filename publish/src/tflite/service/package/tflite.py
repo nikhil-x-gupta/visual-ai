@@ -39,20 +39,20 @@ class Config:
         self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] 
         self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] 
 
-        # leading / only for the first path. NO leading / in sub paths
-        self.defaultModelDir = os.path.join(os.environ['APP_BIND_HORIZON_DIR'], "tflite/model")
+        # os.path.join - leading / only for the first path. NO leading / in sub paths
+        self.defaultModelDir = "/model"
         self.defaultModel = "detect.tflite"
         self.defaultLabelmap = "labelmap.txt"
+
+        self.modelDir = None
+        self.model = None
+        self.labelmap = None
 
         self.modelObjectType = None
         self.modelObjectId = None
         self.modelNet = None
         self.modelFmwk = None
         self.modelVersion = None
-
-        self.modelDir = None
-        self.model = None
-        self.labelmap = None
 
         self.modelUpdatedAt = datetime.datetime.now()
         self.shouldRefreshModel = None
