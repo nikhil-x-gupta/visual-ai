@@ -51,7 +51,6 @@ if __name__ == '__main__':
         index += 1
 
     if videoObjectClassifier is not None:
-        config.mmsConfigPoller()
-        config.mmsModelPoller()
+        config.mmsPoller()
         
     

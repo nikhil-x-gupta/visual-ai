@@ -50,7 +50,7 @@ if [ "$MMS_ACTION" = "mmsconfig" ]; then
     fi
 elif [ "$MMS_ACTION" = "mmsmodel" ]; then 
     OBJ_ID=$(jq -r ".[].objectID" objects.meta)
-    if [[ $OBJ_ID =~ ^(.*)-(.*)-([0-9].[0-9].[0-9])-mms.tar.gz ]]; then
+    if [[ $OBJ_ID =~ ^(.*)-(.*)-([0-9]+.[0-9]+.[0-9]+)-mms$ ]]; then
 	OBJECT_ID=$OBJ_ID
 	MODEL_NET=${BASH_REMATCH[1]}
 	MODEL_FMWK=${BASH_REMATCH[2]}

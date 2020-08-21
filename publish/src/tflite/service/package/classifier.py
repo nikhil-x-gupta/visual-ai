@@ -69,9 +69,8 @@ class VideoObjectClassifier:
             # Update framerate
             opencv.updateFrameRate()
 
-            if self.config.shouldRefreshModel is not None:
+            if detector.getModelPath() != self.config.getModelPath():
                 detector = Detector(self.config)
-                self.config.shouldRefreshModel = None
 
         videoStream.stop()
 

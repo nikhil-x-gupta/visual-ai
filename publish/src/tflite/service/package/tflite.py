@@ -55,7 +55,6 @@ class Config:
         self.modelVersion = None
 
         self.modelUpdatedAt = datetime.datetime.now()
-        self.shouldRefreshModel = None
 
     def getRTSPStreams(self):
         rtspStr = os.environ['RTSP_STREAMS'] 
@@ -218,7 +217,6 @@ class Config:
                     elif(file.endswith(".tflite")):
                         self.model = file
 
-                self.shouldRefreshModel = resp
                 self.modelUpdatedAt = datetime.datetime.now()
 
         except requests.exceptions.HTTPError as errh:
@@ -230,6 +228,18 @@ class Config:
         except requests.exceptions.RequestException as err:
             print ("OOps: Something Else", err)
 
+    def mmsProcessor(self):
+        while True:
+            time.sleep(1)
+            #if self.shouldRefreshModel is None:
+            self.mmsConfig()
+            time.sleep(1)
+            self.mmsModel()
+
+    def mmsPoller(self):
+        Thread(target=self.mmsProcessor, args=()).start()
+
+    """
     def mmsConfigProcessor(self):
         while True:
             time.sleep(1)
@@ -239,12 +249,13 @@ class Config:
         while True:
             time.sleep(1)
             self.mmsModel()
-            
+
     def mmsConfigPoller(self):
         Thread(target=self.mmsConfigProcessor, args=()).start()
 
     def mmsModelPoller(self):
         Thread(target=self.mmsModelProcessor, args=()).start()
+    """
             
 class Detector:
     def __init__(self, config):
@@ -263,6 +274,10 @@ class Detector:
         self.inference_interval = 0
         self.interpreter = Interpreter(model_path=config.getModelPath())
         self.interpreter.allocate_tensors()
+        self.modelPath = config.getModelPath()
+
+    def getModelPath(self):
+        return self.modelPath
 
     def getLabels(self):
         return self.labels
