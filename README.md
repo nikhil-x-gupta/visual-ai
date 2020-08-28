@@ -100,9 +100,12 @@ policy
     ./node_register_app.sh -e ENV_TFVISUAL_DEV -r -l
 
 ### Research, reference and acknowledgement
-https://opencv.org
-https://www.tensorflow.org/lite
-https://github.com/EdjeElectronics/TensorFlow-Object-Detection-on-the-Raspberry-Pi
-https://stackoverflow.com/questions/tagged/tensorflow
+
+    https://opencv.org
+    https://www.tensorflow.org/lite
+    https://github.com/EdjeElectronics/TensorFlow-Object-Detection-on-the-Raspberry-Pi
+    https://stackoverflow.com/questions/tagged/tensorflow
+    
+    
 
     
