@@ -48,13 +48,15 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
 
     export DOCKER_BASE=<docker-base> # e.g. Change this this your docker base 
 
+#### IEAM specific
+
     export HZN_ORG_ID=mycluster
     export HZN_EXCHANGE_USER_AUTH=iamapikey:<iam-api-key>
     export HZN_EXCHANGE_NODE_AUTH="<UNIQUE-NODE-ANME>:<node-token>"
-    export APP_NODE_NAME=<UNIQUE-NODE-ANME>
+    export HZN_DEVICE_ID=`grep HZN_DEVICE_ID /etc/default/horizon | cut -d'=' -f2`
 
 #### Application specific
-
+    export APP_NODE_NAME=<UNIQUE-NODE-ANME>
     export DEVICE_ID=<unique-device-id>
     export DEVICE_NAME="<short device name"
     export DEVICE_IP_ADDRESS=`hostname -i`
@@ -65,11 +67,21 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
     export APP_MMS_OBJECT_TYPE_CONFIG="tflite-mmsconfig"
     export APP_MMS_OBJECT_SERVICE_NAME_CONFIG="$EDGE_OWNER.$EDGE_DEPLOY.mms"
     
+    export APP_BIND_HORIZON_DIR=/var/tmp/horizon
+    
+    export APP_MMS_OBJECT_ID_MODEL="<object-model>"
+    export APP_MMS_OBJECT_TYPE_MODEL="tflite-mmsmodel"
+    export APP_MMS_OBJECT_SERVICE_NAME_MODEL="$EDGE_OWNER.$EDGE_DEPLOY.mms"
+    
     export SHOW_OVERLAY=true # false to hide OVERLAY
     export DETECT_FACE=false
     export BLUR_FACE=true
     export PUBLISH_KAFKA=false # To send kafka stream
     export PUBLISH_STREAM=true # to send local mjpeg stream and view in browser
+
+#### RTSP Streams
+
+    export RTSP_STREAMS=rtsp://<ip-address>:<port>/rtsp,rtsp://<ip-address>:<port>/rtsp
 
 #### Event Streams
 
@@ -81,6 +93,10 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
 ### Create node
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
+    
+### Publish Machine Inference model (object id format is my own nomenclature to pass required info) 
+
+    hzn mms object publish -t tflite-mmsmodel -i <net>-<framework>-<x.y.z>-mms -f <model-file-with-labelmap>
 
 ### Register node - NUC (amd64)
 Use script to register node
@@ -88,7 +104,4 @@ Use script to register node
 policy
 
     ./node_register_app.sh -e ENV_TFVISUAL_DEV -r -l
-
-pattern
-
-    ./node_register_app.sh -e ENV_TFVISUAL_DEV -r -p
+    
