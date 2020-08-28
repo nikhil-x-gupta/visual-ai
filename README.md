@@ -1,4 +1,6 @@
-## IBM Edge Application Manager (IEAM) - OpenCV and TensorFlow Lite based Object Classification
+## IBM Edge Application Manager (IEAM) - OpenCV and TensorFlow Lite based Object Detection
+
+IEAM + MMS + OpenCV + Tensorflow Lite + Python
 
 ### Introduction
 
