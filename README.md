@@ -30,14 +30,6 @@ Start with reviewing Makefile for targets.
 Build and publish images to docker and services to exchange. Can be executed again and again.
 
     make
-    
-Publish deploy-policy
-
-    make deploy-policy
-
-Publish pattern
-
-    make publish-pattern
 
 ### ENVIRONMENT variables
 
