@@ -33,7 +33,7 @@
 	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,
 	    "DETECT_FACE"              : $DETECT_FACE,
 	    "BLUR_FACE"                : $BLUR_FACE,
-	    "VIEW_COLUMN"              : 2,
+	    "VIEW_COLUMN"              : 3,
 	    "MIN_CONFIDENCE_THRESHOLD" : 0.6
 	}
     }
