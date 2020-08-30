@@ -36,7 +36,10 @@ if __name__ == '__main__':
 
     sources = []
     sources.extend(config.discoverVideoDeviceSources(8)) # Max number of /dev/videoX to discover for
-    sources.extend(config.getRTSPStreams()) # A list of RTSP sources passed to container via user-input
+
+    rtsps = config.getRTSPStreams() # A list of RTSP sources passed to container via user-input
+    if rtsps is not None:
+        sources.extend(rtsps)
 
     index = 0
     for source in sources:

@@ -58,8 +58,9 @@ class Config:
 
     def getRTSPStreams(self):
         rtspStr = os.environ['RTSP_STREAMS'] 
-        rtspStr = rtspStr.replace(" ", "")
-        return rtspStr.split(",")
+        rtsps =  (rtspStr.replace(" ", "")).split(",")
+        rtsp = [rtsp for rtsp in rtsps if "rtsp" in rtsp]  
+        return rtsps if rtsp else None
 
     def getRTSPIP(self, rtsp):
         x = rtsp.split(":")
