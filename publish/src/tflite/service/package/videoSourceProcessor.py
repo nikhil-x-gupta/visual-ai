@@ -1,27 +1,20 @@
-import time
-import numpy as np
+#
+# videoSourceProcessor.py
+#
+# Sanjeev Gupta, April 2020
 
 from threading import Thread
 
 from package import Config
 from package import Detector
 from package import OpenCV
-from package import VideoStream
 from package import util
+from package import VideoStream
+from package import VideoSource
 
-class VideoSource:
-    def __init__(self, name, source):
-        self.name = name
-        self.source = source
-        self.frame_annotated = None
-        
-    def getName(self):
-        return self.name
+import time
 
-    def getSource(self):
-        return self.source
-
-class VideoObjectClassifier:
+class VideoSourceProcessor:
     def __init__(self, config, name, source):
         self.videoSources = []
         self.config = config

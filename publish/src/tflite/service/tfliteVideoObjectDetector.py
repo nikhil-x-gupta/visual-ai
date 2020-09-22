@@ -1,5 +1,5 @@
 #
-# tflite_video_object_classifier.py
+# tfliteVideoObjectDetector.py
 #
 # An implementation using IBM Edge Application Manager (IEAM) to deploy container workloads on edge nodes
 #
@@ -27,11 +27,11 @@
 # - Separate threads for MMS based configuration and model updates
 
 from package import Config
-from package import VideoObjectClassifier
+from package import VideoSourceProcessor
 
 if __name__ == '__main__':
 
-    videoObjectClassifier = None
+    videoSourceProcessor = None
     config = Config(resolution=(640, 480), framerate=30)
 
     sources = []
@@ -43,17 +43,17 @@ if __name__ == '__main__':
 
     index = 0
     for source in sources:
-        src_sfx = "    RTSP " + config.getRTSPIP(source) if str(source).startswith("rtsp:") else "    /dev/video" + str(source)
+        src_sfx = "    " + source if str(source).startswith("rtsp:") else "    /dev/video" + str(source)
         sourceName = "Camera " + str(index + 1) + src_sfx
-        if videoObjectClassifier is None:
-            videoObjectClassifier = VideoObjectClassifier(config, sourceName, source)
+        if videoSourceProcessor is None:
+            videoSourceProcessor = VideoSourceProcessor(config, sourceName, source)
         else:
-            videoObjectClassifier.addVideoSource(sourceName, source)
+            videoSourceProcessor.addVideoSource(sourceName, source)
 
-        videoObjectClassifier.processThread(index)
+        videoSourceProcessor.processThread(index)
         index += 1
 
-    if videoObjectClassifier is not None:
+    if videoSourceProcessor is not None:
         config.mmsPoller()
         
     

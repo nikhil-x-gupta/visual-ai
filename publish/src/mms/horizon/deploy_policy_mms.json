@@ -16,6 +16,7 @@
     ],
     "constraints": [
 	"owner == $EDGE_OWNER",
+	"deploy == $EDGE_DEPLOY",
 	"mms == true"
     ],
     "userInput": [

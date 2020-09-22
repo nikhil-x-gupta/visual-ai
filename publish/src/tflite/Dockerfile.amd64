@@ -31,10 +31,10 @@ RUN rm /model/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
 
 WORKDIR /
 RUN mkdir -p package
-COPY service/tflite_video_object_classifier.py .
+COPY service/tfliteVideoObjectDetector.py .
 COPY service/package/*.py package/
 
 WORKDIR /
-CMD /usr/local/bin/python3 tflite_video_object_classifier.py 
+CMD /usr/local/bin/python3 tfliteVideoObjectDetector.py
 
 

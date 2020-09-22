@@ -89,10 +89,10 @@ fi
 if [ "$MMS_ACTION" = "mmsconfig" ]; then
    OBJECT_VALUE=`cat $OBJECT_ID`
 elif [ "$MMS_ACTION" = "mmsmodel" ]; then 
-    if [ ! -z $OBJECT_ID ]; then
-	mkdir -p $MODEL_PATH/files
+    if [ ! -z "$OBJECT_ID" ]; then
+	mkdir -p "$MODEL_PATH/files"
 	cp $OBJECT_ID $MODEL_PATH/.
-	cd $MODEL_PATH
+	cd "$MODEL_PATH"
 	tar zxf $OBJECT_ID -C files
 	list=`ls files`
 	OBJECT_VALUE="{\"OBJECT_TYPE\":\""$OBJECT_TYPE"\",\"OBJECT_ID\":\""$OBJECT_ID"\",\"MODEL_NET\":\""$MODEL_NET"\",\"MODEL_FMWK\":\""$MODEL_FMWK"\",\"MODEL_VERSION\":\""$MODEL_VERSION"\",\"MODEL_DIR\":\""$MODEL_PATH"/files\",\"FILES\":\""$list"\"}"
