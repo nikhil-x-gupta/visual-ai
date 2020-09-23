@@ -38,11 +38,14 @@ RUN cd /model; unzip coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
 RUN rm /model/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
 
 WORKDIR /
-RUN mkdir -p package
-COPY service/tfliteVideoObjectDetector.py .
+RUN mkdir -p package/tfdetect package/util package/video 
+COPY service/package/tfdetect/*.py package/tfdetect/
+COPY service/package/video/*.py package/video/
+COPY service/package/util/*.py package/util/
 COPY service/package/*.py package/
+COPY service/tfliteVideoObjectDetector.py .
 
 WORKDIR /
-CMD /usr/bin/python3  tfliteVideoObjectDetector.py
+CMD /usr/bin/python3 tfliteVideoObjectDetector.py
 
 

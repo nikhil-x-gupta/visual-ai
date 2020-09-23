@@ -10,16 +10,16 @@ from tflite_runtime.interpreter import Interpreter
 
 class Detector:
     def __init__(self, config):
+        self.inference_interval = 0
+        self.interpreter = Interpreter(model_path=config.getModelPath())
+        self.interpreter.allocate_tensors()
+        self.modelPath = config.getModelPath()
+
         #Fix label content
         with open(config.getLabelmapPath(), 'r') as f:
             self.labels = [line.strip() for line in f.readlines()]
         if self.labels[0] == '???':
             del(self.labels[0])
-
-        self.inference_interval = 0
-        self.interpreter = Interpreter(model_path=config.getModelPath())
-        self.interpreter.allocate_tensors()
-        self.modelPath = config.getModelPath()
 
     def getModelPath(self):
         return self.modelPath

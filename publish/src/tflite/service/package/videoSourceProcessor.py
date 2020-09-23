@@ -5,12 +5,14 @@
 
 from threading import Thread
 
-from package import Config
-from package import Detector
-from package import OpenCV
-from package import util
-from package import VideoStream
-from package import VideoSource
+from package.tfdetect import Config
+from package.tfdetect import Detector
+from package.tfdetect import OpenCV
+
+from package.util import util
+
+from package.video import VideoStream
+from package.video import VideoSource
 
 import time
 

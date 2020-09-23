@@ -26,7 +26,7 @@
 # - Result visualization in grafana after processing via cloud function
 # - Separate threads for MMS based configuration and model updates
 
-from package import Config
+from package.tfdetect import Config
 from package import VideoSourceProcessor
 
 if __name__ == '__main__':
