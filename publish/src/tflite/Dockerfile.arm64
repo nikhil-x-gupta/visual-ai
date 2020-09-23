@@ -74,5 +74,5 @@ COPY service/package/*.py package/
 COPY service/tfliteVideoObjectDetector.py .
 
 WORKDIR /
-CMD /usr/bin/python3 tfliteVideoObjectDetector.py
+CMD /usr/local/bin/python3 tfliteVideoObjectDetector.py
 
