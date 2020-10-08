@@ -10,6 +10,7 @@ import time
 
 class VideoStream:
     def __init__(self, config, source):
+        print ("{:.7f} VideoStream initializing".format(time.time()))
         self.videoCapture = cv2.VideoCapture(source)
         ret = self.videoCapture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
         ret = self.videoCapture.set(3, config.getResolutionWidth())
@@ -18,10 +19,11 @@ class VideoStream:
         (self.grabbed, self.frame) = self.videoCapture.read()
 
         self.stopped = False
+        print ("{:.7f} VideoStream initialized".format(time.time()))
 
-    def start(self):
-        Thread(target=self.update, args=()).start()
-        return self
+    def startThread(self):
+        Thread(target=self.setup, args=()).start()
+        print ("{:.7f} VideoStream thread started".format(time.time()))
 
     def stop(self):
         self.stopped = True
@@ -29,11 +31,12 @@ class VideoStream:
     def read(self):
         return self.frame
 
-    def update(self):
+    def setup(self):
+        print ("{:.7f} VideoStream setup".format(time.time()))
         while True:
             if self.stopped:
                 self.videoCapture.release()
                 return
             else:
                 (self.grabbed, self.frame) = self.videoCapture.read()
-                time.sleep(0.02)
+                time.sleep(0.01)

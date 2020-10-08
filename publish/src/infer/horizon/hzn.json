@@ -1,0 +1,12 @@
+{
+    "MetadataVars": {
+        "IMAGE_NAME_TFLITE": "tflite",
+        "DOCKER_IMAGE_BASE_TFLITE": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).tflite",
+        "SERVICE_NAME_TFLITE": "$(EDGE_OWNER).$(EDGE_DEPLOY).tflite",
+        "SERVICE_VERSION_TFLITE": "1.0.0",
+        "IMAGE_NAME_VINO": "vino",
+        "DOCKER_IMAGE_BASE_VINO": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).vino",
+        "SERVICE_NAME_VINO": "$(EDGE_OWNER).$(EDGE_DEPLOY).vino",
+        "SERVICE_VERSION_VINO": "1.0.0"
+    }
+}

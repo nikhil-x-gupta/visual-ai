@@ -1,5 +1,5 @@
 #
-# openCV.py
+# vinoOpenCV.py
 #
 # Sanjeev Gupta, April 2020
 
@@ -10,14 +10,16 @@ import json
 import math
 import numpy 
 import time
+import logging
 
-class OpenCV:
+class VinoOpenCV:
     def __init__(self):
         self.frame_rate  = 1 # seed value. Will get updated
         self.tickFrequency = cv2.getTickFrequency()
         self.t1 = cv2.getTickCount()
-        self.face_cascade = cv2.CascadeClassifier('/usr/local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-        self.eye_cascade = cv2.CascadeClassifier('/usr/local/lib/python3.7/site-packages/cv2/data/haarcascade_eye.xml')
+        # haarcascade based face classifier not reliable enough
+        self.face_cascade = cv2.CascadeClassifier('/usr/local/lib/python3.6/dist-packages/cv2/data/haarcascade_frontalface_default.xml')
+        self.eye_cascade = cv2.CascadeClassifier('/usr/local/lib/python3.6/dist-packages/cv2/data/haarcascade_eye.xml')
         
     def getFrameRate(self):
         return self.frame_rate
@@ -33,42 +35,41 @@ class OpenCV:
         
         return frame_faces, frame_gray
 
-    def getFrame(self, config, detector, videostream):
+    def getFrame(self, config, videostream, n, c, h, w):
         self.t1 = cv2.getTickCount()
-        frame_read = videostream.read()
-        frame_current = frame_read.copy()
-        frame_rgb = cv2.cvtColor(frame_current, cv2.COLOR_BGR2RGB)
-        frame_resize = cv2.resize(frame_rgb, (detector.getWidth(), detector.getHeight()))
 
         frame_faces = None
         frame_gray = None
-        if config.shouldDetectFace() or config.shouldBlurFace():
-            frame_faces, frame_gray = self.faceDetector(frame_current)
-            
-        # Condition and Normalize pixel values
-        frame_norm = numpy.expand_dims(frame_resize, axis=0)
-        if detector.getFloatingModel():
-            frame_norm = (numpy.float32(frame_norm) - config.getInputMean()) / config.getInputStd()
+        frame_norm = None
+        
+        images = numpy.ndarray(shape=(n, c, h, w))
+        images_hw = []
+        for i in range(n):
+            frame_read = videostream.read()
+            frame_current = frame_read.copy()
+            image = frame_read.copy()
+            ih, iw = image.shape[:-1]
+            images_hw.append((ih, iw))
+            if (ih, iw) != (h, w):
+                image = cv2.resize(image, (w, h))
+            image = image.transpose((2, 0, 1))  # Change data layout from HWC to CHW
+            images[i] = image
 
-        return frame_current, frame_norm, frame_faces, frame_gray
+        return frame_current, frame_norm, frame_faces, frame_gray, images, images_hw
 
-    def annotateFrame(self, config, detector, opencv, frame_current, src_name, frame_faces, frame_gray, boxes, classes, scores, num):
+    def annotateFrame(self, config, frame_current, src_name, frame_faces, frame_gray, boxes_dict, classes_dict, scores_dict):
         entities_dict = {}
-        for i in range(len(scores)):
-            if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
-                
-                imageH, imageW, _ = frame_current.shape
-
-                # Get bounding box coordinates and draw box
-                ymin = int(max(1, (boxes[i][0] * imageH)))
-                xmin = int(max(1, (boxes[i][1] * imageW )))
-                ymax = int(min(imageH, (boxes[i][2] * imageH)))
-                xmax = int(min(imageW, (boxes[i][3] * imageW)))
-                cv2.rectangle(frame_current, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
+        for imid in classes_dict:
+            for box in boxes_dict[imid]:
+                xmin = box[0]
+                ymin = box[1]
+                xmax = box[2]
+                ymax = box[3]
+                cv2.rectangle(frame_current, (xmin, ymin), (xmax, ymax), (232, 35, 244), 2)
 
                 # Draw label
-                object_name = detector.getLabels()[int(classes[i])]
-                label = '%s: %d%%' % (object_name,  int(scores[i] * 100))
+                object_name = config.getObjectName()
+                label = '%s: %d%%' % (object_name,  int(scores_dict[imid][0] * 100))
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
                 label_ymin = max(ymin, labelSize[1] + 8)
                 cv2.rectangle(frame_current, (xmin, label_ymin - labelSize[1] - 10), (xmin + labelSize[0], label_ymin + baseLine - 10), (255, 255, 255), cv2.FILLED)
@@ -80,14 +81,14 @@ class OpenCV:
                 else:
                     entities_dict[object_name] = details
 
-                h = int(ymax-ymin)
                 w = int(xmax-xmin)
+                h = int(ymax-ymin)
                 detail_dict = {}
                 detail_dict['h'] = h 
                 detail_dict['w'] = w
-                detail_dict['cx'] = int(xmin + w/2)
-                detail_dict['cy'] = int(ymin + h/2)
-                detail_dict['confidence'] = float('{0:.2f}'.format(scores[i]))
+                detail_dict['cx'] = int(box[0] + w/2)
+                detail_dict['cy'] = int(box[1] + h/2)
+                detail_dict['confidence'] = float('{0:.2f}'.format(scores_dict[imid][0]))
                 details.append(detail_dict)
 
                 if frame_faces is not None:
@@ -156,7 +157,26 @@ class OpenCV:
         bgColor = [15, 15, 15]
         fullFrame = cv2.copyMakeBorder(fullFrame, 0, 60, 0, 0, cv2.BORDER_CONSTANT, value=bgColor)
 
-        status_text = "Detect Face: "
+        status_text = "Overlay: "
+        if config.shouldShowOverlay():
+            status_text += "YES"
+        else:
+           status_text += "NO "
+
+        status_text += "       Publish Kafka: "
+        if config.shouldPublishKafka():
+            status_text += "YES"
+        else:
+           status_text += "NO "
+           
+        status_text += "       Publish Stream: "
+        if config.shouldPublishStream():
+            status_text += "YES"
+        else:
+           status_text += "NO "
+
+        '''
+        status_text = "       Detect Face: "
         if config.shouldDetectFace():
             status_text += "YES"
         else:
@@ -167,12 +187,7 @@ class OpenCV:
             status_text += "YES"
         else:
             status_text += "NO "
-            
-        status_text += "       Publish Kafka: "
-        if config.shouldPublishKafka():
-            status_text += "YES"
-        else:
-           status_text += "NO"
+        '''    
             
         if ncols == 1:
             font_scale = 1

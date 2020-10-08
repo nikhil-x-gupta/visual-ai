@@ -9,7 +9,7 @@ export ARCH ?= $(shell hzn architecture)
 
 all: publish deploy-policy
 
-publish: publish-http publish-mms publish-tflite 
+publish: publish-http publish-mms publish-tflite publish-vino deploy-policy
 
 publish-http:
 	make -C src/http
@@ -22,11 +22,17 @@ publish-mms:
 	make -C src/mms publish-service
 
 publish-tflite:
-	make -C src/tflite
-	make -C src/tflite push
-	make -C src/tflite publish-service
+	make -C src/infer tflite-build
+	make -C src/infer tflite-push
+	make -C src/infer tflite-publish-service
+
+publish-vino:
+	make -C src/infer vino-build
+	make -C src/infer vino-push
+	make -C src/infer vino-publish-service
 
 deploy-policy:
 	make -C src/mms deploy-policy
-	make -C src/tflite deploy-policy
+	make -C src/infer tflite-deploy-policy
+	make -C src/infer vino-deploy-policy
 

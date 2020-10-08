@@ -20,7 +20,7 @@
     },
     {
 	"org": "$HZN_ORG_ID",
-	"url": "$EDGE_OWNER.$EDGE_DEPLOY.vino",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.tflite",
 	"versionRange": "[0.0.0,INFINITY)",
 	"variables": {
             "DEVICE_ID"                : "$DEVICE_ID",

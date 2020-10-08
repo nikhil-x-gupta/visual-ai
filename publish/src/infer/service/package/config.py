@@ -13,7 +13,8 @@ import requests
 import time
 
 class Config:
-    def __init__(self, resolution=(640, 480), framerate=30):
+    def __init__(self, isTFLite, resolution=(640, 480), framerate=30):
+        self.isTFLite  = isTFLite
         self.resolution = resolution
         self.framerate = framerate
 
@@ -26,18 +27,11 @@ class Config:
         self.env_dict = {}
         self.env_dict['SHOW_OVERLAY'] = os.environ['SHOW_OVERLAY'] if 'SHOW_OVERLAY' in os.environ else True
         self.env_dict['DETECT_FACE'] = os.environ['DETECT_FACE'] if 'DETECT_FACE' in os.environ else True
-        self.env_dict['BLUR_FACE'] = os.environ['BLUR_FACE'] if 'BLUR_FACE' in os.environ else True
+        self.env_dict['BLUR_FACE'] = os.environ['BLUR_FACE'] if 'BLUR_FACE' in os.environ else False
         self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] if 'PUBLISH_KAFKA' in os.environ else False
         self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] if 'PUBLISH_STREAM' in os.environ else True
 
-        # os.path.join - leading / only for the first path. NO leading / in sub paths
-        self.defaultModelDir = "/model"
-        self.defaultModel = "detect.tflite"
-        self.defaultLabelmap = "labelmap.txt"
-
         self.modelDir = None
-        self.model = None
-        self.labelmap = None
 
         self.modelObjectType = None
         self.modelObjectId = None
@@ -46,6 +40,65 @@ class Config:
         self.modelVersion = None
 
         self.modelUpdatedAt = datetime.datetime.now()
+
+        if self.isTFLite:
+            self.setTFLiteDefaults()
+        else:
+            self.setVinoDefaults()
+
+        print ("{:.7f} Config initialized".format(time.time()))
+
+    def getIsTFLite(self):
+        return self.isTFLite
+
+    # os.path.join - leading / only for the first path. NO leading / in sub paths
+    def setTFLiteDefaults(self):
+        self.modelTFLite = None
+        self.labelmap = None
+        self.defaultModelDir = os.environ['APP_MODEL_DIR']
+        self.defaultModelTFLite = os.environ['APP_MODEL_TFLITE']
+        self.defaultLabelmap = os.environ['APP_MODEL_LABELMAP']
+        self.tool = "TensorFlow Lite OpenCV"
+
+    def setVinoDefaults(self):
+        self.modelXML = None
+        self.modelBin = None
+        self.defaultModelDir = os.environ['APP_MODEL_DIR']
+        self.defaultModelXML = os.environ['APP_MODEL_XML']
+        self.defaultModelBin = os.environ['APP_MODEL_BIN']
+        self.tool = "OpenVINO OpenCV"
+        self.modelObjectId = self.defaultModelXML.split('.')[0]
+        self.objectName = "Face"
+
+    def getObjectName(self):
+        return self.objectName
+
+    def getModelDir(self):
+        return self.defaultModelDir if self.modelDir is None else self.modelDir
+
+    def getModelTFLite(self):
+        return self.defaultModelTFLite if self.modelTFLite is None else self.modelTFLite
+
+    def getLabelmap(self):
+        return self.defaultLabelmap if self.labelmap is None else self.labelmap
+
+    def getModelXML(self):
+        return self.defaultModelXML if self.modelXML is None else self.modelXML
+
+    def getModelBin(self):
+        return self.defaultModelBin if self.modelBin is None else self.modelBin
+
+    def getModelPathTFLite(self):
+        return os.path.join(self.getModelDir(), self.getModelTFLite())
+
+    def getLabelmapPath(self):
+        return os.path.join(self.getModelDir(), self.getLabelmap())
+
+    def getModelPathVinoXML(self):
+        return os.path.join(self.getModelDir(), self.getModelXML())
+
+    def getModelPathVinoBin(self):
+        return os.path.join(self.getModelDir(), self.getModelBin())
 
     def getRTSPStreams(self):
         rtspStr = os.environ['RTSP_STREAMS'] if 'RTSP_STREAMS' in os.environ else ''
@@ -59,7 +112,7 @@ class Config:
         return x
 
     def getViewColumn(self):
-        return int(os.environ['VIEW_COLUMN'] if 'VIEW_COLUMN' in os.environ else '1')
+        return int(os.environ['VIEW_COLUMN'] if 'VIEW_COLUMN' in os.environ else '3')
 
     def getBlankFrame(self):
         return self.blankFrame
@@ -71,6 +124,7 @@ class Config:
             if vcap.read()[0]:
                 deviceSources.append(source)
                 vcap.release()
+                time.sleep(1) 
 
         return deviceSources
 
@@ -80,19 +134,26 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
+    # uses network:host . Use host network IP
     def getMMSConfigProviderUrl(self):
-        url = "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
-        return url
+        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
 
+    # uses network:host . Use host network IP
     def getMMSModelProviderUrl(self):
-        url = "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsmodel"
-        return url
+        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsmodel"
 
-    def getPublishPayloadKafkaUrl(self):
-        return os.environ['HTTP_PUBLISH_KAFKA_URL'] if 'HTTP_PUBLISH_KAFKA_URL' in os.environ else 'Missing HTTP_PUBLISH_KAFKA_URL'
-
+    # Vino container uses network:host , so use host network IP . TFLite container uses default bridge network, so use netowrk alias
     def getPublishPayloadStreamUrl(self):
-        return os.environ['HTTP_PUBLISH_STREAM_URL'] if 'HTTP_PUBLISH_STREAM_URL' in os.environ else 'Missing HTTP_PUBLISH_STREAM_URL'
+        if self.isTFLite:
+            return os.environ['HTTP_PUBLISH_STREAM_URL'] if 'HTTP_PUBLISH_STREAM_URL' in os.environ else 'Missing HTTP_PUBLISH_STREAM_URL'
+        else: #network = host vino
+            return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":5000/publish/stream"
+            
+    def getPublishPayloadKafkaUrl(self):
+        if self.isTFLite:
+            return os.environ['HTTP_PUBLISH_KAFKA_URL'] if 'HTTP_PUBLISH_KAFKA_URL' in os.environ else 'Missing HTTP_PUBLISH_KAFKA_URL'
+        else: #network = host vino
+            return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":5000/publish/kafka"
 
     def getMinConfidenceThreshold(self):
         return float(os.environ['MIN_CONFIDENCE_THRESHOLD'] if 'MIN_CONFIDENCE_THRESHOLD' in os.environ else "0.6")
@@ -125,22 +186,7 @@ class Config:
         return self.resolution[1]
 
     def getTool(self):
-        return "OpenCV TensorFlow Lite"
-
-    def getModelDir(self):
-        return self.defaultModelDir if self.modelDir is None else self.modelDir
-
-    def getModel(self):
-        return self.defaultModel if self.model is None else self.model
-
-    def getLabelmap(self):
-        return self.defaultLabelmap if self.labelmap is None else self.labelmap
-
-    def getModelPath(self):
-        return os.path.join(self.getModelDir(), self.getModel())
-
-    def getLabelmapPath(self):
-        return os.path.join(self.getModelDir(), self.getLabelmap())
+        return self.tool
 
     def getInputMean(self):
         return 127.5
@@ -149,13 +195,15 @@ class Config:
         return 127.5
 
     def getStatusText(self):
-        #   return "Default" if self.modelObjectId is None else self.modelObjectId
-        ts = self.modelUpdatedAt.strftime("%Y-%m-%d %H:%M:%S")
-        if self.modelObjectId is None:
-            return "Default" + " " + ts
+        if self.isTFLite:
+            ts = self.modelUpdatedAt.strftime("%Y-%m-%d %H:%M:%S")
+            if self.modelObjectId is None:
+                return "Default" + " " + ts
+            else:
+                return self.modelObjectId + " " + ts
         else:
-            return self.modelObjectId + " " + ts
-    
+            return self.modelObjectId
+
     def mmsConfig(self):
         url = self.getMMSConfigProviderUrl()
         try:
@@ -181,7 +229,8 @@ class Config:
         except requests.exceptions.HTTPError as errh:
             print ("Http Error:", errh)
         except requests.exceptions.ConnectionError as errc:
-            print ("Error Connecting:", errc)
+            None
+            #print ("Error Connecting:", errc)
         except requests.exceptions.Timeout as errt:
             print ("Timeout Error:", errt)
         except requests.exceptions.RequestException as err:
@@ -195,26 +244,28 @@ class Config:
             dict = resp.json()
             if dict['mms_action'] == 'updated':
                 value_dict = dict['value']
-                self.modelObjectType = value_dict['OBJECT_TYPE']
-                self.modelObjectId = value_dict['OBJECT_ID']
-                self.modelNet = value_dict['MODEL_NET']
-                self.modelFmwk = value_dict['MODEL_FMWK']
-                self.modelVersion = value_dict['MODEL_VERSION']
-                self.modelDir = value_dict['MODEL_DIR']
+                if self.isTFLite:
+                    self.modelObjectId = value_dict['OBJECT_ID']
+                    self.modelObjectType = value_dict['OBJECT_TYPE']
+                    self.modelNet = value_dict['MODEL_NET']
+                    self.modelFmwk = value_dict['MODEL_FMWK']
+                    self.modelVersion = value_dict['MODEL_VERSION']
+                    self.modelDir = value_dict['MODEL_DIR']
 
-                files = value_dict['FILES'].split(" ")
-                for file in files:
-                    if(file.startswith("labelmap.")):
-                        self.labelmap = file
-                    elif(file.endswith(".tflite")):
-                        self.model = file
+                    files = value_dict['FILES'].split(" ")
+                    for file in files:
+                        if(file.startswith("labelmap.")):
+                            self.labelmap = file
+                        elif(file.endswith(".tflite")):
+                            self.model = file
 
-                self.modelUpdatedAt = datetime.datetime.now()
+                    self.modelUpdatedAt = datetime.datetime.now()
 
         except requests.exceptions.HTTPError as errh:
             print ("Http Error:", errh)
         except requests.exceptions.ConnectionError as errc:
-            print ("Error Connecting:", errc)
+            None
+            #print ("Error Connecting:", errc)
         except requests.exceptions.Timeout as errt:
             print ("Timeout Error:", errt)
         except requests.exceptions.RequestException as err:
@@ -223,7 +274,6 @@ class Config:
     def mmsProcessor(self):
         while True:
             time.sleep(1)
-            #if self.shouldRefreshModel is None:
             self.mmsConfig()
             time.sleep(1)
             self.mmsModel()

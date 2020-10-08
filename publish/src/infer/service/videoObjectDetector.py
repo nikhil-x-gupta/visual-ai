@@ -1,5 +1,5 @@
 #
-# tfliteVideoObjectDetector.py
+# videoObjectDetector.py
 #
 # An implementation using IBM Edge Application Manager (IEAM) to deploy container workloads on edge nodes
 #
@@ -26,22 +26,38 @@
 # - Result visualization in grafana after processing via cloud function
 # - Separate threads for MMS based configuration and model updates
 
-from package.tfdetect import Config
-from package import VideoSourceProcessor
+from package import Config
+from package.video import VideoSourceProcessor
+
+import importlib.util
+import os
+import time
 
 if __name__ == '__main__':
 
-    videoSourceProcessor = None
-    config = Config(resolution=(640, 480), framerate=30)
+    print ("{:.7f} Entered main".format(time.time()))
+    print ("{:.7f} {}".format(time.time(), os.environ['DEVICE_IP_ADDRESS']))
 
-    sources = []
-    sources.extend(config.discoverVideoDeviceSources(8)) # Max number of /dev/videoX to discover for
+    isTFLite = importlib.util.find_spec('tflite_runtime')
+
+    config = Config(isTFLite, resolution=(640, 480), framerate=30)
+
+    videoSourceProcessor = None
+
+    devices = []
+    devices.extend(config.discoverVideoDeviceSources(8)) # Max number of /dev/videoX to discover for
 
     rtsps = config.getRTSPStreams() # A list of RTSP sources passed to container via user-input
     if rtsps is not None:
-        sources.extend(rtsps)
+        devices.extend(rtsps)
 
     index = 0
+
+    # If TFLite then process many video and RTSP feeds, but for vino on MYRIAD process one device camera for now
+    #sources = devices if isTFLite  else [devices[0]]
+    sources = devices
+    threaded = True
+
     for source in sources:
         src_sfx = "    " + source if str(source).startswith("rtsp:") else "    /dev/video" + str(source)
         sourceName = "Camera " + str(index + 1) + src_sfx
@@ -50,7 +66,7 @@ if __name__ == '__main__':
         else:
             videoSourceProcessor.addVideoSource(sourceName, source)
 
-        videoSourceProcessor.processThread(index)
+        videoSourceProcessor.processThread(index, threaded)
         index += 1
 
     if videoSourceProcessor is not None:

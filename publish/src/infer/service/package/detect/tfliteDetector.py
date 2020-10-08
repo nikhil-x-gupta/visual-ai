@@ -1,25 +1,30 @@
 #
-# detector.py
+# tfliteDetector.py
 #
 # Sanjeev Gupta, April 2020
 
 import importlib.util
 import numpy
 import time
-from tflite_runtime.interpreter import Interpreter
 
-class Detector:
+class TFLiteDetector:
     def __init__(self, config):
-        self.inference_interval = 0
-        self.interpreter = Interpreter(model_path=config.getModelPath())
-        self.interpreter.allocate_tensors()
-        self.modelPath = config.getModelPath()
+        spec = importlib.util.find_spec('tflite_runtime')
+        if spec:
+            from tflite_runtime.interpreter import Interpreter
 
-        #Fix label content
-        with open(config.getLabelmapPath(), 'r') as f:
-            self.labels = [line.strip() for line in f.readlines()]
-        if self.labels[0] == '???':
-            del(self.labels[0])
+            self.interpreter = Interpreter(model_path=config.getModelPathTFLite())
+            self.interpreter.allocate_tensors()
+
+            self.modelPath = config.getModelPathTFLite()
+            self.inference_interval = 0
+
+            #Fix label content
+            with open(config.getLabelmapPath(), 'r') as f:
+                self.labels = [line.strip() for line in f.readlines()]
+
+            if self.labels[0] == '???':
+                del(self.labels[0])
 
     def getModelPath(self):
         return self.modelPath

@@ -37,24 +37,19 @@ server = Flask(__name__)
 g_stream_frame = None
 g_lock = threading.Lock()
 
-def generate_stream_MJPEG_WIP():
-    global g_stream_frame, g_lock
-    
-    count = 0
-    while True:
-        with g_lock:
-            if g_stream_frame is None:
-                image_name = 'test-image-' + str(count) + '.jpg'
-                image_path = os.path.join('/static', image_name)
-                with open(image_path, "rb") as image:
-                    frame_read = image.read()
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + frame_read + b'\r\n')
-                time.sleep(0.1)            
-                return
-            else:
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + g_stream_frame + b'\r\n')
+def generate_still_wget():
+    global g_stream_frame
+
+    if g_stream_frame is not None:
+        b64_frame = (base64.b64encode(g_stream_frame)).decode('utf8')
+        yield (b64_frame)
+
+def generate_still_test():
+    global g_stream_frame
+
+    if g_stream_frame is not None:
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + g_stream_frame + b'\r\n')
 
 def generate_stream_MJPEG():
     global g_stream_frame, g_lock
@@ -84,6 +79,14 @@ def stream_video():
 @server.route('/stream')
 def stream():
     return render_template('stream.html')
+
+@server.route('/test')
+def test():
+    return Response(generate_still_test(), mimetype = "multipart/x-mixed-replace; boundary=frame")
+
+@server.route('/wget')
+def test_wget():
+    return Response(generate_still_wget(), mimetype = "image/jpeg")
 
 # Default URL http://<ip-address>:5000/
 @server.route('/')
@@ -159,30 +162,35 @@ def update_config_policy():
 
         config_d = {}
 
-        if request.json["overlay"]:
-            config_d['SHOW_OVERLAY'] = 'true'
-        else:
-            config_d['SHOW_OVERLAY'] = 'false'
+        if "overlay" in request.json:
+            if request.json["overlay"]:
+                config_d['SHOW_OVERLAY'] = 'true'
+            else:
+                config_d['SHOW_OVERLAY'] = 'false'
 
-        if request.json["face"]:
-            config_d['DETECT_FACE'] = 'true'
-        else:
-            config_d['DETECT_FACE'] = 'false'
+        if "face" in request.json:
+            if request.json["face"]:
+                config_d['DETECT_FACE'] = 'true'
+            else:
+                config_d['DETECT_FACE'] = 'false'
 
-        if request.json["blur"]:
-            config_d['BLUR_FACE'] = 'true'
-        else:
-            config_d['BLUR_FACE'] = 'false'
+        if "blur" in request.json:
+            if request.json["blur"]:
+                config_d['BLUR_FACE'] = 'true'
+            else:
+                config_d['BLUR_FACE'] = 'false'
 
-        if request.json["kafka"]:
-            config_d['PUBLISH_KAFKA'] = 'true'
-        else:
-            config_d['PUBLISH_KAFKA'] = 'false'
+        if "kafka" in request.json:
+            if request.json["kafka"]:
+                config_d['PUBLISH_KAFKA'] = 'true'
+            else:
+                config_d['PUBLISH_KAFKA'] = 'false'
     
-        if request.json["stream"]:
-            config_d['PUBLISH_STREAM'] = 'true'
-        else:
-            config_d['PUBLISH_STREAM'] = 'false'
+        if "stream" in request.json:
+            if request.json["stream"]:
+                config_d['PUBLISH_STREAM'] = 'true'
+            else:
+                config_d['PUBLISH_STREAM'] = 'false'
 
         # Always on Forcing PUBLISH_STREAM : TODO: Consider removing
         config_d['PUBLISH_STREAM'] = 'true'

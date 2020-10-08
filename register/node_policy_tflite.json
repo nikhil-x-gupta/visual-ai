@@ -3,7 +3,7 @@
       { "name": "owner",  "value": "sg.edge" },
       { "name": "deploy",  "value": "example.visual" },
       { "name": "mms", "value": true },
-      { "name": "vino", "value": true },
+      { "name": "tflite", "value": true },
       { "name": "openhorizon.allowPrivileged", "value": true }
   ],
   "constraints": [

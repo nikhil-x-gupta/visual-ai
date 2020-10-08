@@ -5,8 +5,10 @@
 #
 
 usage() {                      
-  echo "Usage: $0 -e -r -u -p -l"
+  echo "Usage: $0 -e -k -r -u -p -l"
   echo "where "
+  echo "   -e file path to environemnt veriables "
+  echo "   -k framework tflite | vino "
   echo "   -r register "
   echo "   -u unregister "
   echo "   -p pattern based deployment "
@@ -21,6 +23,19 @@ fn_chk_env() {
     if [ -z $HZN_EXCHANGE_USER_AUTH ]; then 
 	echo "Must set HZN_EXCHANGE_USER_AUTH in ENV file "
     fi
+}
+
+fn_register_with_policy() {
+    echo "Registering with ... "
+    echo "   node_policy_${FMWK}.json"
+    echo "   user-input-app-${FMWK}.json"
+
+    . $envvar
+
+    fn_chk_env
+
+    hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
+    hzn register --policy=node_policy_${FMWK}.json --input-file user-input-app-${FMWK}.json
 }
 
 fn_register_with_mms_pattern() {
@@ -49,17 +64,6 @@ fn_register_with_pattern() {
     hzn register --pattern "${HZN_ORG_ID}/pattern-${EDGE_OWNER}.${EDGE_DEPLOY}.tflite-${ARCH}" --input-file user-input-app.json --policy=node_policy_privileged.json
 }
 
-fn_register_with_policy() {
-    echo "Registering with policy... "
-
-    . $envvar
-
-    fn_chk_env
-
-    hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
-    hzn register --policy=node_policy.json --input-file user-input-app.json
-}
-
 fn_unregister() {
     echo "Un-registering... "
 
@@ -70,22 +74,24 @@ fn_unregister() {
     hzn unregister -vrD
 }
 
-while getopts 'e:ruplm' option; do
+while getopts 'e:k:rlupm' option; do
   case "$option" in
     h) usage
        exit 1
        ;;
     e) envvar=$OPTARG
        ;;
+    k) FMWK=$OPTARG
+       ;;
     r) register=1
+       ;;
+    l) policy=1
        ;;
     u) unregister=1
        ;;
     p) pattern=1
        ;;
     m) mmspattern=1
-       ;;
-    l) policy=1
        ;;
     :) printf "missing argument for -%s\n" "$OPTARG" >&2
        usage
@@ -102,6 +108,22 @@ shift $((OPTIND - 1))
 if [ -z $envvar ]; then
     echo ""
     echo "Must provide one of the options to set ENV vars ENV_HZN_DEV, ENV_HZN_DEMO etc"
+    echo ""
+    usage
+    exit 1
+fi
+
+if [ -z $FMWK ]; then
+    echo ""
+    echo "Must provide one of the options to set framework vino | tflite"
+    echo ""
+    usage
+    exit 1
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ]; then
+    echo "Framework $FMWK"
+else
+    echo ""
+    echo "Must provide one of the options to set framework vino | tflite"
     echo ""
     usage
     exit 1
