@@ -1,4 +1,6 @@
-## IBM Edge Application Manager (IEAM) - Edge deployment of container workload and ML model
+## IBM Edge Application Manager (IEAM)
+### Edge deployment of container workload and ML model
+
 TensorFlow Lite, OpenVINO based Machine Inferencing and Object Detection
 
 IEAM + MMS + OpenCV + Tensorflow Lite + OpenVINO + Python 
