@@ -67,9 +67,10 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
     export APP_MMS_OBJECT_TYPE_MODEL="tflite-mmsmodel"
     export APP_MMS_OBJECT_SERVICE_NAME_MODEL="$EDGE_OWNER.$EDGE_DEPLOY.mms"
     
+    # face detection disabled for now as haarscascade based detection is not reliable
     export SHOW_OVERLAY=true # false to hide OVERLAY
     export DETECT_FACE=false
-    export BLUR_FACE=true
+    export BLUR_FACE=false
     export PUBLISH_KAFKA=false # To send kafka stream
     export PUBLISH_STREAM=true # to send local mjpeg stream and view in browser
 
@@ -92,12 +93,16 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
 
     hzn mms object publish -t tflite-mmsmodel -i <net>-<framework>-<x.y.z>-mms -f <model-file-with-labelmap>
 
-### Register node - NUC (amd64)
-Use script to register node
+### Register node with TensorFlow lite NUC (amd64), RPI (arm32)
+    
+    hzn register --policy=node_policy_tflite.json --input-file user_input_app_tflite.json
 
-policy
+### Register node  
+If using script to register node
 
-    ./node_register_app.sh -e ENV_TFVISUAL_DEV -r -l
+    ./node_register_app.sh -e ENV_TFLITE -k tflite -r -l
+    
+    ./node_register_app.sh -e ENV_VINO -k vino -r -l
 
 ### Research, reference and acknowledgement
 
