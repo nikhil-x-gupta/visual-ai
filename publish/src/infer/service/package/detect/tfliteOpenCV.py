@@ -157,11 +157,23 @@ class TFLiteOpenCV:
         bgColor = [15, 15, 15]
         fullFrame = cv2.copyMakeBorder(fullFrame, 0, 60, 0, 0, cv2.BORDER_CONSTANT, value=bgColor)
 
-        status_text = "Publish Kafka: "
+        status_text = "Overlay: "
+        if config.shouldShowOverlay():
+            status_text += "YES"
+        else:
+           status_text += "NO "
+
+        status_text += "       Publish Kafka: "
         if config.shouldPublishKafka():
             status_text += "YES"
         else:
-           status_text += "NO"
+           status_text += "NO "
+           
+        status_text += "       Publish Stream: "
+        if config.shouldPublishStream():
+            status_text += "YES"
+        else:
+           status_text += "NO "
 
         '''
         status_text = "       Detect Face: "
