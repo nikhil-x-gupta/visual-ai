@@ -1,7 +1,7 @@
-## IBM Edge Application Manager (IEAM) - 
-TensorFlow Lite, OpenVINO based Object Detection
+## IBM Edge Application Manager (IEAM) - Edge deployment of container workload and ML model
+TensorFlow Lite, OpenVINO based Machine Inferencing and Object Detection
 
-IEAM + MMS + OpenCV + Tensorflow Lite + OpenVINO + Python
+IEAM + MMS + OpenCV + Tensorflow Lite + OpenVINO + Python 
 
 ### Introduction
 
@@ -96,9 +96,10 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
 
     hzn mms object publish -t tflite-mmsmodel -i <net>-<framework>-<x.y.z>-mms -f <model-file-with-labelmap>
 
-### Register node with TensorFlow lite NUC (amd64), RPI (arm32)
+### Register node using framework TensorFlow lite NUC (amd64), RPI (arm32)
     
     hzn register --policy=node_policy_tflite.json --input-file user_input_app_tflite.json
+    hzn register --policy=node_policy_vino.json --input-file user_input_app_vino.json
 
 ### Register node  
 If using script to register node
@@ -107,10 +108,9 @@ If using script to register node
     
     ./node_register_app.sh -e ENV_VINO -k vino -r -l
 
-
 ### View result 
 
-- Streaming output view in a browser
+- View streaming output in a browser 
     http://<local-ip-address>:5000/stream
     
 - Take spanpshot of annotated frame
