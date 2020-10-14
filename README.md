@@ -1,6 +1,7 @@
-## IBM Edge Application Manager (IEAM) - OpenCV and TensorFlow Lite based Object Detection
+## IBM Edge Application Manager (IEAM) - 
+TensorFlow Lite, OpenVINO based Object Detection
 
-IEAM + MMS + OpenCV + Tensorflow Lite + Python
+IEAM + MMS + OpenCV + Tensorflow Lite + OpenVINO + Python
 
 ### Introduction
 
@@ -10,6 +11,8 @@ A python based implementation using three containers with detection time below <
 - Http and kafka message bridge
 - MJPEG based streaming available on http:<edge-device-ip-address:5000> 
 - A simple  Web UI to interactivly upload config using MMS to edge nodes.
+- Frameworks - TensorFlow Lite and OpenVINO
+- Intel Neural Compute Stick 2 + Movidius MyriadX VPU
 
 #### Build, Publish and Use in a shared IEAM environment
 
@@ -104,6 +107,21 @@ If using script to register node
     
     ./node_register_app.sh -e ENV_VINO -k vino -r -l
 
+
+### View result 
+
+- Streaming output view in a browser
+    http://<local-ip-address>:5000/stream
+    
+- Take spanpshot of annotated frame
+    http://<local-ip-address>:5000/test
+    
+- Get a file output locally (to test on the local machine)
+    
+        wget http://<local-ip-address>:5000/wget
+    
+        cat wget | base64 -d > wget.jpg
+
 ### Research, reference and acknowledgement
 
   https://opencv.org
@@ -113,6 +131,8 @@ If using script to register node
   https://github.com/EdjeElectronics/TensorFlow-Object-Detection-on-the-Raspberry-Pi
   
   https://stackoverflow.com/questions/tagged/tensorflow
+  
+  OpenVINO
     
     
 
