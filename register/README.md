@@ -8,7 +8,7 @@
   
 2. Copy node_policy_tflite.json and user_input_app_tflite.json locally
   
-3. Setup ENV variables
+3. Setup ENV variables. Add all of the following *export* in a file and *source* them before registrering the node.
 ### ENVIRONMENT variables
 
 Must define following ENVIRONMENT variables to build application, add policies and register edge node. Preferebly save in the script directory and use when invoking device registration. 
