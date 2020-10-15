@@ -53,6 +53,8 @@ Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different d
     export BLUR_FACE=false
     export PUBLISH_KAFKA=false # To send kafka stream
     export PUBLISH_STREAM=true # to send local mjpeg stream and view in browser
+    
+    export VIEW_COLUMN=1
 
 #### RTSP Streams
 
