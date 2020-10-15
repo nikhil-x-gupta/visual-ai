@@ -4,9 +4,9 @@
 
         hostname -i
         
-  It should not be the local loopback address. If that is the case then edit */etc/hosts* and make an entry like 
+  It should not be the local loopback address. If that is the case then edit */etc/hosts* and make an entry for your hostnaame 
 
-        *ip-address hostname* 
+        <ip-address> <hostname> 
         
   Verify the result of the above command again.
   
