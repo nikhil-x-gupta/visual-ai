@@ -15,10 +15,8 @@ Must define following ENVIRONMENT variables to build application, add policies a
 
 Enviornment variables EDGE_OWNER, EDGE_DEPLOY provide flexiblity for different developers to use the same exchange without clobering over each other.
 
-    export EDGE_OWNER=<a-two-or-three-letter-distinctive-initial-of-your-name>  # sg.dev  
-    export EDGE_DEPLOY=<deploy-target> # e.g: example.tfvisual
-
-    export DOCKER_BASE=<docker-base> # e.g. Change this this your docker base 
+    export EDGE_OWNER=sg.edge  
+    export EDGE_DEPLOY=example.visual
 
 #### IEAM specific
 
