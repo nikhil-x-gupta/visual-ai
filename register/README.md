@@ -4,7 +4,11 @@
 
         hostname -i
         
-  It should not be the local loopback address. If that is the case then edit /etc/hosts and make an entry like *ip-address hostname* and verify the result of the above command again.
+  It should not be the local loopback address. If that is the case then edit */etc/hosts* and make an entry like 
+
+        *ip-address hostname* 
+        
+  Verify the result of the above command again.
   
 2. Copy node_policy_tflite.json and user_input_app_tflite.json locally
   
