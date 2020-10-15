@@ -5,9 +5,9 @@
 
 from threading import Thread
 
+import numpy 
 import cv2
 import datetime
-import numpy 
 import os
 import requests
 import time

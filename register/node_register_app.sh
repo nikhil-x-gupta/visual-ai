@@ -28,14 +28,14 @@ fn_chk_env() {
 fn_register_with_policy() {
     echo "Registering with ... "
     echo "   node_policy_${FMWK}.json"
-    echo "   user-input-app-${FMWK}.json"
+    echo "   user_input_app_${FMWK}.json"
 
     . $envvar
 
     fn_chk_env
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
-    hzn register --policy=node_policy_${FMWK}.json --input-file user-input-app-${FMWK}.json
+    hzn register --policy=node_policy_${FMWK}.json --input-file user_input_app_${FMWK}.json
 }
 
 fn_register_with_mms_pattern() {
