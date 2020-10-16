@@ -102,10 +102,11 @@ export EVENTSTREAMS_ENHANCED_TOPIC=<your-event-stream-topic>
 export EVENTSTREAMS_API_KEY=<your-event-stream-api-key>
 export EVENTSTREAMS_BROKER_URLS="your-event-stream-brokers"
 ```
+#### 4. Set and update ENV variables
 
     source APP_ENV
 
-#### 4. Verify the content of the `json` files 
+#### 5. Verify the content of the `json` files 
 Review the output and verify that the content look complete and there is no error. 
 
     envsubst < node_policy_tflite.json | jq
@@ -116,11 +117,11 @@ Or
     envsubst < node_policy_vino.json | jq
     envsubst < user_input_app_vino.json | jq
 
-#### 5. Create node
+#### 6. Create node
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
     
-#### 6. Register node using one of the two frameworks - TensorFlow lite NUC (amd64), RPI (arm32)
+#### 7. Register node using one of the two frameworks - TensorFlow lite NUC (amd64), RPI (arm32)
     
     hzn register --policy=node_policy_tflite.json --input-file user_input_app_tflite.json
   
@@ -129,7 +130,7 @@ OR
     hzn register --policy=node_policy_vino.json --input-file user_input_app_vino.json
 
 
-#### 7. View access result by one or more methods
+#### 8. View access result by one or more methods
 
 - View streaming output in a browser 
     
