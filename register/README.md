@@ -101,9 +101,11 @@ OR
 #### 6. View access result by one or more methods
 
 - View streaming output in a browser 
+    
     http://<local-ip-address>:5000/stream
     
 - Take spanpshot of annotated frame
+    
     http://<local-ip-address>:5000/test
     
 - Get a file output locally (to test on the local machine)
