@@ -104,7 +104,7 @@ OR
     
     `http://<local-ip-address>:5000/stream`
     
-- Take spanpshot of annotated frame
+- Take snapshot of the annotated frame
     
     `http://<local-ip-address>:5000/test`
     
