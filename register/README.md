@@ -15,7 +15,7 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
 
         hostname -i
         
-   The output of above command should not be the local loopback address (e.g. 127.0.x.x) or have mutiple addresses. If that is the case then edit **/etc/hosts** and make an entry for your hostnaame 
+   The output of above command should not be the local loopback address (e.g. 127.0.x.x) or have multiple addresses. If that is the case then edit **/etc/hosts** and make an entry for your hostnaame 
 
         <ip-address> <your-hostname> 
         
