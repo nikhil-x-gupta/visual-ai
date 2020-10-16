@@ -6,7 +6,8 @@
   - An Intel NUC (x86, amd64), or Desktop or Raspberry PI4 (arm32) with at least one USB camera
    
   For OpenVINO
-    - Either have Neural Compute Stick 2 (NCS2) plugged in or Movidius VPU card in the desktop 
+  
+  - Either have Neural Compute Stick 2 (NCS2) plugged in or Movidius VPU card in the desktop 
 
 #### 1. Verify the output of the following command. 
 It should return one IP address that you use to ssh into the edge device. e.g. `192.168.x.x your-hostname`
