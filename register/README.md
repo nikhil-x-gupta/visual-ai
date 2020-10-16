@@ -101,10 +101,18 @@ export RTSP_STREAMS=rtsp://<ip-address>:<port>/rtsp,rtsp://<ip-address>:<port>/r
 export EVENTSTREAMS_ENHANCED_TOPIC=<your-event-stream-topic>
 export EVENTSTREAMS_API_KEY=<your-event-stream-api-key>
 export EVENTSTREAMS_BROKER_URLS="your-event-stream-brokers"
-
 ```
 
     source APP_ENV
+
+#### 4. Verify the content of the `json` files 
+Review the output and verify that the content look complete and there is no error. 
+
+    envsubst < node_policy_tflite.json | jq
+    envsubst < user_input_app_tflite.json | jq
+Or
+    envsubst < node_policy_vino.json | jq
+    envsubst < user_input_app_vino.json | jq
 
 #### 4. Create node
 
