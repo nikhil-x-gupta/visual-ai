@@ -1,4 +1,12 @@
-### Instruction to `Register` an edge device node 
+### Instruction to `Register` an edge device node to detect objects in a video stream
+    
+  These instructions will guide you through the steps to register an edge node to detect objects in a video stream using **TensorFlow Lite** or **OpenVINO** framework. 
+    
+#### Pre-requisite
+  - An Intel NUC (x86, amd64), or Desktop or Raspberry PI4 (arm32) with at least one USB camera
+   
+  For OpenVINO
+    - Either have Neural Compute Stick 2 (NCS2) plugged in or Movidius VPU card in the desktop 
 
 #### 1. Verify the output of the following command. 
 It should return one IP address that you use to ssh into the edge device. e.g. `192.168.x.x your-hostname`
@@ -12,8 +20,9 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
    Verify the result of the above command again.
   
 #### 2. Prepare node policy and user input files
-        
-   Copy **node_policy_tflite.json** and **user_input_app_tflite.json** locally 
+     
+   To register the edge node with TensorFlow Lite 
+   Copy `node_policy_tflite.json` and `user_input_app_tflite.json` locally 
   
 #### 3. Setup ENV variables. 
    Add all of the following **export** in a file and **source** them before registrering the node. These ENVIRONMENT variables are required to build application, add policies and register edge node. Review and provide values based on your environment.
