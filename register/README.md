@@ -1,4 +1,4 @@
-## README
+### Instruction to `Register` an edge device node 
 
 #### 1. Verify the output of the following command. 
 It should return one IP address that you use to ssh into the edge device. e.g. `192.168.x.x your-hostname`
