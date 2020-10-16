@@ -22,15 +22,16 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
   
 #### 2. Prepare node policy and user input files
      
-   To register the edge node with:
+   To prepare copy the following files from this repo on the edge node:
    
-   - TensorFlow Lite 
-   
-   Copy `node_policy_tflite.json` and `user_input_app_tflite.json` locally 
+   - For TensorFlow Lite
+        - node_policy_tflite.json 
+        - user_input_app_tflite.json
 
    - OpenVINO 
    
-   Copy `node_policy_vino.json` and `user_input_app_vino.json` locally 
+        - node_policy_vino.json
+        - user_input_app_vino.json
    
 #### 3. Setup ENV variables. 
    Add all of the following **export** in a file and **source** them before registrering the node. These ENVIRONMENT variables are required to build application, add policies and register edge node. Review and provide values based on your environment.
