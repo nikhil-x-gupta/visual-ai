@@ -3,6 +3,7 @@
   These instructions will guide you through the steps to register an edge node to detect objects in a video stream using **TensorFlow Lite** or **OpenVINO** framework. 
     
 #### Pre-requisite
+  - API-KEY from the IEAM mgmt hub admin to register the edge node.
   - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera
    
   For OpenVINO
@@ -37,9 +38,9 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
    Add all of the following **export** in a file and **source** them before registrering the node. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment.
 
 ```
-#### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service
-export EDGE_OWNER=sg.edge           # Keep this value
-export EDGE_DEPLOY=example.visual.  # Keep this value
+#### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service. Keep them as such
+export EDGE_OWNER=sg.edge           
+export EDGE_DEPLOY=example.visual 
     
 #### IEAM specific. Update values in < > brackets
 # Keep this value
