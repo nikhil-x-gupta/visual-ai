@@ -4,11 +4,11 @@
     
 #### Pre-requisite
   - API-KEY from the IEAM mgmt hub admin to register the edge node.
-  - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera
+  - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera connected.
    
   For OpenVINO
   
-  - Either have Neural Compute Stick 2 (NCS2) plugged in or Movidius VPU card in the desktop 
+  - Either have Neural Compute Stick 2 (NCS2) plugged in or Movidius VPU card in the desktop.
 
 #### 1. Verify the output of the following command. 
 It should return one IP address that you use to ssh into the edge device. e.g. `192.168.x.x your-hostname`
