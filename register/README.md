@@ -58,7 +58,7 @@ export APP_NODE_NAME=<UNIQUE-NODE-ANME>
 # Provide any arbitrary id for the node that may identify your edge-node
 export DEVICE_ID=<device-id>
 # Provide any arbitrary short name for the node 
-export DEVICE_NAME="<short device name"
+export DEVICE_NAME="<short device name>"
 # Automtically created based on work done in step 1 above.
 export DEVICE_IP_ADDRESS=`hostname -i`  
   
