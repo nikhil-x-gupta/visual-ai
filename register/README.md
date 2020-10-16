@@ -1,6 +1,7 @@
-### README
+## README
 
-1. Verify the output of following command. It should return one IP address that you use to ssh into the edge device. e.g. **e 192.168.x.x your-hostname**
+#### 1. Verify the output of the following command. 
+It should return one IP address that you use to ssh into the edge device. e.g. **e 192.168.x.x your-hostname**
 
         hostname -i
         
@@ -10,9 +11,12 @@
         
    Verify the result of the above command again.
   
-2. Copy **node_policy_tflite.json** and **user_input_app_tflite.json** locally 
+#### 2. Prepare node policy and user inout files
+        
+   Copy **node_policy_tflite.json** and **user_input_app_tflite.json** locally 
   
-3. Setup ENV variables. Add all of the following **export** in a file and **source** them before registrering the node. These ENVIRONMENT variables are required to build application, add policies and register edge node. Review and provide values based on your environment.
+#### 3. Setup ENV variables. 
+   Add all of the following **export** in a file and **source** them before registrering the node. These ENVIRONMENT variables are required to build application, add policies and register edge node. Review and provide values based on your environment.
 
 ```
 #### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service
@@ -79,19 +83,22 @@ export EVENTSTREAMS_ENHANCED_TOPIC=<your-event-stream-topic>
 export EVENTSTREAMS_API_KEY=<your-event-stream-api-key>
 export EVENTSTREAMS_BROKER_URLS="your-event-stream-brokers"
 
-'''
+```
 
-### Create node
+#### 4. Create node
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
     
-### Register node using framework TensorFlow lite NUC (amd64), RPI (arm32)
+#### 5. Register node using one of the two frameworks - TensorFlow lite NUC (amd64), RPI (arm32)
     
     hzn register --policy=node_policy_tflite.json --input-file user_input_app_tflite.json
+  
+OR
+  
     hzn register --policy=node_policy_vino.json --input-file user_input_app_vino.json
 
 
-### View result 
+### 6. View access result by one or more methods
 
 - View streaming output in a browser 
     http://<local-ip-address>:5000/stream
