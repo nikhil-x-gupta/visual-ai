@@ -1,4 +1,4 @@
-### Instruction to `Register` an edge device node to detect objects in a video stream
+#### Instructions to `Register` an edge device node to detect objects in a video stream
     
   These instructions will guide you through the steps to register an edge node to detect objects in a video stream using **TensorFlow Lite** or **OpenVINO** framework. 
     
