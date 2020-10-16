@@ -3,7 +3,7 @@
   These instructions will guide you through the steps to register an edge node to detect objects in a video stream using **TensorFlow Lite** or **OpenVINO** framework. 
     
 #### Pre-requisite
-  - An Intel NUC (x86, amd64), or Desktop or Raspberry PI4 (arm32) with at least one USB camera
+  - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera
    
   For OpenVINO
   
