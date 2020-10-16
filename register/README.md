@@ -8,7 +8,7 @@
 
         <ip-address> <your-hostname> 
         
-  Verify the result of the above command again.
+   Verify the result of the above command again.
   
 2. Copy **node_policy_tflite.json** and **user_input_app_tflite.json** locally 
   
