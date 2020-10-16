@@ -24,7 +24,7 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
      
    To prepare copy the following files from this repo on the edge node:
    
-   - For TensorFlow Lite
+   - TensorFlow Lite
         - node_policy_tflite.json 
         - user_input_app_tflite.json
 
