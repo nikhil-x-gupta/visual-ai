@@ -23,7 +23,7 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
   
 #### 2. Prepare node policy and user input files
      
-   To prepare copy the following files from this repo on the edge node:
+   Copy one of the following set of files from this repo on the edge node depending upon the framework that you want to use:
    
    - TensorFlow Lite
         - node_policy_tflite.json 
