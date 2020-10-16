@@ -11,7 +11,7 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
         
    Verify the result of the above command again.
   
-#### 2. Prepare node policy and user inout files
+#### 2. Prepare node policy and user input files
         
    Copy **node_policy_tflite.json** and **user_input_app_tflite.json** locally 
   
@@ -98,7 +98,7 @@ OR
     hzn register --policy=node_policy_vino.json --input-file user_input_app_vino.json
 
 
-### 6. View access result by one or more methods
+#### 6. View access result by one or more methods
 
 - View streaming output in a browser 
     http://<local-ip-address>:5000/stream
