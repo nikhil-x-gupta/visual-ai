@@ -35,7 +35,7 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
         - user_input_app_vino.json
    
 #### 3. Setup ENV variables. 
-   Add all of the following `**export**` in a file and **source** them in your current shell before you can register the node. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment.
+   Add all of the following `export` in a file and **source** them in your current shell before you can register the node. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment.
 
 ```
 #### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service. Keep them as such
