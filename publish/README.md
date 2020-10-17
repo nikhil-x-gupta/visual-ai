@@ -1,4 +1,4 @@
-### Development containers, services, policies and defintion files
+### Development of containers, services, policies and defintion files
 
 #### Build, Publish and Use in a shared IEAM environment
 
