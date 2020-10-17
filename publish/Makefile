@@ -1,5 +1,5 @@
 #
-# Makefile: A tensorflow lite and OpenCV based videostream object classification
+# Makefile: A tensorflow lite, OpenVINO and OpenCV based videostream object classification
 #
 
 # Checks required environment variables
