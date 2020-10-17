@@ -1,13 +1,11 @@
-# Sets the scope so that mutiple users can use the same instance
-# common is to be used for the version that is to be used by everyone
-
+# Sets the scope so that multiple users can use the same instance
 ifndef EDGE_OWNER
-$(error EDGE_OWNER is not set. Set to com or your two-letter initials e.g: export EDGE_OWNER=sg )
+$(error EDGE_OWNER is not set. Set to com or your two-letter initials e.g: export EDGE_OWNER=sg.edge )
 endif
 
 # Lets you manage and deploy different group of code across dev, demo, test, prod
 ifndef EDGE_DEPLOY
-$(error EDGE_DEPLOY is not set. Set to either dev, demo, test, prod etc. e.g: export EDGE_DEPLOY=dev )
+$(error EDGE_DEPLOY is not set. Set to either dev, demo, test, prod etc. e.g: export EDGE_DEPLOY=example.visual )
 endif
 
 # Docker base. Usually your login account
