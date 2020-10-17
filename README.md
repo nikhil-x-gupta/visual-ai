@@ -18,7 +18,7 @@ This python based example implementation uses three containers and can be deploy
 - OpenVINO
 
 ### Publish
-Development containers, services, policies and corresponding defintion files.
+Development of containers, services, policies and corresponding defintion files.
 See `publish` directory.
 
 ### Register
