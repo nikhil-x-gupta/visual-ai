@@ -10,13 +10,13 @@ Using a shared single tenant instance creates several challenges when services, 
 - Developers may have project for demo, dev, test and more ( group the assets)
 - Developers need to use their own docker repository (specify own docker account)
 
-The tooling outlined below addresses these concerns and builds on top of existing infrastructure
+The tooling outlined here addresses these issues and builds all the container images as per the specified target.
 
 ### Automated Steps
 
 Start with reviewing Makefile for targets.
 
-### Setup ENVIRONMENT variables.
+### `MUST` Setup ENVIRONMENT variables.
 See `Register` directory for all the **ENVIRONMENT** variables. `All of them` apply here as well. Create a file `APP_ENV` and source them before starting to build and publish the services.  
 
 ### Build and publish images to docker and services to IEAM exchange.
