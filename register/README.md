@@ -130,7 +130,7 @@ OR
     hzn register --policy=node_policy_vino.json --input-file user_input_app_vino.json
 
 
-#### 8. View access result by one or more methods
+#### 8. View/access result by one or more methods
 
 - View streaming output in a browser 
     
