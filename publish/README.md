@@ -17,7 +17,7 @@ The tooling outlined below addresses these concerns and builds on top of existin
 Start with reviewing Makefile for targets.
 
 ### Setup ENVIRONMENT variables.
-See Register directory for all the ENVIRONMENT variables. `All of them` apply here as well. Create a file `APP_ENV` and source them before startting to build and publish the services.  
+See `Register` directory for all the **ENVIRONMENT** variables. `All of them` apply here as well. Create a file `APP_ENV` and source them before startting to build and publish the services.  
 
 ### Build and publish images to docker and services to IEAM exchange.
 
