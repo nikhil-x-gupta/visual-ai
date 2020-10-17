@@ -142,6 +142,6 @@ OR
     
 - Get a file output locally (to test on the local edge node)
     
-      wget http://<local-ip-address>:5000/wget`
+      wget http://<local-ip-address>:5000/wget
     
       cat wget | base64 -d > wget.jpg`
