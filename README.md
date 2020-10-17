@@ -17,11 +17,13 @@ A python based example implementation using three containers on Intel NUC, RPI4 
 
 ### Publish
 The source code for containers, services, policies and corresponding defintion files.
+See `publish` directory.
 
 ### Register
 Instructions to register an edge device node to detect objects in a video stream
+See `register` directory.
 
-### Research, reference and acknowledgement
+### Research, reference and acknowledgements
 
   https://opencv.org
   
