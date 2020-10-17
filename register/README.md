@@ -112,7 +112,7 @@ Review the output and verify that the content look complete and there is no erro
     envsubst < node_policy_tflite.json | jq
     envsubst < user_input_app_tflite.json | jq
 
-Or
+OR
 
     envsubst < node_policy_vino.json | jq
     envsubst < user_input_app_vino.json | jq
