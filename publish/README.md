@@ -12,14 +12,14 @@ Using a shared single tenant instance creates several challenges when services, 
 
 The tooling outlined here addresses these issues and builds all the container images as per the specified target.
 
-### Automated Steps
+#### Automated Steps
 
 Start with reviewing Makefile for targets.
 
-### `MUST` Setup ENVIRONMENT variables.
+#### `MUST` Setup ENVIRONMENT variables.
 See `Register` directory for all the **ENVIRONMENT** variables. `All of them` apply here as well. Create a file `APP_ENV` and source them before starting to build and publish the services.  
 
-### Build and publish images to docker and services to IEAM exchange.
+#### Build and publish images to docker and services to IEAM exchange.
 
     make
 
