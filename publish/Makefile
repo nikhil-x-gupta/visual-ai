@@ -7,7 +7,13 @@
 
 export ARCH ?= $(shell hzn architecture)
 
-all: publish-all deploy-policy-all
+ifeq ($(ARCH),arm64)
+all: tflite-all
+else
+all: arch-all
+endif
+
+arch-all: publish-all deploy-policy-all
 
 tflite-all: publish-http publish-mms publish-tflite deploy-policy-tflite
 
