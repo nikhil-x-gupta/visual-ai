@@ -9,11 +9,11 @@ export ARCH ?= $(shell hzn architecture)
 
 all: publish-all deploy-policy-all
 
+tflite-all: publish-http publish-mms publish-tflite deploy-policy-tflite
+
+vino-all: publish-http publish-mms publish-vino deploy-policy-vino
+
 publish-all: publish-http publish-mms publish-tflite publish-vino
-
-publish-tflite-all: publish-http publish-mms publish-tflite deploy-policy-tflite
-
-publish-vino-all: publish-http publish-mms publish-vino deploy-policy-vino
 
 publish-http:
 	make -C src/http
