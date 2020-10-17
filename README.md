@@ -1,13 +1,11 @@
 ## IBM Edge Application Manager (IEAM)
 ### Edge deployment of container workload and ML model
 
-TensorFlow Lite and OpenVINO based Machine Inferencing and Object Detection
-
-IEAM + MMS + OpenCV + Tensorflow Lite + OpenVINO + Python 
+TensorFlow Lite and OpenVINO based Machine Inferencing and Object Detection IEAM + MMS + OpenCV + Tensorflow Lite + OpenVINO + Python 
 
 ### Introduction
 
-A python based implementation using three containers with detection time below < 0.4 sec without any GPU accelerator on Intel NUC using coco_ssd_mobilenet_v1_1.0 model
+A python based example implementation using three containers on Intel NUC, RPI4 using Tensorflow Lite and OpenVINO
 
 - Image capture and classification
 - Http and kafka message bridge
@@ -15,6 +13,13 @@ A python based implementation using three containers with detection time below <
 - A simple  Web UI to interactivly upload config using MMS to edge nodes.
 - Frameworks - TensorFlow Lite and OpenVINO
 - Intel Neural Compute Stick 2 + Movidius MyriadX VPU
+- coco_ssd_mobilenet_v1_1.0 model and Op
+
+### Publish
+The source code for services, policies and corresponding defintion files.
+
+### Register
+
 
 #### Build, Publish and Use in a shared IEAM environment
 
