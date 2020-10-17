@@ -1,4 +1,4 @@
-#### Source code for containers, services, policies and corresponding defintion files.
+### Development containers, services, policies and defintion files
 
 #### Build, Publish and Use in a shared IEAM environment
 
