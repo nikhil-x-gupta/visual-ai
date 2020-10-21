@@ -5,7 +5,7 @@
 
 ### Introduction
 
-This python based example implementation uses three containers and can be deployed on **Intel NUC(amd64), Jeston Nano(arm64) and RaspberryPi 4(arm32)** using Tensorflow Lite and/or OpenVINO
+This python based example implementation uses three containers and can be deployed on **Intel NUC(amd64), Jetson Nano(arm64) and RaspberryPi 4(arm32)** using Tensorflow Lite and/or OpenVINO
 
 - Image capture and classification
 - HTTP and kafka message bridge
