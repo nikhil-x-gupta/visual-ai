@@ -107,7 +107,7 @@ export EVENTSTREAMS_BROKER_URLS="your-event-stream-brokers"
     source APP_ENV
 
 #### 5. Verify the content of the `json` files 
-Review the output and verify that the content look complete and there is no error. 
+Review the output and verify that the contents look complete and there is no error. 
 
     envsubst < node_policy_tflite.json | jq
     envsubst < user_input_app_tflite.json | jq
