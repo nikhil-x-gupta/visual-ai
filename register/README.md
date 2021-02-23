@@ -44,7 +44,7 @@ export EDGE_DEPLOY=example.visual
     
 #### IEAM specific. Update values in < > brackets
 # Keep this value
-export HZN_ORG_ID=mycluster  
+export HZN_ORG_ID=<org-id>  
 # Update iam-api-key with the value provided to you
 export HZN_EXCHANGE_USER_AUTH=iamapikey:<iam-api-key> 
 # Update with arbitrary values for your node 
@@ -122,13 +122,17 @@ OR
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
     
 #### 7. Register node using one of the two frameworks - TensorFlow lite NUC (amd64), RPI (arm32)
-    
+TensorFlow lite
+ 
     hzn register --policy=node_policy_tflite.json --input-file user_input_app_tflite.json
   
-OR
+OpenVINO
   
     hzn register --policy=node_policy_vino.json --input-file user_input_app_vino.json
 
+MVI (IBM) in development
+
+    hzn register --policy=node_policy_mvi_test_1.json 
 
 #### 8. View/access result by one or more methods
 
