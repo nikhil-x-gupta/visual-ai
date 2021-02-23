@@ -1,0 +1,36 @@
+{
+    "org": "$HZN_ORG_ID",
+    "label": "$SERVICE_NAME for $ARCH",
+    "description": "",
+    "public": true,
+    "documentation": "",
+    "url": "$SERVICE_NAME",
+    "version": "$SERVICE_VERSION",
+    "arch": "$ARCH",
+    "sharable": "singleton",
+    "requiredServices": [
+    ],
+    "userInput": [
+    ],
+    "deployment": {
+        "services": {
+            "$SERVICE_NAME": {
+                "image": "${DOCKER_IMAGE_BASE}:$SERVICE_VERSION",
+                "privileged": true,
+		"environment": ["BASE=CAFFE","OMP_NUM_THREADS=4"],
+		"binds": [
+		    "/var/tmp/horizon/MaskOO_model.zip:/config/dropins/model.zip:ro"
+		],
+		"ports": [
+		    {
+			"HostPort": "6001:5001/tcp",
+			"HostIP": "0.0.0.0"
+		    }
+		],
+		"command": ["/opt/DNN/bin/setup_env_and_run.sh", "/opt/DNN/bin/deploy_zipped_model.py", "--gpu", "-1"]
+		
+            }
+        }
+    }
+}
+

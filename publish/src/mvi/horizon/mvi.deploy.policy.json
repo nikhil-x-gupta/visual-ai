@@ -1,0 +1,33 @@
+{
+    "label": "deploy-policy-mvi-$ARCH",
+    "description": "A deploy policy for tflite on $ARCH",
+    "service": {
+	"name": "$EDGE_OWNER.$EDGE_DEPLOY.mvi",
+	"org": "$HZN_ORG_ID",
+	"arch": "$ARCH",
+	"serviceVersions": [
+	    {
+		"version": "8.1.0",
+		"priority":{}
+	    }
+	]
+    },
+    "properties": [
+    ],
+    "constraints": [
+	"owner == $EDGE_OWNER",
+	"deploy == $EDGE_DEPLOY",
+	"mvi == true"
+    ],
+    "userInput": [
+	{
+	    "serviceOrgid": "$HZN_ORG_ID",
+	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.mvi",
+	    "serviceVersionRange": "[0.0.0,INFINITY)",
+	    "inputs": [
+		{ "name" : "DEVICE_ID", "value" : "DEVICE_ID"  },
+		{ "name" : "DEVICE_NAME", "value" : "DEVICE_NAME"  }
+	    ]
+	}
+    ]
+}
