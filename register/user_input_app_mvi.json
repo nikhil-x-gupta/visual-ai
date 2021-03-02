@@ -1,0 +1,41 @@
+{
+    "services": [
+    {
+	"org": "$HZN_ORG_ID",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.http",
+	"versionRange": "[0.0.0,INFINITY)",
+	"variables": {
+	    "APP_IEAM_API_CSS_OBJECTS"           : "$APP_IEAM_API_CSS_OBJECTS",
+	    "APP_APIKEY_PASSWORD"                : "$APP_APIKEY_PASSWORD",
+	    "APP_MMS_OBJECT_ID_CONFIG"           : "$APP_MMS_OBJECT_ID_CONFIG",
+	    "APP_MMS_OBJECT_TYPE_CONFIG"         : "$APP_MMS_OBJECT_TYPE_CONFIG",
+	    "APP_MMS_OBJECT_SERVICE_NAME_CONFIG" : "$APP_MMS_OBJECT_SERVICE_NAME_CONFIG",
+	    "APP_MMS_OBJECT_ID_MODEL"            : "$APP_MMS_OBJECT_ID_MODEL",
+	    "APP_MMS_OBJECT_TYPE_MODEL"          : "$APP_MMS_OBJECT_TYPE_MODEL",
+	    "APP_MMS_OBJECT_SERVICE_NAME_MODEL"  : "$APP_MMS_OBJECT_SERVICE_NAME_MODEL",
+            "EVENTSTREAMS_BROKER_URLS"           : "$EVENTSTREAMS_BROKER_URLS",
+            "EVENTSTREAMS_API_KEY"               : "$EVENTSTREAMS_API_KEY",
+            "EVENTSTREAMS_ENHANCED_TOPIC"        : "$EVENTSTREAMS_ENHANCED_TOPIC"
+	}
+    },
+    {
+	"org": "$HZN_ORG_ID",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.mvi",
+	"versionRange": "[0.0.0,INFINITY)",
+	"variables": {
+            "DEVICE_ID"                : "$DEVICE_ID",
+            "DEVICE_NAME"              : "$DEVICE_NAME",
+	    "DEVICE_IP_ADDRESS"        : "$DEVICE_IP_ADDRESS",
+	    "RTSP_STREAMS"             : "$RTSP_STREAMS",
+	    "APP_BIND_HORIZON_DIR"     : "$APP_BIND_HORIZON_DIR",
+	    "SHOW_OVERLAY"             : $SHOW_OVERLAY,
+	    "PUBLISH_KAFKA"            : $PUBLISH_KAFKA,
+	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,
+	    "DETECT_FACE"              : $DETECT_FACE,
+	    "BLUR_FACE"                : $BLUR_FACE,
+	    "VIEW_COLUMN"              : $VIEW_COLUMN,
+	    "MIN_CONFIDENCE_THRESHOLD" : 0.6
+	}
+    }
+  ]
+}

@@ -7,7 +7,7 @@
 	"arch": "$ARCH",
 	"serviceVersions": [
 	    {
-		"version": "8.1.0",
+		"version": "1.0.0",
 		"priority":{}
 	    }
 	]
@@ -22,7 +22,7 @@
     "userInput": [
 	{
 	    "serviceOrgid": "$HZN_ORG_ID",
-	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.mvi",
+	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.max_mvi",
 	    "serviceVersionRange": "[0.0.0,INFINITY)",
 	    "inputs": [
 		{ "name" : "DEVICE_ID", "value" : "DEVICE_ID"  },

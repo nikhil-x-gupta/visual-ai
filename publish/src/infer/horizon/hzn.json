@@ -7,6 +7,15 @@
         "IMAGE_NAME_VINO": "vino",
         "DOCKER_IMAGE_BASE_VINO": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).vino",
         "SERVICE_NAME_VINO": "$(EDGE_OWNER).$(EDGE_DEPLOY).vino",
-        "SERVICE_VERSION_VINO": "1.0.0"
+        "SERVICE_VERSION_VINO": "1.0.0",
+        "IMAGE_NAME_MVI": "mvi",
+        "DOCKER_IMAGE_BASE_MVI": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).mvi",
+        "SERVICE_NAME_MVI": "$(EDGE_OWNER).$(EDGE_DEPLOY).mvi",
+        "SERVICE_VERSION_MVI": "1.0.0",
+        "IMAGE_NAME_MAX_MVI": "max_mvi",
+        "DOCKER_IMAGE_BASE_MAX_MVI": "us.icr.io/ieam-mvi/vision-dnn-deploy",
+        "SERVICE_NAME_MAX_MVI": "$(EDGE_OWNER).$(EDGE_DEPLOY).max_mvi",
+        "SERVICE_VERSION_MAX_MVI": "8.1.0",
+        "SERVICE_NAME_MAX_MVI_PORT": "5001"
     }
 }

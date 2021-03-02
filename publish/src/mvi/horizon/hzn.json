@@ -1,9 +1,0 @@
-
-{
-    "MetadataVars": {
-        "IMAGE_NAME": "mvi",
-        "DOCKER_IMAGE_BASE": "us.icr.io/ieam-mvi/vision-dnn-deploy",
-        "SERVICE_NAME": "$(EDGE_OWNER).$(EDGE_DEPLOY).mvi",
-        "SERVICE_VERSION": "8.1.0"
-    }
-}

@@ -11,6 +11,8 @@ from package.detect import TFLiteDetector
 from package.detect import TFLiteOpenCV
 from package.detect import VinoDetector
 from package.detect import VinoOpenCV
+from package.detect import MVIDetector
+from package.detect import MVIOpenCV
 
 from package.util import util
 
@@ -24,7 +26,8 @@ class VideoSourceProcessor:
         self.videoSources = []
         self.config = config
         self.videoSources.append(VideoSource(name, source))
-        self.detector = None if config.getIsTFLite() else VinoDetector(config)
+        #self.detector = None if config.getIsTFLite() else VinoDetector(config)
+        self.detector = None
        
     def addVideoSource(self, name, source):
         self.videoSources.append(VideoSource(name, source))
@@ -45,6 +48,7 @@ class VideoSourceProcessor:
 
                 inference_interval = detector.infer(frame_normalized)
                 boxes, classes, scores, num = detector.getResults()
+
                 entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
             
                 if self.config.shouldShowOverlay():
@@ -67,25 +71,24 @@ class VideoSourceProcessor:
 
             videoStream.stop()
 
-        else:
-            print ("{:.7f} VideoSourceProcessor OpenVINO".format(time.time()))
+        elif self.config.getIsVino():
+            print ("{:.7f} VideoSourceProcessor OpenVINO".format(time.time()), end="", flush=True)
             
-            #detector = VinoDetector(self.config)
+            detector = VinoDetector(self.config)
             opencv = VinoOpenCV()
 
             frameCount = 0;
             while True:
                 frameCount += 1
                 if frameCount % 100 == 0:
-                    print (" frame processed {} ".format(frameCount))
+                    print (" frame processed {} ".format(frameCount), end="", flush=True)
                 elif frameCount % 100 == 1:
                     print ("{:.7f} VideoSourceProcessor".format(time.time()), end="", flush=True)
                 elif frameCount % 10 == 0:
                     print (" .", end = "", flush=True)
 
-                frame_current, frame_norm, frame_faces, frame_gray, images, images_hw = opencv.getFrame(self.config, videoStream, self.detector.getN(), self.detector.getC(), self.detector.getHeight(), self.detector.getWidth())
-
-                inference_interval, boxes, classes, scores = self.detector.getInferResults(images, images_hw, frame_current)
+                frame_current, frame_norm, frame_faces, frame_gray, images, images_hw = opencv.getFrame(self.config, videoStream, detector.getN(), detector.getC(), detector.getHeight(), detector.getWidth())
+                inference_interval, boxes, classes, scores = detector.getInferResults(images, images_hw, frame_current)
 
                 entities_dict = opencv.annotateFrame(self.config, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
             
@@ -94,6 +97,66 @@ class VideoSourceProcessor:
 
                 videoSource.frame_annotated = frame_current.copy()
     
+                inference_data_json = opencv.getInferenceDataJSON(self.config, inference_interval, entities_dict, self.videoSources)
+
+                if self.config.shouldPublishKafka():
+                    util.inference_publish(self.config.getPublishPayloadKafkaUrl(), inference_data_json)
+
+                if self.config.shouldPublishStream():
+                    util.inference_publish(self.config.getPublishPayloadStreamUrl(), inference_data_json)
+
+                opencv.updateFrameRate()
+
+                #if detector.getModelPath() != self.config.getModelPath():
+                #    detector = VinoDetector(self.config)
+
+            videoStream.stop()
+
+        elif self.config.getIsMVI():
+
+            print ("{:.7f} VideoSourceProcessor MVI".format(time.time()), end="\n", flush=True)
+            
+            detector = MVIDetector(self.config)
+            print ("{:.7f} MVIDetector initialized".format(time.time()), end="\n", flush=True)
+
+            opencv = MVIOpenCV()
+            print ("{:.7f} MVIOpenCV initialized".format(time.time()), end="\n", flush=True)
+
+            frameCount = 0;
+            while True:
+                print ("{:.7f} Process loop begins ".format(time.time()), end="\n", flush=True)
+
+                print ("{:.7f} Enter opencv.getFrame ".format(time.time()), end="\n", flush=True)
+                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
+
+                frame_image_jpg_file = "/tmp/frame-image-mvi.jpg"
+                opencv.writeImageFileJpg(frame_image_jpg_file, frame_current)
+                #frame_jpg = opencv.getEncodeImageJpg(frame_current)
+
+                print ("MVI Detector Infer >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", end="\n", flush=True)
+                inference_interval = detector.inferJpgFile(frame_image_jpg_file)
+                #print ("MVI Detector getResuls >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", end="\n", flush=True)
+                boxes, classes, scores, num = detector.getResults()
+
+                #boxes = [[73, 153, 144, 233], [65, 38, 114, 102]]
+                #classes = ['Mask', 'Mask']
+                #scores = [0.99959, 0.98961]
+                #num = 2
+
+                print ("MVI Detector Results ============================================", end="\n", flush=True)
+                print (boxes, classes, scores, num)
+
+                print ("MVI Detector annotateFrame >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", end="\n", flush=True)
+                entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
+                print ("entities_dict=", entities_dict, end="\n", flush=True)
+
+                if self.config.shouldShowOverlay():
+                    opencv.addOverlay(frame_current, self.config.getTool(), self.config.getDeviceName(), inference_interval, opencv.getFrameRate())
+
+                print ("frame_current.copy()", end="\n", flush=True)
+                videoSource.frame_annotated = frame_current.copy()
+    
+                print ("inference_data_json>>>>>>>>>>>>>>>>>>>>>>>>>", end="\n", flush=True)
                 inference_data_json = opencv.getInferenceDataJSON(self.config, inference_interval, entities_dict, self.videoSources)
 
                 if self.config.shouldPublishKafka():

@@ -38,9 +38,11 @@ if __name__ == '__main__':
     print ("{:.7f} Entered main".format(time.time()))
     print ("{:.7f} {}".format(time.time(), os.environ['DEVICE_IP_ADDRESS']))
 
+    fmwk = os.environ['APP_MODEL_FMWK']
+
     isTFLite = importlib.util.find_spec('tflite_runtime')
 
-    config = Config(isTFLite, resolution=(640, 480), framerate=30)
+    config = Config(fmwk, isTFLite, resolution=(640, 480), framerate=30)
 
     videoSourceProcessor = None
 
@@ -58,18 +60,23 @@ if __name__ == '__main__':
     sources = devices
     threaded = True
 
-    for source in sources:
-        src_sfx = "    " + source if str(source).startswith("rtsp:") else "    /dev/video" + str(source)
-        sourceName = "Camera " + str(index + 1) + src_sfx
-        if videoSourceProcessor is None:
-            videoSourceProcessor = VideoSourceProcessor(config, sourceName, source)
-        else:
-            videoSourceProcessor.addVideoSource(sourceName, source)
+    if len(sources) > 0:
+        for source in sources:
+            src_sfx = "    " + source if str(source).startswith("rtsp:") else "    /dev/video" + str(source)
+            sourceName = "Camera " + str(index + 1) + src_sfx
+            print ("{:.7f} Video source: ".format(time.time()), sourceName, end="\n", flush=True)
+            if videoSourceProcessor is None:
+                videoSourceProcessor = VideoSourceProcessor(config, sourceName, source)
+            else:
+                videoSourceProcessor.addVideoSource(sourceName, source)
 
-        videoSourceProcessor.processThread(index, threaded)
-        index += 1
+            videoSourceProcessor.processThread(index, threaded)
+            index += 1
 
-    if videoSourceProcessor is not None:
-        config.mmsPoller()
-        
+        if videoSourceProcessor is not None:
+            config.mmsPoller()
+    else:
+        print ("{:.7f} No video source found".format(time.time()), end="\n", flush=True)
+
+            
     

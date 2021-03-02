@@ -32,6 +32,7 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN ln -s /usr/local/lib/python3.7/dist-packages /usr/local/lib/python3.7/site-packages
 
 WORKDIR /
+ENV APP_MODEL_FMWK tflite
 ENV APP_MODEL_DIR /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/
 ENV APP_MODEL_TFLITE detect.tflite
 ENV APP_MODEL_LABELMAP labelmap.txt

@@ -8,7 +8,7 @@ usage() {
   echo "Usage: $0 -e -k -r -u -p -l"
   echo "where "
   echo "   -e file path to environemnt veriables "
-  echo "   -k framework tflite | vino "
+  echo "   -k framework tflite | vino | mvi"
   echo "   -r register "
   echo "   -u unregister "
   echo "   -p pattern based deployment "
@@ -115,15 +115,15 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite"
+    echo "Must provide one of the options to set framework vino | tflite | mvi"
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ]; then
     echo "Framework $FMWK"
 else
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite"
+    echo "Must provide one of the options to set framework vino | tflite | mvi"
     echo ""
     usage
     exit 1

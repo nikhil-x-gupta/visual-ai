@@ -59,6 +59,7 @@ RUN if [ -f "/opt/intel/openvino/bin/setupvars.sh" ]; then \
     fi;
 
 # Model download
+ENV APP_MODEL_FMWK vino
 ENV APP_MODEL_DIR /opt/horizon/inference/models/openvino/2020.1/FP16/
 ENV APP_MODEL_XML face-detection-adas-0001.xml
 ENV APP_MODEL_BIN face-detection-adas-0001.bin

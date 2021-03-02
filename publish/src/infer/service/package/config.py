@@ -13,7 +13,8 @@ import requests
 import time
 
 class Config:
-    def __init__(self, isTFLite, resolution=(640, 480), framerate=30):
+    def __init__(self, fmwk, isTFLite, resolution=(640, 480), framerate=30):
+        self.fmwk = fmwk
         self.isTFLite  = isTFLite
         self.resolution = resolution
         self.framerate = framerate
@@ -41,35 +42,47 @@ class Config:
 
         self.modelUpdatedAt = datetime.datetime.now()
 
-        if self.isTFLite:
-            self.setTFLiteDefaults()
-        else:
+        if self.getIsVino():
             self.setVinoDefaults()
+        elif self.getIsMVI():
+            self.setMVIDefaults()
+        else:
+            self.setTFLiteDefaults()
 
         print ("{:.7f} Config initialized".format(time.time()))
 
     def getIsTFLite(self):
-        return self.isTFLite
+        #return self.isTFLite
+        return self.fmwk == 'tflite'
+
+    def getIsVino(self):
+        return self.fmwk == 'vino'
+
+    def getIsMVI(self):
+        return self.fmwk == 'mvi'
 
     # os.path.join - leading / only for the first path. NO leading / in sub paths
     def setTFLiteDefaults(self):
+        self.tool = "TensorFlow Lite OpenCV"
         self.modelTFLite = None
         self.labelmap = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
         self.defaultModelTFLite = os.environ['APP_MODEL_TFLITE']
         self.defaultLabelmap = os.environ['APP_MODEL_LABELMAP']
-        self.tool = "TensorFlow Lite OpenCV"
 
     def setVinoDefaults(self):
+        self.tool = "OpenVINO OpenCV"
         self.modelXML = None
         self.modelBin = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
         self.defaultModelXML = os.environ['APP_MODEL_XML']
         self.defaultModelBin = os.environ['APP_MODEL_BIN']
-        self.tool = "OpenVINO OpenCV"
         self.modelObjectId = self.defaultModelXML.split('.')[0]
         self.objectName = "Face"
 
+    def setMVIDefaults(self):
+        self.tool = "MVI OpenCV"
+        
     def getObjectName(self):
         return self.objectName
 
@@ -134,6 +147,10 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
+    def getMaxMVIDetectorURL(self):
+        #return "http://sg.edge.example.visual.max_mvi:5001/inference"
+        return os.environ['APP_SVC_MAX_MVI_URL'] 
+
     # uses network:host . Use host network IP
     def getMMSConfigProviderUrl(self):
         return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
@@ -159,6 +176,7 @@ class Config:
         return float(os.environ['MIN_CONFIDENCE_THRESHOLD'] if 'MIN_CONFIDENCE_THRESHOLD' in os.environ else "0.6")
 
     def shouldShowOverlay(self):
+        print ("shouldShowOverlay")
         return self.env_dict['SHOW_OVERLAY'] == 'true'
 
     def shouldPublishKafka(self):

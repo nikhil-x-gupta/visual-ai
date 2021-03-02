@@ -1,11 +1,11 @@
 {
     "org": "$HZN_ORG_ID",
-    "label": "$SERVICE_NAME for $ARCH",
+    "label": "$SERVICE_NAME_MAX_MVI-$ARCH",
     "description": "",
     "public": true,
     "documentation": "",
-    "url": "$SERVICE_NAME",
-    "version": "$SERVICE_VERSION",
+    "url": "$SERVICE_NAME_MAX_MVI",
+    "version": "$SERVICE_VERSION_MAX_MVI",
     "arch": "$ARCH",
     "sharable": "singleton",
     "requiredServices": [
@@ -14,8 +14,8 @@
     ],
     "deployment": {
         "services": {
-            "$SERVICE_NAME": {
-                "image": "${DOCKER_IMAGE_BASE}:$SERVICE_VERSION",
+            "$SERVICE_NAME_MAX_MVI": {
+                "image": "${DOCKER_IMAGE_BASE_MAX_MVI}:$SERVICE_VERSION_MAX_MVI",
                 "privileged": true,
 		"environment": ["BASE=CAFFE","OMP_NUM_THREADS=4"],
 		"binds": [
@@ -28,7 +28,6 @@
 		    }
 		],
 		"command": ["/opt/DNN/bin/setup_env_and_run.sh", "/opt/DNN/bin/deploy_zipped_model.py", "--gpu", "-1"]
-		
             }
         }
     }

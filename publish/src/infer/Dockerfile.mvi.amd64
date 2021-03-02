@@ -1,0 +1,37 @@
+FROM python:3.7-slim
+
+RUN apt-get update && apt-get --no-install-recommends -y install \
+    libjpeg-dev \
+    libtiff5-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libv4l-dev \
+    libxvidcore-dev \
+    libx264-dev \
+    libgstreamer-plugins-base1.0-dev \
+    qtbase5-dev \
+    unzip \
+    wget 
+
+#RUN apt-get install -y python3-pip
+# 4.2.0.32 required for videocapture(0) to work
+RUN pip3 install requests opencv-python==4.2.0.32
+
+RUN apt-get update && apt-get --no-install-recommends -y install \
+    curl
+
+ENV APP_MODEL_FMWK mvi
+
+WORKDIR /
+RUN mkdir -p package/detect package/util package/video 
+COPY service/package/detect/*.py package/detect/
+COPY service/package/video/*.py package/video/
+COPY service/package/util/*.py package/util/
+COPY service/package/*.py package/
+COPY service/videoObjectDetector.py .
+
+WORKDIR /
+CMD /usr/local/bin/python3 videoObjectDetector.py
+
+
