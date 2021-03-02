@@ -148,7 +148,6 @@ class Config:
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
     def getMaxMVIDetectorURL(self):
-        #return "http://sg.edge.example.visual.max_mvi:5001/inference"
         return os.environ['APP_SVC_MAX_MVI_URL'] 
 
     # uses network:host . Use host network IP

@@ -23,12 +23,10 @@ class MVIOpenCV:
         
     def getEncodeImageJpg(self, frame):
         cv2.imwrite("/tmp/frame-image-mvi.jpg", frame)
-        print ("getEncodeImageJpg", end="\n", flush=True)
         frame_jpg = cv2.imencode('.jpg', frame)    
         return frame_jpg
 
     def writeImageFileJpg(self, file, frame):
-        #cv2.imwrite("/tmp/frame-image-mvi.jpg", frame)
         cv2.imwrite(file, frame)
 
     def getFrameRate(self):
@@ -46,7 +44,6 @@ class MVIOpenCV:
         return frame_faces, frame_gray
 
     def getFrame(self, config, videostream, isFloatingModel, height, width):
-        print ("MVIOpenCV getFrame", end="\n", flush=True)
         self.t1 = cv2.getTickCount()
         frame_read = videostream.read()
         frame_current = frame_read.copy()
@@ -63,7 +60,6 @@ class MVIOpenCV:
         if isFloatingModel:
             frame_norm = (numpy.float32(frame_norm) - config.getInputMean()) / config.getInputStd()
 
-        print ("MVIOpenCV getFrame existing", end="\n", flush=True)
         return frame_current, frame_norm, frame_faces, frame_gray
 
     def annotateFrame(self, config, detector, frame_current, src_name, frame_faces, frame_gray, boxes, classes, scores):
@@ -73,23 +69,11 @@ class MVIOpenCV:
                 
                 imageH, imageW, _ = frame_current.shape
 
-                print (imageH, imageW, end="\n", flush=True)
-
-                # Get bounding box coordinates and draw box
-                #ymin = int(max(1, (boxes[i][0] * imageH)))
-                #xmin = int(max(1, (boxes[i][1] * imageW )))
-                #ymax = int(min(imageH, (boxes[i][2] * imageH)))
-                #xmax = int(min(imageW, (boxes[i][3] * imageW)))
-
-                #[[73, 153, 144, 233], [65, 38, 114, 102]] ['Mask', 'Mask'] [0.99959, 0.98961] 2
-                #entities_dict= {'Mask': [{'h': -34560, 'w': -97280, 'cx': 49280, 'cy': 17760, 'confidence': 1.0}, {'h': -30720, 'w': -23680, 'cx': 12480, 'cy': 15840, 'confidence': 0.99}]}
                 ymin = boxes[i][0]
                 xmin = boxes[i][1]
                 ymax = boxes[i][2]
                 xmax = boxes[i][3]
 
-                print (ymin, xmin, ymax, xmax, end="\n", flush=True)
-                
                 cv2.rectangle(frame_current, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
 
                 # Draw label
@@ -137,12 +121,9 @@ class MVIOpenCV:
         cv2.putText(frame_current, 'GMT {0:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()), (w - 230, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.putText(frame_current, config.getStatusText(), (10, h-20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
-        print ("return entities_dict", entities_dict, end="\n", flush=True)
-
         return entities_dict 
         
     def addOverlay(self, frame_current, tool, device_name, inference_interval, frame_rate): 
-        print ("enter addOverlay", end="\n", flush=True)
         alpha = 0.6
         overlay = frame_current.copy()
         cv2.rectangle(overlay, (2, 30), (215, 125), (64, 64, 64), -1)
@@ -151,10 +132,8 @@ class MVIOpenCV:
         cv2.putText(frame_current, '{device_name}'.format(device_name=device_name), (5, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
         cv2.putText(frame_current, 'Detection Time {0:.2f} sec'.format(inference_interval), (5, 100), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
         cv2.putText(frame_current, 'Overall FPS {0:.2f}'.format(frame_rate), (5, 120), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 0), 1, cv2.LINE_AA)
-        print ("exit addOverlay", end="\n", flush=True)
     
     def getInferenceDataJSON(self, config, inference_interval, entities_dict, video_sources):
-        print ("enter getInferenceDataJSON", end="\n", flush=True)
         entities = []
         for key in entities_dict:
             entity_dict = {}
@@ -249,13 +228,10 @@ class MVIOpenCV:
         inference_dict['count'] = len(entities)
         inference_dict['entities'] = entities
 
-        print ("inference_dict", inference_dict, end="\n", flush=True)
-
         inference_dict['image'] = infered_b64_frame
 
         inference_data = {}
         inference_data['detect'] = inference_dict
         inference_data_json = json.dumps(inference_data);
 
-        print ("exit getInferenceDataJSON", end="\n", flush=True)
         return inference_data_json

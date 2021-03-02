@@ -17,7 +17,6 @@ class MVIDetector:
     def __init__(self, config):
         self.config = config
 
-        #self.detectorURL = "http://sg.edge.example.visual.max_mvi:5001/inference"
         self.detectorURL = config.getMaxMVIDetectorURL()
 
         self.modelPath = "."
@@ -33,35 +32,21 @@ class MVIDetector:
         return self.labels
 
     def inferJpgFile(self, frame_image_jpg_file):
-        print ("Infer....", end="\n", flush=True)
         t1 = time.time()
         try:
-            print ("imageFile detector", end="\n", flush=True)
-
-            print ("imageFile opening ", frame_image_jpg_file, end="\n", flush=True)
-            #frame_jpg = open('package/detect/ef3f7ca8-a85c-48ae-84f2-4c65d9aac02a.jpg', 'rb')
             frame_jpg = open(frame_image_jpg_file, 'rb')
-            print ("imageFile opened ", end="\n", flush=True)
-
             files = {'imagefile': frame_jpg}
 
             session = requests.Session()
-
             retries = Retry(total=10,
                             backoff_factor=0.1,
                             status_forcelist=[ 500, 502, 503, 504 ])
             session.mount('http://', HTTPAdapter(max_retries=retries))
-
-            print ("imageFile detectorURL posting ", self.detectorURL, end="\n", flush=True)
-
             response = session.post(self.detectorURL, files=files)
 
             self.outputDetails = response.json()
-            print ("imageFile detectorURL", self.outputDetails, end="\n", flush=True)
 
             self.inference_interval = time.time() - t1
-            print ("imageFile inference_interval", self.inference_interval, end="\n", flush=True)
-            print ("imageFile detector return", end="\n", flush=True)
             return self.inference_interval
         except requests.exceptions.RequestException as err:
             print ("Oops: Something Else",err, end="\n", flush=True)
