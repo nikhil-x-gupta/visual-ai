@@ -19,7 +19,7 @@
                 "privileged": true,
 		"environment": ["BASE=CAFFE","OMP_NUM_THREADS=4"],
 		"binds": [
-		    "/var/local/horizon/mvi-caffednn-facemask-1.0.0-mms.zip:/config/dropins/model.zip:ro"
+		    "/var/local/horizon/model/mvi-caffednn-facemask-1.0.0-mms.zip:/config/dropins/model.zip:ro"
 		],
 		"ports": [
 		    {
