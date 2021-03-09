@@ -10,7 +10,7 @@
     "sharable": "singleton",
     "requiredServices": [
         { "url": "$EDGE_OWNER.$EDGE_DEPLOY.http", "org": "$HZN_ORG_ID", "version": "1.0.0", "arch": "$ARCH" },
-        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.max_hv_mvi", "org": "$HZN_ORG_ID", "version": "8.1.0", "arch": "$ARCH" }
+        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.max_mvi_hv", "org": "$HZN_ORG_ID", "version": "8.1.0", "arch": "$ARCH" }
     ],
     "userInput": [
         { "name": "DEVICE_ID", "label": "device-id", "type": "string", "defaultValue": "DEVICE_ID" },
@@ -26,7 +26,7 @@
         { "name": "MMS_HTTP_CONFIG_PROVIDER", "label": "mms-config-provider", "type": "string", "defaultValue": "http://$EDGE_OWNER.$EDGE_DEPLOY.mms:7778/mmsconfig" },
         { "name": "HTTP_PUBLISH_KAFKA_URL", "label": "HTTP-HOST-KAFKA-URL", "type": "string", "defaultValue": "http://$EDGE_OWNER.$EDGE_DEPLOY.http:5000/publish/kafka" },
         { "name": "HTTP_PUBLISH_STREAM_URL", "label": "HTTP-HOST-STREAM-URL", "type": "string", "defaultValue": "http://$EDGE_OWNER.$EDGE_DEPLOY.http:5000/publish/stream" },
-        { "name": "APP_SVC_MAX_MVI_URL", "label": "app-svc-max-mvi-hv-url", "type": "string", "defaultValue": "http://$SERVICE_NAME_MAX_HV_MVI:$MAX_MVI_SERVICE_MODEL_PORT/inference" }
+        { "name": "APP_SVC_MAX_MVI_URL", "label": "app-svc-max-mvi-hv-url", "type": "string", "defaultValue": "http://$SERVICE_NAME_MAX_MVI_HV:$MAX_MVI_SERVICE_MODEL_PORT/inference" }
     ],
     "deployment": {
         "services": {

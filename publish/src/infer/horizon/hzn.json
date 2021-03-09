@@ -20,8 +20,8 @@
         "DOCKER_IMAGE_BASE_MAX_MVI": "${MAX_MVI_DOCKER_IMAGE_BASE}",
         "SERVICE_NAME_MAX_MVI": "$(EDGE_OWNER).$(EDGE_DEPLOY).max_mvi",
         "SERVICE_VERSION_MAX_MVI": "8.1.0",
-        "IMAGE_NAME_MAX_HV_MVI": "max_hv_mvi",
-        "SERVICE_NAME_MAX_HV_MVI": "$(EDGE_OWNER).$(EDGE_DEPLOY).max_hv_mvi",
-        "SERVICE_VERSION_MAX_HV_MVI": "8.1.0"
+        "IMAGE_NAME_MAX_MVI_HV": "max_mvi_hv",
+        "SERVICE_NAME_MAX_MVI_HV": "$(EDGE_OWNER).$(EDGE_DEPLOY).max_mvi_hv",
+        "SERVICE_VERSION_MAX_MVI_HV": "8.1.0"
     }
 }

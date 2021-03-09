@@ -17,7 +17,7 @@ max-mvi: max-mvi-publish-service
 
 mvi: mvi-build mvi-push mvi-publish-service mvi-deploy-policy
 
-max-hv-mvi: max-mvi-hv-publish-service
+max-mvi-hv: max-mvi-hv-publish-service
 
 mvi-hv:  mvi-hv-publish-service mvi-hv-deploy-policy
 
@@ -54,7 +54,7 @@ max-mvi-publish-service:
 
 max-mvi-hv-publish-service:
 	docker login -u iamapikey -p $(APP_CR_API_KEY_RO_PULL) $(CR_DST)
-	hzn exchange service publish -f horizon/$(IMAGE_NAME_MAX_HV_MVI).service.definition.json --pull-image -r "$(CR_DST):iamapikey:$(APP_CR_API_KEY_RO_PULL)" 
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_MAX_MVI_HV).service.definition.json --pull-image -r "$(CR_DST):iamapikey:$(APP_CR_API_KEY_RO_PULL)" 
 
 mvi-publish-service:
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_MVI).service.definition.json --pull-image

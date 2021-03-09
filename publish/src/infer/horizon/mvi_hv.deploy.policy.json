@@ -22,7 +22,7 @@
     "userInput": [
 	{
 	    "serviceOrgid": "$HZN_ORG_ID",
-	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.max_hv_mvi",
+	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.max_mvi_hv",
 	    "serviceVersionRange": "[0.0.0,INFINITY)",
 	    "inputs": [
 		{ "name" : "DEVICE_ID", "value" : "DEVICE_ID"  },
