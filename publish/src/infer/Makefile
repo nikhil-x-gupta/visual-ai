@@ -17,6 +17,10 @@ max-mvi: max-mvi-publish-service
 
 mvi: mvi-build mvi-push mvi-publish-service mvi-deploy-policy
 
+max-hv-mvi: max-mvi-hv-publish-service
+
+mvi-hv:  mvi-hv-publish-service mvi-hv-deploy-policy
+
 # Build the docker container
 tflite-build:
 	 envsubst < ./Dockerfile.tflite.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_TFLITE)_$(ARCH):$(SERVICE_VERSION_TFLITE) . -f -
@@ -48,8 +52,15 @@ max-mvi-publish-service:
 	docker login -u iamapikey -p $(APP_CR_API_KEY_RO_PULL) $(CR_DST)
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_MAX_MVI).service.definition.json --pull-image -r "$(CR_DST):iamapikey:$(APP_CR_API_KEY_RO_PULL)" 
 
+max-mvi-hv-publish-service:
+	docker login -u iamapikey -p $(APP_CR_API_KEY_RO_PULL) $(CR_DST)
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_MAX_HV_MVI).service.definition.json --pull-image -r "$(CR_DST):iamapikey:$(APP_CR_API_KEY_RO_PULL)" 
+
 mvi-publish-service:
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_MVI).service.definition.json --pull-image
+
+mvi-hv-publish-service:
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_MVI_HV).service.definition.json --pull-image
 
 # Deployment policy
 tflite-deploy-policy:
@@ -61,7 +72,11 @@ vino-deploy-policy:
 mvi-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_MVI).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_MVI)_$(ARCH)
 
+mvi-hv-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_MVI_HV).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_MVI_HV)_$(ARCH)
+
 #mvi-max deploys as requiredService in mvi deployment
+#mvi-hv-max deploys as requiredService in mvi deployment
 
 #-------------------------------
 test-docker-run-tflite:

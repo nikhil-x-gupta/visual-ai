@@ -2,7 +2,8 @@
   "properties": [
       { "name": "owner",  "value": "sg.edge" },
       { "name": "deploy",  "value": "example.visual" },
-      { "name": "mvi", "value": true },
+      { "name": "mms", "value": true },
+      { "name": "mvi_hv", "value": true },
       { "name": "openhorizon.allowPrivileged", "value": true }
   ],
   "constraints": [

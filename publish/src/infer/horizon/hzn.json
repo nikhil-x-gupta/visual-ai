@@ -12,10 +12,16 @@
         "DOCKER_IMAGE_BASE_MVI": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).mvi",
         "SERVICE_NAME_MVI": "$(EDGE_OWNER).$(EDGE_DEPLOY).mvi",
         "SERVICE_VERSION_MVI": "1.0.0",
+        "IMAGE_NAME_MVI_HV": "mvi_hv",
+        "DOCKER_IMAGE_BASE_MVI_HV": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).mvi",
+        "SERVICE_NAME_MVI_HV": "$(EDGE_OWNER).$(EDGE_DEPLOY).mvi_hv",
+        "SERVICE_VERSION_MVI_HV": "1.0.0",
         "IMAGE_NAME_MAX_MVI": "max_mvi",
-        "DOCKER_IMAGE_BASE_MAX_MVI": "us.icr.io/ieam-mvi/vision-dnn-deploy",
+        "DOCKER_IMAGE_BASE_MAX_MVI": "${MAX_MVI_DOCKER_IMAGE_BASE}",
         "SERVICE_NAME_MAX_MVI": "$(EDGE_OWNER).$(EDGE_DEPLOY).max_mvi",
         "SERVICE_VERSION_MAX_MVI": "8.1.0",
-        "SERVICE_NAME_MAX_MVI_PORT": "5001"
+        "IMAGE_NAME_MAX_HV_MVI": "max_hv_mvi",
+        "SERVICE_NAME_MAX_HV_MVI": "$(EDGE_OWNER).$(EDGE_DEPLOY).max_hv_mvi",
+        "SERVICE_VERSION_MAX_HV_MVI": "8.1.0"
     }
 }
