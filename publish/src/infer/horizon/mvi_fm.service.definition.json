@@ -1,16 +1,16 @@
 {
     "org": "$HZN_ORG_ID",
-    "label": "$SERVICE_NAME_MVI for $ARCH",
+    "label": "$SERVICE_NAME_MVI_FM for $ARCH",
     "description": "",
     "public": true,
     "documentation": "",
-    "url": "$SERVICE_NAME_MVI",
-    "version": "$SERVICE_VERSION_MVI",
+    "url": "$SERVICE_NAME_MVI_FM",
+    "version": "$SERVICE_VERSION_MVI_FM",
     "arch": "$ARCH",
     "sharable": "singleton",
     "requiredServices": [
         { "url": "$EDGE_OWNER.$EDGE_DEPLOY.http", "org": "$HZN_ORG_ID", "version": "1.0.0", "arch": "$ARCH" },
-        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.max_mvi", "org": "$HZN_ORG_ID", "version": "8.1.0", "arch": "$ARCH" }
+        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.max_mvi_fm", "org": "$HZN_ORG_ID", "version": "8.1.0", "arch": "$ARCH" }
     ],
     "userInput": [
         { "name": "DEVICE_ID", "label": "device-id", "type": "string", "defaultValue": "DEVICE_ID" },
@@ -26,12 +26,12 @@
         { "name": "MMS_HTTP_CONFIG_PROVIDER", "label": "mms-config-provider", "type": "string", "defaultValue": "http://$EDGE_OWNER.$EDGE_DEPLOY.mms:7778/mmsconfig" },
         { "name": "HTTP_PUBLISH_KAFKA_URL", "label": "HTTP-HOST-KAFKA-URL", "type": "string", "defaultValue": "http://$EDGE_OWNER.$EDGE_DEPLOY.http:5000/publish/kafka" },
         { "name": "HTTP_PUBLISH_STREAM_URL", "label": "HTTP-HOST-STREAM-URL", "type": "string", "defaultValue": "http://$EDGE_OWNER.$EDGE_DEPLOY.http:5000/publish/stream" },
-        { "name": "APP_SVC_MAX_MVI_URL", "label": "app-svc-max-mvi-url", "type": "string", "defaultValue": "http://$SERVICE_NAME_MAX_MVI:$MAX_MVI_SERVICE_MODEL_PORT/inference" }
+        { "name": "APP_SVC_MAX_MVI_URL", "label": "app-svc-max-mvi-url", "type": "string", "defaultValue": "http://$SERVICE_NAME_MAX_MVI_FM:$MAX_MVI_SERVICE_MODEL_PORT/inference" }
     ],
     "deployment": {
         "services": {
-            "$SERVICE_NAME_MVI": {
-                "image": "${DOCKER_IMAGE_BASE_MVI}_$ARCH:$SERVICE_VERSION_MVI",
+            "$SERVICE_NAME_MVI_FM": {
+                "image": "${DOCKER_IMAGE_BASE_MVI_FM}_$ARCH:$SERVICE_VERSION_MVI_FM",
                 "privileged": true,
 		"binds": [
 		    "$APP_BIND_HORIZON_DIR:$APP_BIND_HORIZON_DIR:rw",

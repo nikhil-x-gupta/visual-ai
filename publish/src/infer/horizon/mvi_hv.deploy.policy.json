@@ -1,6 +1,6 @@
 {
-    "label": "deploy-policy-mvi-$ARCH",
-    "description": "A deploy policy for mvi on $ARCH",
+    "label": "deploy-policy-mvi-hv-$ARCH",
+    "description": "A deploy policy for mvi_hv on $ARCH",
     "service": {
 	"name": "$EDGE_OWNER.$EDGE_DEPLOY.mvi_hv",
 	"org": "$HZN_ORG_ID",

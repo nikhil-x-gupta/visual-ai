@@ -19,7 +19,7 @@ tflite-all: publish-http publish-mms publish-tflite deploy-policy-tflite
 
 vino-all: publish-http publish-mms publish-vino deploy-policy-vino
 
-publish-all: publish-http publish-mms publish-tflite publish-vino publish-mvi publish-mvi-hv
+publish-all: publish-http publish-mms publish-tflite publish-vino publish-mvi-fm publish-mvi-hv
 
 publish-http:
 	make -C src/http
@@ -41,23 +41,23 @@ publish-vino:
 	make -C src/infer vino-push
 	make -C src/infer vino-publish-service
 
-publish-mvi:
-	make -C src/infer max-mvi-publish-service
-	make -C src/infer mvi-build
-	make -C src/infer mvi-push
-	make -C src/infer mvi-publish-service
+publish-mvi-fm:
+	make -C src/infer max-mvi-fm-publish-service
+	make -C src/infer mvi-fm-build
+	make -C src/infer mvi-fm-push
+	make -C src/infer mvi-fm-publish-service
 
 publish-mvi-hv:
 	make -C src/infer max-mvi-hv-publish-service
-	make -C src/infer mvi-build
-	make -C src/infer mvi-push
+	make -C src/infer mvi-hv-build
+	make -C src/infer mvi-hv-push
 	make -C src/infer mvi-hv-publish-service
 
 deploy-policy-all:
 	make -C src/mms deploy-policy
 	make -C src/infer tflite-deploy-policy
 	make -C src/infer vino-deploy-policy
-	make -C src/infer mvi-deploy-policy
+	make -C src/infer mvi-fm-deploy-policy
 	make -C src/infer mvi-hv-deploy-policy
 
 deploy-policy-tflite:
