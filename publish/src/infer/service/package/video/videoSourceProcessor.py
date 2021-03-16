@@ -113,7 +113,6 @@ class VideoSourceProcessor:
             videoStream.stop()
 
         elif self.config.getIsMVI():
-
             print ("{:.7f} VideoSourceProcessor MVI".format(time.time()), end="\n", flush=True)
             
             detector = MVIDetector(self.config)
@@ -123,13 +122,18 @@ class VideoSourceProcessor:
             while True:
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
 
+                print ("{:.7f} write image".format(time.time()), end="\n", flush=True)
                 frame_image_jpg_file = "/tmp/frame-image-mvi.jpg"
                 opencv.writeImageFileJpg(frame_image_jpg_file, frame_current)
                 #frame_jpg = opencv.getEncodeImageJpg(frame_current)
 
+                print ("{:.7f} detect ".format(time.time()), end="\n", flush=True)
                 inference_interval = detector.inferJpgFile(frame_image_jpg_file)
+
+                print ("{:.7f} detect result".format(time.time()), end="\n", flush=True)
                 boxes, classes, scores, num = detector.getResults()
 
+                print ("{:.7f} annotateFrame".format(time.time()), end="\n", flush=True)
                 entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
 
                 if self.config.shouldShowOverlay():

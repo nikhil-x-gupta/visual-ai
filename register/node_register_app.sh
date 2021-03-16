@@ -7,8 +7,9 @@
 usage() {                      
   echo "Usage: $0 -e -k -r -u -p -l"
   echo "where "
+  echo "   -k framework tflite | vino | mvi"
   echo "   -e file path to environemnt veriables "
-  echo "   -k framework tflite | vino | mvi_fm | mvi_hv"
+  echo "   -m file path to mvi model file "
   echo "   -r register "
   echo "   -u unregister "
   echo "   -p pattern based deployment "
@@ -30,7 +31,7 @@ fn_register_with_policy() {
     echo "   node_policy_${FMWK}.json"
     echo "   user_input_app_${FMWK}.json"
 
-    . $envvar
+    . $ENVVAR
 
     fn_chk_env
 
@@ -41,7 +42,7 @@ fn_register_with_policy() {
 fn_register_with_mms_pattern() {
     echo "Registering with pattern... "
 
-    . $envvar
+    . $ENVVAR
 
     fn_chk_env
 
@@ -54,7 +55,7 @@ fn_register_with_mms_pattern() {
 fn_register_with_pattern() {
     echo "Registering with pattern... "
 
-    . $envvar
+    . $ENVVAR
 
     fn_chk_env
 
@@ -67,21 +68,23 @@ fn_register_with_pattern() {
 fn_unregister() {
     echo "Un-registering... "
 
-    . $envvar
+    . $ENVVAR
 
     fn_chk_env
 
     hzn unregister -vrD
 }
 
-while getopts 'e:k:rlupm' option; do
+while getopts 'e:k:m:rlupm' option; do
   case "$option" in
     h) usage
        exit 1
        ;;
-    e) envvar=$OPTARG
-       ;;
     k) FMWK=$OPTARG
+       ;;
+    e) ENVVAR=$OPTARG
+       ;;
+    m) MI_MODEL=$OPTARG
        ;;
     r) register=1
        ;;
@@ -105,7 +108,7 @@ while getopts 'e:k:rlupm' option; do
 done
 shift $((OPTIND - 1))
 
-if [ -z $envvar ]; then
+if [ -z $ENVVAR ]; then
     echo ""
     echo "Must provide one of the options to set ENV vars ENV_HZN_DEV, ENV_HZN_DEMO etc"
     echo ""
@@ -115,15 +118,21 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi_fm | mvi_hv"
+    echo "Must provide one of the options to set framework vino | tflite | mvi "
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi_fm" ] || [ "$FMWK" = "mvi_hv" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ]; then
     echo "Framework $FMWK"
+    if [ "$FMWK" = "mvi" ]; then
+	export APP_MI_MODEL=$MI_MODEL
+	echo "Copy $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip"
+	mkdir -p /var/local/horizon/ai/mi/model/mvi
+	cp $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip
+    fi
 else
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi_fm | mvi_hv"
+    echo "Must provide one of the options to set framework vino | tflite | mvi "
     echo ""
     usage
     exit 1

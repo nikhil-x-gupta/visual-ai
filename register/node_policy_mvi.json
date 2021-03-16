@@ -1,9 +1,9 @@
 {
   "properties": [
       { "name": "owner",  "value": "sg.edge" },
-      { "name": "deploy",  "value": "example.visual" },
+      { "name": "deploy",  "value": "example.ai" },
       { "name": "mms", "value": true },
-      { "name": "mvi_fm", "value": true },
+      { "name": "mi.mvi", "value": true },
       { "name": "openhorizon.allowPrivileged", "value": true }
   ],
   "constraints": [

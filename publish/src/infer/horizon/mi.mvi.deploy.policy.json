@@ -1,8 +1,8 @@
 {
-    "label": "deploy-policy-mvi-hv-$ARCH",
-    "description": "A deploy policy for mvi_hv on $ARCH",
+    "label": "deploy-policy-mi-mvi-$ARCH",
+    "description": "A deploy policy for mvi_fm on $ARCH",
     "service": {
-	"name": "$EDGE_OWNER.$EDGE_DEPLOY.mvi_hv",
+	"name": "$EDGE_OWNER.$EDGE_DEPLOY.mi.mvi",
 	"org": "$HZN_ORG_ID",
 	"arch": "$ARCH",
 	"serviceVersions": [
@@ -17,12 +17,12 @@
     "constraints": [
 	"owner == $EDGE_OWNER",
 	"deploy == $EDGE_DEPLOY",
-	"mvi_hv == true"
+	"mi.mvi == true"
     ],
     "userInput": [
 	{
 	    "serviceOrgid": "$HZN_ORG_ID",
-	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.max_mvi_hv",
+	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.mi.model_mvi",
 	    "serviceVersionRange": "[0.0.0,INFINITY)",
 	    "inputs": [
 		{ "name" : "DEVICE_ID", "value" : "DEVICE_ID"  },

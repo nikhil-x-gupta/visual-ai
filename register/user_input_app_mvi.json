@@ -20,7 +20,7 @@
     },
     {
 	"org": "$HZN_ORG_ID",
-	"url": "$EDGE_OWNER.$EDGE_DEPLOY.mvi_hv",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.mi.mvi",
 	"versionRange": "[0.0.0,INFINITY)",
 	"variables": {
             "DEVICE_ID"                : "$DEVICE_ID",
@@ -28,6 +28,7 @@
 	    "DEVICE_IP_ADDRESS"        : "$DEVICE_IP_ADDRESS",
 	    "RTSP_STREAMS"             : "$RTSP_STREAMS",
 	    "APP_BIND_HORIZON_DIR"     : "$APP_BIND_HORIZON_DIR",
+	    "APP_MI_MODEL"             : "$APP_MI_MODEL",
 	    "SHOW_OVERLAY"             : $SHOW_OVERLAY,
 	    "PUBLISH_KAFKA"            : $PUBLISH_KAFKA,
 	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,

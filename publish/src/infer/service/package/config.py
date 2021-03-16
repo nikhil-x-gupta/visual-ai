@@ -8,6 +8,7 @@ from threading import Thread
 import numpy 
 import cv2
 import datetime
+import json
 import os
 import requests
 import time
@@ -82,7 +83,8 @@ class Config:
 
     def setMVIDefaults(self):
         self.tool = "MVI OpenCV"
-        
+        self.modelObjectId = os.environ['APP_MI_MODEL'] 
+
     def getObjectName(self):
         return self.objectName
 
@@ -147,8 +149,8 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
-    def getMaxMVIDetectorURL(self):
-        return os.environ['APP_SVC_MAX_MVI_URL'] 
+    def getMVIDetectorURL(self):
+        return os.environ['APP_SVC_MODEL_MVI_URL'] 
 
     # uses network:host . Use host network IP
     def getMMSConfigProviderUrl(self):
