@@ -22,6 +22,6 @@ $(error HZN_EXCHANGE_USER_AUTH is not set. export HZN_EXCHANGE_USER_AUTH=iamapik
 endif
 
 ifndef APP_BIND_HORIZON_DIR
-$(error APP_BIND_HORIZON_DIR is not set. export APP_BIND_HORIZON_DIR=/var/tmp/horizon )
+$(error APP_BIND_HORIZON_DIR is not set. export APP_BIND_HORIZON_DIR=/var/local/horizon )
 endif
 

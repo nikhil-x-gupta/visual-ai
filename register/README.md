@@ -81,7 +81,7 @@ export APP_MMS_OBJECT_TYPE_MODEL="tflite-mmsmodel"
 export APP_MMS_OBJECT_SERVICE_NAME_MODEL="$EDGE_OWNER.$EDGE_DEPLOY.mms"   
  
 # Keep this as such.
-export APP_BIND_HORIZON_DIR=/var/tmp/horizon
+export APP_BIND_HORIZON_DIR=/var/local/horizon
     
 # Keep these as such. face detection disabled for now as haarscascade based detection is not reliable
 export SHOW_OVERLAY=true # false to hide OVERLAY
