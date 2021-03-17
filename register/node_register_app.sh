@@ -1,11 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 #
 # edge device register unregister pattern policy
-# #
+# 
 #
 
+RED="\033[31m"
+GREEN="\033[32m"
+OFF="\033[0m"
+
 usage() {                      
-  echo "Usage: $0 -e -k -r -u -p -l"
+  echo "Usage: $0 -e -k -m -r -u -p -l"
   echo "where "
   echo "   -k framework tflite | vino | mvi"
   echo "   -e file path to environemnt veriables "
@@ -27,7 +31,7 @@ fn_chk_env() {
 }
 
 fn_register_with_policy() {
-    echo "Registering with ... "
+    echo "${GREEN}Registering with ... ${OFF}"
     echo "   node_policy_${FMWK}.json"
     echo "   user_input_app_${FMWK}.json"
 
@@ -123,12 +127,28 @@ if [ -z $FMWK ]; then
     usage
     exit 1
 elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ]; then
-    echo "Framework $FMWK"
+    echo "\n${GREEN}Framework $FMWK"
     if [ "$FMWK" = "mvi" ]; then
-	export APP_MI_MODEL=$MI_MODEL
-	echo "Copy $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip"
-	mkdir -p /var/local/horizon/ai/mi/model/mvi
-	cp $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip
+	if [ ! -z $MI_MODEL ]; then 
+	    if [ -f $MI_MODEL ]; then 
+		MODEL_DIR=/var/local/horizon/ai/mi/model/mvi
+		mkdir -p $MODEL_DIR
+		if [ -d $MODEL_DIR ]; then 
+		    export APP_MI_MODEL=$MI_MODEL
+		    echo "${OFF}Copying $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip"
+		    cp $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip
+		else
+		    echo "\n${RED}Failed creating directoy $MODEL_DIR.\n"
+		    exit 1
+		fi
+	    else
+		echo "\n${RED}Model file $MI_MODEL does not exist.\n"
+		exit 1
+	    fi
+	else
+	    echo "\n${RED}For $FMWK, must provide a valid mvi model file using -m option.\n"
+	    exit 1
+	fi
     fi
 else
     echo ""
