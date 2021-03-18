@@ -45,15 +45,18 @@ publish-vino:
 
 publish-mvi:
 	make -C src/infer model-mvi-publish-service 
+	make -C src/infer model-mvi-p100-publish-service
 	make -C src/infer mi-mvi-build 
 	make -C src/infer mi-mvi-push
 	make -C src/infer mi-mvi-publish-service
+	make -C src/infer mi-mvi-p100-publish-service
 
 deploy-policy-all:
 	make -C src/mms deploy-policy
 	make -C src/infer tflite-deploy-policy
 	make -C src/infer vino-deploy-policy
 	make -C src/infer mi-mvi-deploy-policy
+	make -C src/infer mi-mvi-p100-deploy-policy
 
 deploy-policy-tflite:
 	make -C src/mms deploy-policy
@@ -66,5 +69,6 @@ deploy-policy-vino:
 deploy-policy-mvi:
 	make -C src/mms deploy-policy
 	make -C src/infer mi-mvi-deploy-policy
+	make -C src/infer mi-mvi-p100-deploy-policy
 
 

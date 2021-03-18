@@ -1,0 +1,33 @@
+{
+    "label": "deploy-policy-mi-mvi-p100-$ARCH",
+    "description": "A deploy policy for mvi p100m on $ARCH",
+    "service": {
+	"name": "$EDGE_OWNER.$EDGE_DEPLOY.mi.mvi_p100",
+	"org": "$HZN_ORG_ID",
+	"arch": "$ARCH",
+	"serviceVersions": [
+	    {
+		"version": "1.0.0",
+		"priority":{}
+	    }
+	]
+    },
+    "properties": [
+    ],
+    "constraints": [
+	"owner == $EDGE_OWNER",
+	"deploy == $EDGE_DEPLOY",
+	"mi.mvi.p100 == true"
+    ],
+    "userInput": [
+	{
+	    "serviceOrgid": "$HZN_ORG_ID",
+	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.mi.model_mvi_p100",
+	    "serviceVersionRange": "[0.0.0,INFINITY)",
+	    "inputs": [
+		{ "name" : "DEVICE_ID", "value" : "DEVICE_ID"  },
+		{ "name" : "DEVICE_NAME", "value" : "DEVICE_NAME"  }
+	    ]
+	}
+    ]
+}

@@ -11,12 +11,12 @@ def inference_publish(url, inference_data_json):
         header = {"Content-type": "application/json", "Accept": "text/plain"} 
         req = requests.post(url, data=inference_data_json, headers=header)
     except requests.exceptions.RequestException as err:
-        print ("OOps: Something Else",err)
+        print ("inference_publish: Something Else",err)
     except requests.exceptions.HTTPError as errh:
-        print ("Http Error:",errh)
+        print ("inference_publish: Http Error:",errh)
     except requests.exceptions.ConnectionError as errc:
-        print ("Error Connecting:",errc)
+        print ("inference_publish: Error Connecting:",errc)
     except requests.exceptions.Timeout as errt:
-        print ("Timeout Error:",errt) 
+        print ("inference_publish: Timeout Error:",errt) 
 
     return ""

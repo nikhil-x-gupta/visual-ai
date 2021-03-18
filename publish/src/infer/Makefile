@@ -48,9 +48,19 @@ model-mvi-publish-service:
 	docker login -u iamapikey -p $(APP_CR_API_KEY_RO_PULL) $(CR_DST)
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_MODEL_MVI).service.definition.json --pull-image -r "$(CR_DST):iamapikey:$(APP_CR_API_KEY_RO_PULL)" 
 
+model-mvi-p100-publish-service:
+	docker login -u iamapikey -p $(APP_CR_API_KEY_RO_PULL) $(CR_DST)
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_MODEL_MVI_P100).service.definition.json --pull-image -r "$(CR_DST):iamapikey:$(APP_CR_API_KEY_RO_PULL)" 
+
 mi-mvi-publish-service:
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_MI_MVI).service.definition.json --pull-image
 
+mi-mvi-p100-publish-service:
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_MI_MVI_P100).service.definition.json --pull-image
+
+# pattern publish
+model-mvi-p100-publish-pattern:
+	hzn exchange pattern publish -f horizon/$(IMAGE_NAME_MODEL_MVI_P100).pattern.json
 
 # Deployment policy
 tflite-deploy-policy:
@@ -61,6 +71,9 @@ vino-deploy-policy:
 
 mi-mvi-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_MI_MVI).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_MI_MVI)_$(ARCH)
+
+mi-mvi-p100-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_MI_MVI_P100).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_MI_MVI_P100)_$(ARCH)
 
 #mvi-max deploys as requiredService in mvi deployment
 #mvi-hv-max deploys as requiredService in mvi deployment

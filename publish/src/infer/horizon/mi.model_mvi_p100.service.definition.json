@@ -1,0 +1,35 @@
+{
+    "org": "$HZN_ORG_ID",
+    "label": "$SERVICE_NAME_MODEL_MVI_P100-$ARCH",
+    "description": "",
+    "public": true,
+    "documentation": "",
+    "url": "$SERVICE_NAME_MODEL_MVI_P100",
+    "version": "$SERVICE_VERSION_MODEL_MVI_P100",
+    "arch": "$ARCH",
+    "sharable": "singleton",
+    "requiredServices": [
+    ],
+    "userInput": [
+    ],
+    "deployment": {
+        "services": {
+            "$SERVICE_NAME_MODEL_MVI_P100": {
+                "image": "${APP_MODEL_MVI_DOCKER_IMAGE_BASE}:$SERVICE_VERSION_MODEL_MVI_P100",
+                "privileged": true,
+		"environment": [${APP_MODEL_MVI_ENVIRONMENT_P100}],
+		"binds": [
+		    "${APP_BIND_HORIZON_MVI_MDOEL_DIR}/${APP_MI_MVI_MODEL_ZIP}:${APP_CONFIG_MODEL_MVI_ZIP}:ro"
+		],
+		"ports": [
+		    {
+			"HostPort": "${APP_MODEL_MVI_SERVICE_HOST_PORT}:${APP_MODEL_MVI_SERVICE_PORT}/tcp",
+			"HostIP": "0.0.0.0"
+		    }
+		],
+		"command": [${APP_MODEL_MVI_COMMAND_P100}]
+            }
+        }
+    }
+}
+

@@ -11,7 +11,7 @@ OFF="\033[0m"
 usage() {                      
   echo "Usage: $0 -e -k -m -r -u -p -l"
   echo "where "
-  echo "   -k framework tflite | vino | mvi"
+  echo "   -k framework tflite | vino | mvi | mvi_p100"
   echo "   -e file path to environemnt veriables "
   echo "   -m file path to mvi model file "
   echo "   -r register "
@@ -122,13 +122,13 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi "
+    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 "
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ]; then
     echo "\n${GREEN}Framework $FMWK"
-    if [ "$FMWK" = "mvi" ]; then
+    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
 		MODEL_DIR=/var/local/horizon/ai/mi/model/mvi
@@ -152,7 +152,7 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ]; then
     fi
 else
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi "
+    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 "
     echo ""
     usage
     exit 1

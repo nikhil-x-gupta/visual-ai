@@ -246,14 +246,14 @@ class Config:
                     self.env_dict['BLUR_FACE'] = value_dict['BLUR_FACE']
 
         except requests.exceptions.HTTPError as errh:
-            print ("Http Error:", errh)
+            print ("mmsConfig: Http Error:", errh)
         except requests.exceptions.ConnectionError as errc:
             None
             #print ("Error Connecting:", errc)
         except requests.exceptions.Timeout as errt:
-            print ("Timeout Error:", errt)
+            print ("mmsConfig: Error:", errt)
         except requests.exceptions.RequestException as err:
-            print ("OOps: Something Else", err)
+            print ("mmsConfig:Something Else", err)
 
     #{"mms_action":"updated","value":{"OBJECT_TYPE":"tflite-mmsmodel","OBJECT_ID":"mobilenet-tflite-1.0.0-mms.tar.gz","MODEL_NET":"mobilenet","MODEL_FMWK":"tflite","MODEL_VERSION":"1.0.0","MODEL_DIR":"/var/tmp/horizon/tflite-mmsmodel/mobilenet/tflite/1.0.0/files","FILES":"detect.tflite labelmap.txt"}}
     def mmsModel(self):
@@ -286,9 +286,9 @@ class Config:
             None
             #print ("Error Connecting:", errc)
         except requests.exceptions.Timeout as errt:
-            print ("Timeout Error:", errt)
+            print ("mmsModel: Timeout Error:", errt)
         except requests.exceptions.RequestException as err:
-            print ("OOps: Something Else", err)
+            print ("mmsModel:  Something Else", err)
 
     def mmsProcessor(self):
         while True:
