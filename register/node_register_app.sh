@@ -128,7 +128,7 @@ if [ -z $FMWK ]; then
     exit 1
 elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ]; then
     echo "\n${GREEN}Framework $FMWK"
-    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ]; then
+    if [ "$FMWK" = "mvi" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
 		MODEL_DIR=/var/local/horizon/ai/mi/model/mvi
@@ -149,6 +149,11 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 	    echo "\n${RED}For $FMWK, must provide a valid mvi model file using -m option.\n"
 	    exit 1
 	fi
+    elif [ "$FMWK" = "mvi_p100" ]; then
+	export APP_MI_MODEL="Remote model"
+	echo "\n${RED}Make sure that remote model detector is running"
+    else
+	export APP_MI_MODEL="Local model $FMWK"
     fi
 else
     echo ""

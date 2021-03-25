@@ -17,7 +17,7 @@ class MVIDetector:
     def __init__(self, config):
         self.config = config
 
-        self.detectorURL = config.getMVIDetectorURL()
+        self.detectorURL = config.getDetectorURL()
 
         self.modelPath = "."
         self.labels=["Mask", "NoMask"]

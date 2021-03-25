@@ -149,8 +149,8 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
-    def getMVIDetectorURL(self):
-        return os.environ['APP_SVC_MODEL_MVI_URL'] 
+    def getDetectorURL(self):
+        return os.environ['APP_SVC_MODEL_MVI_URL'] if 'APP_SVC_MODEL_MVI_URL' in os.environ else 'internal'
 
     # uses network:host . Use host network IP
     def getMMSConfigProviderUrl(self):
