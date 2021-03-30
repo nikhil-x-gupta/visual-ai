@@ -9,8 +9,9 @@ import cv2
 import time
 
 class VideoStream:
-    def __init__(self, config, source):
+    def __init__(self, config, source, captureInterval=0.01):
         print ("{:.7f} VideoStream initializing".format(time.time()))
+        self.captureInterval = captureInterval
         self.videoCapture = cv2.VideoCapture(source)
         ret = self.videoCapture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
         ret = self.videoCapture.set(3, config.getResolutionWidth())
@@ -39,4 +40,4 @@ class VideoStream:
                 return
             else:
                 (self.grabbed, self.frame) = self.videoCapture.read()
-                time.sleep(0.01)
+                time.sleep(self.captureInterval)

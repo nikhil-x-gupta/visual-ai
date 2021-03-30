@@ -57,7 +57,7 @@ class VinoOpenCV:
 
         return frame_current, frame_norm, frame_faces, frame_gray, images, images_hw
 
-    def annotateFrame(self, config, frame_current, src_name, frame_faces, frame_gray, boxes_dict, classes_dict, scores_dict):
+    def annotateFrame(self, config, detector, frame_current, src_name, frame_faces, frame_gray, boxes_dict, classes_dict, scores_dict):
         entities_dict = {}
         for imid in classes_dict:
             for box in boxes_dict[imid]:
