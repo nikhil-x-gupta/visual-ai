@@ -26,7 +26,6 @@ class VideoSourceProcessor:
         self.videoSources = []
         self.config = config
         self.videoSources.append(VideoSource(name, source))
-        #self.detector = None if config.getIsTFLite() else VinoDetector(config)
         self.detector = None
        
     def addVideoSource(self, name, source):
@@ -42,74 +41,34 @@ class VideoSourceProcessor:
             print ("{:.7f} VideoSourceProcessor TFLite".format(time.time()), end="\n", flush=True)
             detector = TFLiteDetector(self.config)
             opencv = TFLiteOpenCV()
-
             while True:
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
                 inference_interval, boxes, classes, scores = detector.getInferResults(frame_normalized)
-                #print ("{:.7f} VideoSourceProcessor TFLITE".format(time.time()), inference_interval, boxes, classes, scores, end="\n", flush=True)
-
-                entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
-                if self.config.shouldShowOverlay():
-                    opencv.addOverlay(frame_current, self.config.getTool(), self.config.getDeviceName(), inference_interval, opencv.getFrameRate())
-                videoSource.frame_annotated = frame_current.copy()
-                inference_data_json = opencv.getInferenceDataJSON(self.config, inference_interval, entities_dict, self.videoSources)
-                if self.config.shouldPublishKafka():
-                    util.inference_publish(self.config.getPublishPayloadKafkaUrl(), inference_data_json)
-                if self.config.shouldPublishStream():
-                    util.inference_publish(self.config.getPublishPayloadStreamUrl(), inference_data_json)
-                opencv.updateFrameRate()
+                self.update(self.config, self.videoSources, videoSource, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
                 if detector.getModelPath() != self.config.getModelPathTFLite():
                     detector = TFLiteDetector(self.config)
-
             videoStream.stop()
 
         elif self.config.getIsVino():
             print ("{:.7f} VideoSourceProcessor OpenVINO".format(time.time()), end="\n", flush=True)
             detector = VinoDetector(self.config)
             opencv = VinoOpenCV()
-
             while True:
                 frame_current, frame_normalized, frame_faces, frame_gray, images, images_hw = opencv.getFrame(self.config, videoStream, detector.getN(), detector.getC(), detector.getHeight(), detector.getWidth())
                 inference_interval, boxes, classes, scores = detector.getInferResults(images, images_hw, frame_current)
-                #print ("{:.7f} VideoSourceProcessor OpenVINO".format(time.time()), inference_interval, boxes, classes, scores, end="\n", flush=True)
-
-                entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
-                if self.config.shouldShowOverlay():
-                    opencv.addOverlay(frame_current, self.config.getTool(), self.config.getDeviceName(), inference_interval, opencv.getFrameRate())
-                videoSource.frame_annotated = frame_current.copy()
-                inference_data_json = opencv.getInferenceDataJSON(self.config, inference_interval, entities_dict, self.videoSources)
-                if self.config.shouldPublishKafka():
-                    util.inference_publish(self.config.getPublishPayloadKafkaUrl(), inference_data_json)
-                if self.config.shouldPublishStream():
-                    util.inference_publish(self.config.getPublishPayloadStreamUrl(), inference_data_json)
-
-                opencv.updateFrameRate()
-
+                self.update(self.config, self.videoSources, videoSource, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
                 #if detector.getModelPath() != self.config.getModelPath():
                 #    detector = VinoDetector(self.config)
-
             videoStream.stop()
 
         elif self.config.getIsMVI():
             print ("{:.7f} VideoSourceProcessor MVI".format(time.time()), end="\n", flush=True)
             detector = MVIDetector(self.config)
             opencv = MVIOpenCV()
-
             while True:
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
                 inference_interval, boxes, classes, scores = detector.getInferResults(frame_current, index, opencv)
-                #print ("{:.7f} VideoSourceProcessor MVI".format(time.time()), inference_interval, boxes, classes, scores, end="\n", flush=True)
-
-                entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
-                if self.config.shouldShowOverlay():
-                    opencv.addOverlay(frame_current, self.config.getTool(), self.config.getDeviceName(), inference_interval, opencv.getFrameRate())
-                videoSource.frame_annotated = frame_current.copy()
-                inference_data_json = opencv.getInferenceDataJSON(self.config, inference_interval, entities_dict, self.videoSources)
-                if self.config.shouldPublishKafka():
-                    util.inference_publish(self.config.getPublishPayloadKafkaUrl(), inference_data_json)
-                if self.config.shouldPublishStream():
-                    util.inference_publish(self.config.getPublishPayloadStreamUrl(), inference_data_json)
-                opencv.updateFrameRate()
+                self.update(self.config, self.videoSources, videoSource, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
                 #if detector.getModelPath() != self.config.getModelPath():
                 #    detector = VinoDetector(self.config)
 
@@ -121,4 +80,14 @@ class VideoSourceProcessor:
         else:
             self.process(index)
 
-        
+    def update(self, config, video_sources, video_source, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval):
+        entities_dict = opencv.annotateFrame(config, detector, frame_current, video_source.getName(), frame_faces, frame_gray, boxes, classes, scores)
+        if config.shouldShowOverlay():
+            opencv.addOverlay(frame_current, config.getTool(), config.getDeviceName(), inference_interval, opencv.getFrameRate())
+        video_source.frame_annotated = frame_current.copy()
+        inference_data_json = opencv.getInferenceDataJSON(config, inference_interval, entities_dict, video_sources)
+        if config.shouldPublishKafka():
+            util.inference_publish(config.getPublishPayloadKafkaUrl(), inference_data_json)
+        if config.shouldPublishStream():
+            util.inference_publish(config.getPublishPayloadStreamUrl(), inference_data_json)
+        opencv.updateFrameRate()

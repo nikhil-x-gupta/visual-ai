@@ -39,5 +39,8 @@ class VideoStream:
                 self.videoCapture.release()
                 return
             else:
-                (self.grabbed, self.frame) = self.videoCapture.read()
-                time.sleep(self.captureInterval)
+                try:
+                    (self.grabbed, self.frame) = self.videoCapture.read()
+                    time.sleep(self.captureInterval)
+                except cv2.error as e:
+                    print(e)
