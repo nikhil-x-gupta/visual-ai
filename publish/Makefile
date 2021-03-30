@@ -24,12 +24,12 @@ mvi-all: publish-http publish-mms publish-mvi deploy-policy-mvi
 publish-all: publish-http publish-mms publish-tflite publish-vino publish-mvi
 
 publish-http:
-	make -C src/http
+	make -C src/http build
 	make -C src/http push
 	make -C src/http publish-service
 
 publish-mms:
-	make -C src/mms
+	make -C src/mms build
 	make -C src/mms push
 	make -C src/mms publish-service
 

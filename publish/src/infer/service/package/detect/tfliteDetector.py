@@ -68,3 +68,8 @@ class TFLiteDetector:
         num = self.interpreter.get_tensor(output_details[3]['index'])[0]
 
         return boxes, classes, scores, num
+
+    def getInferResults(self, frame_normalized):
+        inference_interval = self.infer(frame_normalized)
+        boxes, classes, scores, num = self.getResults()
+        return inference_interval, boxes, classes, scores

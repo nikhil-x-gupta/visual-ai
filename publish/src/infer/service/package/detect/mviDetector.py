@@ -76,7 +76,6 @@ class MVIDetector:
     def getFloatingModel(self):
         return False
 
-    #{"classified": [{"label": "Mask", "confidence": 0.99959, "xmin": 153, "ymin": 73, "xmax": 233, "ymax": 144, "attr": [{}]}, {"label": "Mask", "confidence": 0.98961, "xmin": 38, "ymin": 65, "xmax": 102, "ymax": 114, "attr": [{}]}], "result": "success"}
     def getResults(self):
         outputDetails = self.getOutputDetails()
         boxes = []
@@ -92,3 +91,11 @@ class MVIDetector:
                 scores.append(record['confidence'])
 
         return boxes, classes, scores, num
+
+    def getInferResults(self, frame_current, index, opencv):
+        frame_image_jpg_file = "/tmp/frame-image-mvi-" + str(index) + ".jpg"
+        opencv.writeImageFileJpg(frame_image_jpg_file, frame_current)
+        inference_interval = self.inferJpgFile(frame_image_jpg_file)
+        boxes, classes, scores, num = self.getResults()
+        return inference_interval, boxes, classes, scores 
+    

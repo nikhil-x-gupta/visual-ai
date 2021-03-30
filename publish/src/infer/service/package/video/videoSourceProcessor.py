@@ -45,8 +45,8 @@ class VideoSourceProcessor:
 
             while True:
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
-                inference_interval = detector.infer(frame_normalized)
-                boxes, classes, scores, num = detector.getResults()
+                inference_interval, boxes, classes, scores = detector.getInferResults(frame_normalized)
+                #print ("{:.7f} VideoSourceProcessor TFLITE".format(time.time()), inference_interval, boxes, classes, scores, end="\n", flush=True)
 
                 entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
                 if self.config.shouldShowOverlay():
@@ -71,6 +71,7 @@ class VideoSourceProcessor:
             while True:
                 frame_current, frame_normalized, frame_faces, frame_gray, images, images_hw = opencv.getFrame(self.config, videoStream, detector.getN(), detector.getC(), detector.getHeight(), detector.getWidth())
                 inference_interval, boxes, classes, scores = detector.getInferResults(images, images_hw, frame_current)
+                #print ("{:.7f} VideoSourceProcessor OpenVINO".format(time.time()), inference_interval, boxes, classes, scores, end="\n", flush=True)
 
                 entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
                 if self.config.shouldShowOverlay():
@@ -96,19 +97,9 @@ class VideoSourceProcessor:
 
             while True:
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
+                inference_interval, boxes, classes, scores = detector.getInferResults(frame_current, index, opencv)
+                #print ("{:.7f} VideoSourceProcessor MVI".format(time.time()), inference_interval, boxes, classes, scores, end="\n", flush=True)
 
-                print ("{:.7f} write image".format(time.time()), end="\n", flush=True)
-                frame_image_jpg_file = "/tmp/frame-image-mvi.jpg"
-                opencv.writeImageFileJpg(frame_image_jpg_file, frame_current)
-                #frame_jpg = opencv.getEncodeImageJpg(frame_current)
-
-                print ("{:.7f} detect ".format(time.time()), end="\n", flush=True)
-                inference_interval = detector.inferJpgFile(frame_image_jpg_file)
-
-                print ("{:.7f} detect result".format(time.time()), end="\n", flush=True)
-                boxes, classes, scores, num = detector.getResults()
-
-                print ("{:.7f} annotateFrame".format(time.time()), end="\n", flush=True)
                 entities_dict = opencv.annotateFrame(self.config, detector, frame_current, videoSource.getName(), frame_faces, frame_gray, boxes, classes, scores)
                 if self.config.shouldShowOverlay():
                     opencv.addOverlay(frame_current, self.config.getTool(), self.config.getDeviceName(), inference_interval, opencv.getFrameRate())
