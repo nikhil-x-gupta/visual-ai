@@ -11,7 +11,7 @@ OFF="\033[0m"
 usage() {                      
   echo "Usage: $0 -e -k -m -r -u -p -l"
   echo "where "
-  echo "   -k framework tflite | vino | mvi | mvi_p100"
+  echo "   -k framework tflite | vino | mvi | mvi_p100 | pytorch"
   echo "   -e file path to environemnt veriables "
   echo "   -m file path to mvi model file "
   echo "   -r register "
@@ -122,23 +122,29 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 "
+    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pytorch "
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pytorch" ]; then
     echo "\n${GREEN}Framework $FMWK"
-    if [ "$FMWK" = "mvi" ]; then
+    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pytorch" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
-		MODEL_DIR=/var/local/horizon/ai/mi/model/mvi
+		echo "${RED}Creating directory "
+		MODEL_DIR="$APP_BIND_HORIZON_DIR/ai/mi/model/$FMWK"
 		mkdir -p $MODEL_DIR
 		if [ -d $MODEL_DIR ]; then 
 		    export APP_MI_MODEL=$MI_MODEL
-		    echo "${OFF}Copying $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip"
-		    cp $MI_MODEL /var/local/horizon/ai/mi/model/mvi/mi_mvi_model.zip
+		    if [ "$FMWK" = "mvi" ]; then
+			echo "${OFF}Copying $MI_MODEL $MODEL_DIR/mi_mvi_model.zip"
+			cp $MI_MODEL $MODEL_DIR/mi_mvi_model.zip
+		    else
+			echo "${OFF}Copying $MI_MODEL to $MODEL_DIR"
+			cp $MI_MODEL $MODEL_DIR/.
+		    fi
 		else
-		    echo "\n${RED}Failed creating directoy $MODEL_DIR.\n"
+		    echo "\n${RED}Failed creating directoy $MODEL_DIR\nProvide 777 privilege to $APP_BIND_HORIZON_DIR directory so that model files can be copied.\n"
 		    exit 1
 		fi
 	    else
@@ -146,7 +152,7 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 		exit 1
 	    fi
 	else
-	    echo "\n${RED}For $FMWK, must provide a valid mvi model file using -m option.\n"
+	    echo "\n${RED}For $FMWK, must provide a valid ML model using -m option.\n"
 	    exit 1
 	fi
     elif [ "$FMWK" = "mvi_p100" ]; then
@@ -157,7 +163,7 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
     fi
 else
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 "
+    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pytorch"
     echo ""
     usage
     exit 1
