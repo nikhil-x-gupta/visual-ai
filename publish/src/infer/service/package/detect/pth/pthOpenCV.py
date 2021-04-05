@@ -1,34 +1,39 @@
 #
-# tfliteOpenCV.py
+# pthOpenCV.py
 #
-# Sanjeev Gupta, April 2020
+# Sanjeev Gupta, Mar 2021
 
 import cv2
 import datetime
 
-from .baseOpenCV import BaseOpenCV
+from package.util import util
+from package.detect.baseOpenCV import BaseOpenCV
 
-class TFLiteOpenCV(BaseOpenCV):
+class PTHOpenCV(BaseOpenCV):
     def __init__(self):
         super().__init__()
     
     def annotateFrame(self, config, detector, frame_current, src_name, frame_faces, frame_gray, boxes, classes, scores):
+        if classes is not None and not util.isIterable(classes):
+            classes = [classes]
+
         entities_dict = {}
-        for i in range(len(scores)):
-            if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
-                
-                imageH, imageW, _ = frame_current.shape
+        for i in range(boxes.shape[0]):
+            if scores[i] < config.getMinConfidenceThreshold():
+                continue
 
-                # Get bounding box coordinates and draw box
-                ymin = int(max(1, (boxes[i][0] * imageH)))
-                xmin = int(max(1, (boxes[i][1] * imageW )))
-                ymax = int(min(imageH, (boxes[i][2] * imageH)))
-                xmax = int(min(imageW, (boxes[i][3] * imageW)))
-                cv2.rectangle(frame_current, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
+            box = boxes[i].numpy()
+            xmin = int(box[0])
+            ymin = int(box[1])
+            xmax = int(box[2])
+            ymax = int(box[3])
 
-                # Draw label
-                object_name = detector.getLabels()[int(classes[i])]
-                label = '%s: %d%%' % (object_name,  int(scores[i] * 100))
+            cv2.rectangle(frame_current, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
+
+            imageH, imageW, _ = frame_current.shape
+            if classes:
+                object_name = classes[i]
+                label = '%s: %d%%' % (object_name,  int(scores[i].item() * 100))
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
                 label_ymin = max(ymin, labelSize[1] + 8)
                 cv2.rectangle(frame_current, (xmin, label_ymin - labelSize[1] - 10), (xmin + labelSize[0], label_ymin + baseLine - 10), (255, 255, 255), cv2.FILLED)

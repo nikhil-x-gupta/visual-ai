@@ -4,7 +4,6 @@
 # Sanjeev Gupta, Feb 24, 2021
 #
 # Uses an all contained container max_mvi detector deployed as a required service
-# Simple requests based post did not work and ha to augment with Retry block 
 
 import numpy
 import requests
@@ -18,6 +17,8 @@ class MVIDetector:
         self.config = config
 
         self.detectorURL = config.getDetectorURL()
+
+        print ("{:.7f} MVIDetector self.detectorURL".format(time.time()), self.detectorURL, end="\n", flush=True)
 
         self.modelPath = "."
         self.labels=["Mask", "NoMask"]

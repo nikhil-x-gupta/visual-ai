@@ -7,7 +7,7 @@ import cv2
 import datetime
 import numpy 
 
-from .baseOpenCV import BaseOpenCV
+from package.detect.baseOpenCV import BaseOpenCV
 
 class VinoOpenCV(BaseOpenCV):
     def __init__(self):

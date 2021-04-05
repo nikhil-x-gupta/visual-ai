@@ -34,8 +34,11 @@ RUN mkdir -p /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quan
     unzip coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip && \
     rm coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
 
+ENV APP_MI_MODEL coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+
 WORKDIR /
-RUN mkdir -p package/detect package/util package/video 
+RUN mkdir -p package/detect/tflite package/util package/video 
+COPY service/package/detect/tflite/*.py package/detect/tflite/
 COPY service/package/detect/*.py package/detect/
 COPY service/package/video/*.py package/video/
 COPY service/package/util/*.py package/util/

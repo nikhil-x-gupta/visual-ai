@@ -20,3 +20,6 @@ def inference_publish(url, inference_data_json):
         print ("inference_publish: Timeout Error:",errt) 
 
     return ""
+
+def isIterable(var):
+    return isinstance(var, list) or isinstance(var, tuple)

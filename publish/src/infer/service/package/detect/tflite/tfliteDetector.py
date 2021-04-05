@@ -9,8 +9,8 @@ import time
 
 class TFLiteDetector:
     def __init__(self, config):
-        spec = importlib.util.find_spec('tflite_runtime')
-        if spec:
+        isTFLite = importlib.util.find_spec('tflite_runtime')
+        if isTFLite:
             from tflite_runtime.interpreter import Interpreter
 
             self.interpreter = Interpreter(model_path=config.getModelPathTFLite())

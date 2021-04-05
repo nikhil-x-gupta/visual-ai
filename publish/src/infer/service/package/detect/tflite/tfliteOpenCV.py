@@ -1,25 +1,17 @@
 #
-# baseOpenCV.py
+# tfliteOpenCV.py
 #
 # Sanjeev Gupta, April 2020
 
 import cv2
 import datetime
 
-from .baseOpenCV import BaseOpenCV
+from package.detect.baseOpenCV import BaseOpenCV
 
-class MVIOpenCV(BaseOpenCV):
+class TFLiteOpenCV(BaseOpenCV):
     def __init__(self):
         super().__init__()
-        
-    def getEncodeImageJpg(self, frame):
-        cv2.imwrite("/tmp/frame-image-mvi.jpg", frame)
-        frame_jpg = cv2.imencode('.jpg', frame)    
-        return frame_jpg
-
-    def writeImageFileJpg(self, file, frame):
-        cv2.imwrite(file, frame)
-
+    
     def annotateFrame(self, config, detector, frame_current, src_name, frame_faces, frame_gray, boxes, classes, scores):
         entities_dict = {}
         for i in range(len(scores)):
@@ -27,15 +19,15 @@ class MVIOpenCV(BaseOpenCV):
                 
                 imageH, imageW, _ = frame_current.shape
 
-                ymin = boxes[i][0]
-                xmin = boxes[i][1]
-                ymax = boxes[i][2]
-                xmax = boxes[i][3]
-
+                # Get bounding box coordinates and draw box
+                ymin = int(max(1, (boxes[i][0] * imageH)))
+                xmin = int(max(1, (boxes[i][1] * imageW )))
+                ymax = int(min(imageH, (boxes[i][2] * imageH)))
+                xmax = int(min(imageW, (boxes[i][3] * imageW)))
                 cv2.rectangle(frame_current, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
 
                 # Draw label
-                object_name = classes[i]
+                object_name = detector.getLabels()[int(classes[i])]
                 label = '%s: %d%%' % (object_name,  int(scores[i] * 100))
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
                 label_ymin = max(ymin, labelSize[1] + 8)

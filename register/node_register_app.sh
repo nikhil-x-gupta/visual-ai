@@ -11,7 +11,7 @@ OFF="\033[0m"
 usage() {                      
   echo "Usage: $0 -e -k -m -r -u -p -l"
   echo "where "
-  echo "   -k framework tflite | vino | mvi | mvi_p100 | pytorch"
+  echo "   -k framework tflite | vino | mvi | mvi_p100 | pth"
   echo "   -e file path to environemnt veriables "
   echo "   -m file path to mvi model file "
   echo "   -r register "
@@ -122,13 +122,17 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pytorch "
+    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pth "
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pytorch" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pth" ]; then
+    . $ENVVAR
+
+    fn_chk_env
+
     echo "\n${GREEN}Framework $FMWK"
-    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pytorch" ]; then
+    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
 		echo "${RED}Creating directory "
@@ -141,7 +145,7 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 			cp $MI_MODEL $MODEL_DIR/mi_mvi_model.zip
 		    else
 			echo "${OFF}Copying $MI_MODEL to $MODEL_DIR"
-			cp $MI_MODEL $MODEL_DIR/.
+			cp $MI_MODEL $MODEL_DIR
 		    fi
 		else
 		    echo "\n${RED}Failed creating directoy $MODEL_DIR\nProvide 777 privilege to $APP_BIND_HORIZON_DIR directory so that model files can be copied.\n"

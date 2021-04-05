@@ -1,5 +1,9 @@
 {
     "MetadataVars": {
+        "IMAGE_NAME_PTH": "pth",
+        "DOCKER_IMAGE_BASE_PTH": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).pth",
+        "SERVICE_NAME_PTH": "$(EDGE_OWNER).$(EDGE_DEPLOY).pth",
+        "SERVICE_VERSION_PTH": "1.0.0",
         "IMAGE_NAME_TFLITE": "tflite",
         "DOCKER_IMAGE_BASE_TFLITE": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).tflite",
         "SERVICE_NAME_TFLITE": "$(EDGE_OWNER).$(EDGE_DEPLOY).tflite",

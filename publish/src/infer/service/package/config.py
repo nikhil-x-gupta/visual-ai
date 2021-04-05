@@ -14,9 +14,8 @@ import requests
 import time
 
 class Config:
-    def __init__(self, fmwk, isTFLite, resolution=(640, 480), framerate=30):
+    def __init__(self, fmwk, resolution=(640, 480), framerate=30):
         self.fmwk = fmwk
-        self.isTFLite  = isTFLite
         self.resolution = resolution
         self.framerate = framerate
 
@@ -47,14 +46,18 @@ class Config:
             self.setVinoDefaults()
         elif self.getIsMVI():
             self.setMVIDefaults()
+        elif self.getIsPTH():
+            self.setPTHDefaults()
         else:
             self.setTFLiteDefaults()
 
         print ("{:.7f} Config initialized".format(time.time()))
 
     def getIsTFLite(self):
-        #return self.isTFLite
         return self.fmwk == 'tflite'
+
+    def getIsPTH(self):
+        return self.fmwk == 'pth'
 
     def getIsVino(self):
         return self.fmwk == 'vino'
@@ -70,6 +73,14 @@ class Config:
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
         self.defaultModelTFLite = os.environ['APP_MODEL_TFLITE']
         self.defaultLabelmap = os.environ['APP_MODEL_LABELMAP']
+        self.modelObjectId = os.environ['APP_MI_MODEL'] 
+
+    def setPTHDefaults(self):
+        self.tool = "Pytorch OpenCV"
+        self.modelPTH = None
+        self.defaultModelDir = os.environ['APP_MODEL_DIR']
+        self.defaultModelPTH = os.environ['APP_MODEL_PTH']
+        self.modelObjectId = os.environ['APP_MI_MODEL'] 
 
     def setVinoDefaults(self):
         self.tool = "OpenVINO OpenCV"
@@ -91,6 +102,9 @@ class Config:
     def getModelDir(self):
         return self.defaultModelDir if self.modelDir is None else self.modelDir
 
+    def getModelPTH(self):
+        return self.defaultModelPTH if self.modelPTH is None else self.modelPTH
+
     def getModelTFLite(self):
         return self.defaultModelTFLite if self.modelTFLite is None else self.modelTFLite
 
@@ -102,6 +116,9 @@ class Config:
 
     def getModelBin(self):
         return self.defaultModelBin if self.modelBin is None else self.modelBin
+
+    def getModelPathPTH(self):
+        return os.path.join(self.getModelDir(), self.getModelPTH())
 
     def getModelPathTFLite(self):
         return os.path.join(self.getModelDir(), self.getModelTFLite())
@@ -149,9 +166,6 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
-    def getDetectorURL(self):
-        return os.environ['APP_SVC_MODEL_MVI_URL'] if 'APP_SVC_MODEL_MVI_URL' in os.environ else 'internal'
-
     # uses network:host . Use host network IP
     def getMMSConfigProviderUrl(self):
         return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
@@ -162,13 +176,13 @@ class Config:
 
     # Vino container uses network:host , so use host network IP . TFLite container uses default bridge network, so use netowrk alias
     def getPublishPayloadStreamUrl(self):
-        if self.isTFLite:
+        if self.getIsTFLite():
             return os.environ['HTTP_PUBLISH_STREAM_URL'] if 'HTTP_PUBLISH_STREAM_URL' in os.environ else 'Missing HTTP_PUBLISH_STREAM_URL'
         else: #network = host vino
             return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":5000/publish/stream"
             
     def getPublishPayloadKafkaUrl(self):
-        if self.isTFLite:
+        if self.getIsTFLite():
             return os.environ['HTTP_PUBLISH_KAFKA_URL'] if 'HTTP_PUBLISH_KAFKA_URL' in os.environ else 'Missing HTTP_PUBLISH_KAFKA_URL'
         else: #network = host vino
             return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":5000/publish/kafka"
@@ -213,15 +227,14 @@ class Config:
     def getInputStd(self):
         return 127.5
 
-    def getStatusText(self):
-        if self.isTFLite:
-            ts = self.modelUpdatedAt.strftime("%Y-%m-%d %H:%M:%S")
-            if self.modelObjectId is None:
-                return "Default" + " " + ts
-            else:
-                return self.modelObjectId + " " + ts
-        else:
-            return self.modelObjectId
+    def getModelText(self):
+        return os.path.basename(self.modelObjectId)
+
+    def getModelUpdatedAtText(self):
+        return self.modelUpdatedAt.strftime("%Y-%m-%d %H:%M:%S")
+    
+    def getDetectorURL(self):
+        return os.environ['APP_SVC_MODEL_MVI_URL'] if 'APP_SVC_MODEL_MVI_URL' in os.environ else "Internal"
 
     def mmsConfig(self):
         url = self.getMMSConfigProviderUrl()
@@ -263,7 +276,7 @@ class Config:
             dict = resp.json()
             if dict['mms_action'] == 'updated':
                 value_dict = dict['value']
-                if self.isTFLite:
+                if self.getIsTFLite():
                     self.modelObjectId = value_dict['OBJECT_ID']
                     self.modelObjectType = value_dict['OBJECT_TYPE']
                     self.modelNet = value_dict['MODEL_NET']

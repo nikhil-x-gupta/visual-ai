@@ -40,9 +40,7 @@ if __name__ == '__main__':
 
     fmwk = os.environ['APP_MODEL_FMWK']
 
-    isTFLite = importlib.util.find_spec('tflite_runtime')
-
-    config = Config(fmwk, isTFLite, resolution=(640, 480), framerate=30)
+    config = Config(fmwk, resolution=(640, 480), framerate=30)
 
     videoSourceProcessor = None
 

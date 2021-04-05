@@ -17,6 +17,8 @@ arch-all: publish-all deploy-policy-all
 
 tflite-all: publish-http publish-mms publish-tflite deploy-policy-tflite
 
+pth-all: publish-http publish-mms publish-pth deploy-policy-pth
+
 vino-all: publish-http publish-mms publish-vino deploy-policy-vino
 
 mvi-all: publish-http publish-mms publish-mvi deploy-policy-mvi
@@ -37,6 +39,11 @@ publish-tflite:
 	make -C src/infer tflite-build
 	make -C src/infer tflite-push
 	make -C src/infer tflite-publish-service
+
+publish-pth:
+	make -C src/infer pth-build
+	make -C src/infer pth-push
+	make -C src/infer pth-publish-service
 
 publish-vino:
 	make -C src/infer vino-build
@@ -61,6 +68,10 @@ deploy-policy-all:
 deploy-policy-tflite:
 	make -C src/mms deploy-policy
 	make -C src/infer tflite-deploy-policy
+
+deploy-policy-pth:
+	make -C src/mms deploy-policy
+	make -C src/infer pth-deploy-policy
 
 deploy-policy-vino:
 	make -C src/mms deploy-policy
