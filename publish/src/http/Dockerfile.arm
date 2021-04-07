@@ -32,6 +32,7 @@ RUN mkdir static templates
 RUN mkdir -p static/css
 RUN mkdir -p static/js
 
+COPY service/static/test-image-0.png static/
 COPY service/static/test-image-0.jpg static/
 COPY service/static/test-image-1.jpg static/
 COPY service/static/test-image-2.jpg static/
