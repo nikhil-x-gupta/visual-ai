@@ -128,7 +128,7 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 
     fn_chk_env
 
-    echo "\n${GREEN}Framework $FMWK"
+    echo "\n${GREEN}Application Deployment Framework $FMWK"
     if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu_noterm" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
