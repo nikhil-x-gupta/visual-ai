@@ -21,11 +21,11 @@ MODEL_VERSION=""
 
 OBJECT_TYPE=""
 if [ "$MMS_ACTION" = "mmsconfig" ]; then  
-    OBJECT_TYPE="tflite-mmsconfig"
+    OBJECT_TYPE="application-mmsconfig"
 elif [ "$MMS_ACTION" = "mmsmodel" ]; then 
     OBJECT_TYPE="tflite-mmsmodel"
 else
-    OBJECT_TYPE="tflite-mmsconfig"
+    OBJECT_TYPE="application-mmsconfig"
 fi
 
 USER=$(cat ${HZN_ESS_AUTH} | jq -r ".id")
