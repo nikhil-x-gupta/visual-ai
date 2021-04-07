@@ -1,8 +1,8 @@
 {
-    "label": "deploy-policy-pth-$ARCH",
-    "description": "A deploy policy for pth on $ARCH",
+    "label": "deploy-policy-pth-gpu-noterm$ARCH",
+    "description": "A deploy policy for pth gpu noterm on $ARCH",
     "service": {
-	"name": "$EDGE_OWNER.$EDGE_DEPLOY.pth",
+	"name": "$EDGE_OWNER.$EDGE_DEPLOY.pth_gpu_noterm",
 	"org": "$HZN_ORG_ID",
 	"arch": "$ARCH",
 	"serviceVersions": [
@@ -17,12 +17,14 @@
     "constraints": [
 	"owner == $EDGE_OWNER",
 	"deploy == $EDGE_DEPLOY",
-	"pth == true"
+	"pth == true",
+	"gpu == true",
+	"noterm == true"
     ],
     "userInput": [
 	{
 	    "serviceOrgid": "$HZN_ORG_ID",
-	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.pth",
+	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.pth_gpu_noterm",
 	    "serviceVersionRange": "[0.0.0,INFINITY)",
 	    "inputs": [
 		{ "name" : "DEVICE_ID", "value" : "DEVICE_ID"  },

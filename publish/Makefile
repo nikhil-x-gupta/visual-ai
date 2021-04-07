@@ -1,5 +1,5 @@
 #
-# Makefile: A tensorflow lite, OpenVINO and OpenCV based videostream object classification
+# Makefile: A tensorflow lite, OpenVINO, MVI, Pytorch  and OpenCV based videostream object classification
 #
 
 # Checks required environment variables
@@ -8,7 +8,7 @@
 export ARCH ?= $(shell hzn architecture)
 
 ifeq ($(ARCH),arm64)
-all: tflite-all
+all: tflite-all pth-all publish-pth-gpu deploy-policy-pth-gpu
 else
 all: arch-all
 endif
@@ -17,13 +17,13 @@ arch-all: publish-all deploy-policy-all
 
 tflite-all: publish-http publish-mms publish-tflite deploy-policy-tflite
 
-pth-all: publish-http publish-mms publish-pth deploy-policy-pth
+pth-all: publish-http publish-mms publish-pth-cpu deploy-policy-pth-cpu
 
 vino-all: publish-http publish-mms publish-vino deploy-policy-vino
 
 mvi-all: publish-http publish-mms publish-mvi deploy-policy-mvi
 
-publish-all: publish-http publish-mms publish-tflite publish-vino publish-mvi
+publish-all: publish-http publish-mms publish-tflite publish-vino publish-mvi publish-pth-cpu
 
 publish-http:
 	make -C src/http build
@@ -40,10 +40,15 @@ publish-tflite:
 	make -C src/infer tflite-push
 	make -C src/infer tflite-publish-service
 
-publish-pth:
-	make -C src/infer pth-build
-	make -C src/infer pth-push
-	make -C src/infer pth-publish-service
+publish-pth-cpu:
+	make -C src/infer pth-cpu-build
+	make -C src/infer pth-cpu-push
+	make -C src/infer pth-cpu-publish-service
+
+publish-pth-gpu:
+	make -C src/infer pth-gpu-noterm-build
+	make -C src/infer pth-gpu-noterm-push
+	make -C src/infer pth-gpu-noterm-publish-service
 
 publish-vino:
 	make -C src/infer vino-build
@@ -69,9 +74,13 @@ deploy-policy-tflite:
 	make -C src/mms deploy-policy
 	make -C src/infer tflite-deploy-policy
 
-deploy-policy-pth:
+deploy-policy-pth-cpu:
 	make -C src/mms deploy-policy
-	make -C src/infer pth-deploy-policy
+	make -C src/infer pth-cpu-deploy-policy
+
+deploy-policy-pth-gpu:
+	make -C src/mms deploy-policy
+	make -C src/infer pth-gpu-noterm-deploy-policy
 
 deploy-policy-vino:
 	make -C src/mms deploy-policy

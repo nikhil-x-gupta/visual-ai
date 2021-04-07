@@ -11,7 +11,7 @@ OFF="\033[0m"
 usage() {                      
   echo "Usage: $0 -e -k -m -r -u -p -l"
   echo "where "
-  echo "   -k framework tflite | vino | mvi | mvi_p100 | pth"
+  echo "   -k framework tflite | vino | mvi | mvi_p100 | pth_cpu | pth_gpu_noterm "
   echo "   -e file path to environemnt veriables "
   echo "   -m file path to mvi model file "
   echo "   -r register "
@@ -34,10 +34,6 @@ fn_register_with_policy() {
     echo "${GREEN}Registering with ... ${OFF}"
     echo "   node_policy_${FMWK}.json"
     echo "   user_input_app_${FMWK}.json"
-
-    . $ENVVAR
-
-    fn_chk_env
 
     hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
     hzn register --policy=node_policy_${FMWK}.json --input-file user_input_app_${FMWK}.json
@@ -122,17 +118,18 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pth "
+    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pth_cpu | pth_gpu_noterm "
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pth" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu_noterm" ]; then
+
     . $ENVVAR
 
     fn_chk_env
 
     echo "\n${GREEN}Framework $FMWK"
-    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth" ]; then
+    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu_noterm" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
 		echo "${RED}Creating directory "

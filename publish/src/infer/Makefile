@@ -21,8 +21,17 @@ mi-mvi: mi-mvi-build mi-mvi-push mi-mvi-publish-service mi-mvi-deploy-policy
 tflite-build:
 	 envsubst < ./Dockerfile.tflite.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_TFLITE)_$(ARCH):$(SERVICE_VERSION_TFLITE) . -f -
 
-pth-build:
-	 envsubst < ./Dockerfile.pth.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH)_$(ARCH):$(SERVICE_VERSION_PTH) . -f -
+pth-cpu-build:
+	 envsubst < ./Dockerfile.pth-cpu.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_CPU)_$(ARCH):$(SERVICE_VERSION_PTH_CPU) . -f -
+
+pth-gpu-noterm-build:
+	 envsubst < ./Dockerfile.pth-gpu-noterm.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU_NOTERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_NOTERM) . -f -
+
+pth-gpu-term-build:
+	 envsubst < ./Dockerfile.pth-gpu-term.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU_TERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_TERM) . -f -
+
+pth-gpu-custom-build:
+	 envsubst < ./Dockerfile.pth-gpu-custom.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU_CUSTOM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_CUSTOM) . -f -
 
 vino-build:
 	 envsubst < ./Dockerfile.vino.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_VINO)_$(ARCH):$(SERVICE_VERSION_VINO) . -f -
@@ -34,8 +43,17 @@ mi-mvi-build:
 tflite-push:
 	docker push $(DOCKER_IMAGE_BASE_TFLITE)_$(ARCH):$(SERVICE_VERSION_TFLITE)
 
-pth-push:
-	docker push $(DOCKER_IMAGE_BASE_PTH)_$(ARCH):$(SERVICE_VERSION_PTH)
+pth-cpu-push:
+	docker push $(DOCKER_IMAGE_BASE_PTH_CPU)_$(ARCH):$(SERVICE_VERSION_PTH_CPU)
+
+pth-gpu-noterm-push:
+	docker push $(DOCKER_IMAGE_BASE_PTH_GPU_NOTERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_NOTERM)
+
+pth-gpu-term-push:
+	docker push $(DOCKER_IMAGE_BASE_PTH_GPU_TERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_TERM)
+
+pth-gpu-custom-push:
+	docker push $(DOCKER_IMAGE_BASE_PTH_GPU_CUSTOM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_CUSTOM)
 
 vino-push:
 	docker push $(DOCKER_IMAGE_BASE_VINO)_$(ARCH):$(SERVICE_VERSION_VINO)
@@ -47,8 +65,17 @@ mi-mvi-push:
 tflite-publish-service:
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_TFLITE).service.definition.json --pull-image
 
-pth-publish-service:
-	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH).service.definition.json --pull-image
+pth-cpu-publish-service:
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH_CPU).service.definition.json --pull-image
+
+pth-gpu-noterm-publish-service:
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH_GPU_NOTERM).service.definition.json --pull-image
+
+pth-gpu-term-publish-service:
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH_GPU_TERM).service.definition.json --pull-image
+
+pth-gpu-custom-publish-service:
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH_GPU_CUSTOM).service.definition.json --pull-image
 
 vino-publish-service:
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_VINO).service.definition.json --pull-image
@@ -75,8 +102,17 @@ model-mvi-p100-publish-pattern:
 tflite-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_TFLITE).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_TFLITE)_$(ARCH)
 
-pth-deploy-policy:
-	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH)_$(ARCH)
+pth-cpu-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_CPU).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_CPU)_$(ARCH)
+
+pth-gpu-noterm-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU_NOTERM).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU_NOTERM)_$(ARCH)
+
+pth-gpu-term-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU_TERM).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU_TERM)_$(ARCH)
+
+pth-gpu-custom-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU_CUSTOM).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU_CUSTOM)_$(ARCH)
 
 vino-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_VINO).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_VINO)_$(ARCH)

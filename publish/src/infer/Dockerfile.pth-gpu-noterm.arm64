@@ -1,0 +1,53 @@
+#sudo apt-cache show nvidia-jetpack
+#https://ngc.nvidia.com/catalog/containers/nvidia:l4t-pytorch
+
+#python 3.6.9
+#PyTorch v1.6.0
+#torchvision v0.7.0
+#torchaudio v0.6.0
+FROM nvcr.io/nvidia/l4t-pytorch:r32.4.4-pth1.6-py3
+
+RUN apt-get update && apt-get --no-install-recommends -y install \
+    libjpeg-dev \
+    libtiff5-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libv4l-dev \
+    libxvidcore-dev \
+    libx264-dev \
+    libgstreamer-plugins-base1.0-dev \
+    qtbase5-dev \
+    unzip \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install -U pip
+RUN python3 -m pip install -U setuptools requests opencv-python-headless==4.3.0.38
+
+# Install a pretrained model
+RUN wget https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth && \
+    mkdir -p /root/.cache/torch/hub/checkpoints/ && \
+    mv fasterrcnn_resnet50_fpn_coco-258fb6c6.pth /root/.cache/torch/hub/checkpoints/
+
+ENV APP_MODEL_FMWK pth
+ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/pth
+ENV APP_MODEL_PTH pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip
+
+WORKDIR /
+RUN mkdir -p package/detect/pth package/util package/video /var/local/horizon/ai/mi/model/pth
+COPY service/package/detect/pth/*.py package/detect/pth/
+COPY service/package/detect/*.py package/detect/
+COPY service/package/video/*.py package/video/
+COPY service/package/util/*.py package/util/
+COPY service/package/*.py package/
+COPY service/videoObjectDetector.py .
+
+#RUN mkdir -p test_script
+#COPY test_script/*.zip test_script/
+#COPY test_script/testPTHDetector.py test_script/
+#COPY test_script/*.jpg test_script/
+
+WORKDIR /
+CMD /usr/bin/python3 videoObjectDetector.py
+

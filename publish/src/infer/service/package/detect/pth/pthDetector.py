@@ -33,7 +33,7 @@ class PTHDetector:
         self.inference_interval = time.time() - t1
         return self.inference_interval, boxes, classes, scores
 
-   def predict(self, images):
+    def predict(self, images):
         # Create a list of images if a single image
         is_single_image = not util.isIterable(images)
         images = [images] if is_single_image else images

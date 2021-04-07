@@ -1,11 +1,11 @@
 {
     "org": "$HZN_ORG_ID",
-    "label": "$SERVICE_NAME_PTH for $ARCH",
+    "label": "$SERVICE_NAME_PTH_CPU for $ARCH",
     "description": "",
     "public": true,
     "documentation": "",
-    "url": "$SERVICE_NAME_PTH",
-    "version": "$SERVICE_VERSION_PTH",
+    "url": "$SERVICE_NAME_PTH_CPU",
+    "version": "$SERVICE_VERSION_PTH_CPU",
     "arch": "$ARCH",
     "sharable": "singleton",
     "requiredServices": [
@@ -29,8 +29,8 @@
     ],
     "deployment": {
         "services": {
-            "$SERVICE_NAME_PTH": {
-                "image": "${DOCKER_IMAGE_BASE_PTH}_$ARCH:$SERVICE_VERSION_PTH",
+            "$SERVICE_NAME_PTH_CPU": {
+                "image": "${DOCKER_IMAGE_BASE_PTH_CPU}_$ARCH:$SERVICE_VERSION_PTH_CPU",
                 "privileged": true,
 		"binds": [
 		    "$APP_BIND_HORIZON_PTH_MDOEL_DIR:$APP_BIND_HORIZON_PTH_MDOEL_DIR:rw",

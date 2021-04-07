@@ -4,6 +4,7 @@
       { "name": "deploy",  "value": "example.ai" },
       { "name": "mms", "value": true },
       { "name": "pth", "value": true },
+      { "name": "cpu", "value": true },
       { "name": "openhorizon.allowPrivileged", "value": true }
   ],
   "constraints": [
