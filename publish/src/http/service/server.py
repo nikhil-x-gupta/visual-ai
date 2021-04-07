@@ -70,12 +70,17 @@ def generate_stream_MJPEG():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + g_stream_frame + b'\r\n')
 
+            
 # Stream resource url_for. To be called in HTML as <img width="640" heigh="480" src="{{ url_for('stream_video') }}"/>
 @server.route('/stream_video')
 def stream_video():
     return Response(generate_stream_MJPEG(), mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 # End point for the host as http://<ip-address>:5000/stream 
+@server.route('/admin')
+def admin():
+    return render_template('admin.html')
+
 @server.route('/stream')
 def stream():
     return render_template('stream.html')
