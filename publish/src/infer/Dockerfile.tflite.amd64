@@ -40,7 +40,11 @@ WORKDIR /
 RUN mkdir -p package/detect/tflite package/util package/video 
 COPY service/package/detect/tflite/*.py package/detect/tflite/
 COPY service/package/detect/*.py package/detect/
-COPY service/package/video/*.py package/video/
+#COPY service/package/video/*.py package/video/
+COPY service/package/video/__init__.py package/video/
+COPY service/package/video/videoSourceProcessor.py package/video/ 
+COPY service/package/video/videoSource.py package/video/
+COPY service/package/video/videoStream.py package/video/
 COPY service/package/util/*.py package/util/
 COPY service/package/*.py package/
 COPY service/videoObjectDetector.py .

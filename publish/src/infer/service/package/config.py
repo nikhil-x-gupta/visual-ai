@@ -166,14 +166,6 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
-    # uses network:host . Use host network IP
-    def getMMSConfigProviderUrl(self):
-        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
-
-    # uses network:host . Use host network IP
-    def getMMSModelProviderUrl(self):
-        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsmodel"
-
     # Vino container uses network:host , so use host network IP . TFLite container uses default bridge network, so use netowrk alias
     def getPublishPayloadStreamUrl(self):
         if self.getIsTFLite():
@@ -236,6 +228,14 @@ class Config:
     def getDetectorURL(self):
         return os.environ['APP_SVC_MODEL_MVI_URL'] if 'APP_SVC_MODEL_MVI_URL' in os.environ else "Internal"
 
+    # uses network:host . Use host network IP
+    def getMMSConfigProviderUrl(self):
+        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
+
+    # uses network:host . Use host network IP
+    def getMMSModelProviderUrl(self):
+        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsmodel"
+
     def mmsConfig(self):
         url = self.getMMSConfigProviderUrl()
         try:
@@ -259,14 +259,14 @@ class Config:
                     self.env_dict['BLUR_FACE'] = value_dict['BLUR_FACE']
 
         except requests.exceptions.HTTPError as errh:
-            print ("mmsConfig: Http Error:", errh)
+            print ("{:.7f}V mmsConfig: HttpError".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.ConnectionError as errc:
             None
-            #print ("Error Connecting:", errc)
+            print ("{:.7f}V mmsConfig: ConnectionError".format(time.time()), errc, end="\n", flush=True)
         except requests.exceptions.Timeout as errt:
-            print ("mmsConfig: Error:", errt)
+            print ("{:.7f}V mmsConfig: Timeout".format(time.time()), errt, end="\n", flush=True)
         except requests.exceptions.RequestException as err:
-            print ("mmsConfig:Something Else", err)
+            print ("{:.7f}V mmsConfig: Other Error".format(time.time()), err, end="\n", flush=True)
 
     #{"mms_action":"updated","value":{"OBJECT_TYPE":"tflite-mmsmodel","OBJECT_ID":"mobilenet-tflite-1.0.0-mms.tar.gz","MODEL_NET":"mobilenet","MODEL_FMWK":"tflite","MODEL_VERSION":"1.0.0","MODEL_DIR":"/var/tmp/horizon/tflite-mmsmodel/mobilenet/tflite/1.0.0/files","FILES":"detect.tflite labelmap.txt"}}
     def mmsModel(self):
@@ -294,24 +294,28 @@ class Config:
                     self.modelUpdatedAt = datetime.datetime.now()
 
         except requests.exceptions.HTTPError as errh:
-            print ("Http Error:", errh)
+            print ("{:.7f}V mmsModel: Http Error".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.ConnectionError as errc:
             None
-            #print ("Error Connecting:", errc)
+            print ("{:.7f}V mmsModel: ConnectionError".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.Timeout as errt:
-            print ("mmsModel: Timeout Error:", errt)
+            print ("{:.7f}V mmsModel: Timeout".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.RequestException as err:
-            print ("mmsModel:  Something Else", err)
+            print ("{:.7f}V mmsModel: Other Error".format(time.time()), err, end="\n", flush=True)
 
-    def mmsProcessor(self):
+    def mmsConfigProcessor(self, interval):
         while True:
-            time.sleep(1)
+            time.sleep(interval)
             self.mmsConfig()
-            time.sleep(1)
+
+    def mmsModelProcessor(self, interval):
+        while True:
+            time.sleep(interval)
             self.mmsModel()
 
     def mmsPoller(self):
-        Thread(target=self.mmsProcessor, args=()).start()
+        Thread(target=self.mmsConfigProcessor, args=(1,)).start()
+        Thread(target=self.mmsModelProcessor, args=(1,)).start()
 
     """
     def mmsConfigProcessor(self):
