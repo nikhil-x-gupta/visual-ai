@@ -129,20 +129,20 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
     fn_chk_env
 
     echo "\n${GREEN}Application Deployment Framework $FMWK"
-    if [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu_noterm" ]; then
+    if [ "$FMWK" = "tflite" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu_noterm" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
 		echo "${RED}Creating directory "
 		MODEL_DIR="$APP_BIND_HORIZON_DIR/ai/mi/model/$FMWK"
 		mkdir -p $MODEL_DIR
 		if [ -d $MODEL_DIR ]; then 
-		    export APP_MI_MODEL=$MI_MODEL
+		    export APP_MI_MODEL="$(basename $MI_MODEL)"
 		    if [ "$FMWK" = "mvi" ]; then
 			echo "${OFF}Copying $MI_MODEL $MODEL_DIR/mi_mvi_model.zip"
 			cp $MI_MODEL $MODEL_DIR/mi_mvi_model.zip
 		    else
 			echo "${OFF}Copying $MI_MODEL to $MODEL_DIR"
-			cp $MI_MODEL $MODEL_DIR
+			cp $MI_MODEL "$MODEL_DIR/default-$APP_MI_MODEL"
 		    fi
 		else
 		    echo "\n${RED}Failed creating directoy $MODEL_DIR\nProvide 777 privilege to $APP_BIND_HORIZON_DIR directory so that model files can be copied.\n"

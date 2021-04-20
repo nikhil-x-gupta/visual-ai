@@ -10,7 +10,7 @@
     "sharable": "singleton",
     "requiredServices": [
         { "url": "$EDGE_OWNER.$EDGE_DEPLOY.http", "org": "$HZN_ORG_ID", "version": "1.0.0", "arch": "$ARCH" },
-        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.mi.model_mvi", "org": "$HZN_ORG_ID", "version": "8.1.0", "arch": "$ARCH" }
+        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.mi.model.mvi", "org": "$HZN_ORG_ID", "version": "8.1.0", "arch": "$ARCH" }
     ],
     "userInput": [
         { "name": "DEVICE_ID", "label": "device-id", "type": "string", "defaultValue": "DEVICE_ID" },

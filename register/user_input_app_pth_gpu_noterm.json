@@ -10,9 +10,6 @@
 	    "APP_MMS_OBJECT_ID_CONFIG"           : "$APP_MMS_OBJECT_ID_CONFIG",
 	    "APP_MMS_OBJECT_TYPE_CONFIG"         : "$APP_MMS_OBJECT_TYPE_CONFIG",
 	    "APP_MMS_OBJECT_SERVICE_NAME_CONFIG" : "$APP_MMS_OBJECT_SERVICE_NAME_CONFIG",
-	    "APP_MMS_OBJECT_ID_MODEL"            : "$APP_MMS_OBJECT_ID_MODEL",
-	    "APP_MMS_OBJECT_TYPE_MODEL"          : "$APP_MMS_OBJECT_TYPE_MODEL",
-	    "APP_MMS_OBJECT_SERVICE_NAME_MODEL"  : "$APP_MMS_OBJECT_SERVICE_NAME_MODEL",
             "EVENTSTREAMS_BROKER_URLS"           : "$EVENTSTREAMS_BROKER_URLS",
             "EVENTSTREAMS_API_KEY"               : "$EVENTSTREAMS_API_KEY",
             "EVENTSTREAMS_ENHANCED_TOPIC"        : "$EVENTSTREAMS_ENHANCED_TOPIC"
@@ -20,7 +17,15 @@
     },
     {
 	"org": "$HZN_ORG_ID",
-	"url": "$EDGE_OWNER.$EDGE_DEPLOY.pth_gpu_noterm",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.mmsmodel",
+	"versionRange": "[0.0.0,INFINITY)",
+	"variables": {
+	    "APP_BIND_HORIZON_DIR"     : "$APP_BIND_HORIZON_DIR"
+	}
+    },
+    {
+	"org": "$HZN_ORG_ID",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.pth.gpu.noterm",
 	"versionRange": "[0.0.0,INFINITY)",
 	"variables": {
             "DEVICE_ID"                : "$DEVICE_ID",

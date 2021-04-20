@@ -2,7 +2,8 @@
   "properties": [
       { "name": "owner",  "value": "sg.edge" },
       { "name": "deploy",  "value": "example.ai" },
-      { "name": "mms", "value": true },
+      { "name": "mmsconfig", "value": true },
+      { "name": "mmsmodel", "value": true },
       { "name": "pth", "value": true },
       { "name": "gpu", "value": true },
       { "name": "noterm", "value": true },

@@ -32,7 +32,7 @@
                 "image": "${DOCKER_IMAGE_BASE_TFLITE}_$ARCH:$SERVICE_VERSION_TFLITE",
                 "privileged": true,
 		"binds": [
-		    "$APP_BIND_HORIZON_DIR:$APP_BIND_HORIZON_DIR:rw"
+		    "$APP_BIND_HORIZON_TFLITE_MDOEL_DIR:$APP_BIND_HORIZON_TFLITE_MDOEL_DIR:rw"
                 ]
             }
         }

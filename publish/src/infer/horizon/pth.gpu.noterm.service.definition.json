@@ -1,11 +1,11 @@
 {
     "org": "$HZN_ORG_ID",
-    "label": "$SERVICE_NAME_PTH_CPU for $ARCH",
+    "label": "$SERVICE_NAME_PTH_GPU_NOTERM for $ARCH",
     "description": "",
     "public": true,
     "documentation": "",
-    "url": "$SERVICE_NAME_PTH_CPU",
-    "version": "$SERVICE_VERSION_PTH_CPU",
+    "url": "$SERVICE_NAME_PTH_GPU_NOTERM",
+    "version": "$SERVICE_VERSION_PTH_GPU_NOTERM",
     "arch": "$ARCH",
     "sharable": "singleton",
     "requiredServices": [
@@ -29,11 +29,11 @@
     ],
     "deployment": {
         "services": {
-            "$SERVICE_NAME_PTH_CPU": {
-                "image": "${DOCKER_IMAGE_BASE_PTH_CPU}_$ARCH:$SERVICE_VERSION_PTH_CPU",
+            "$SERVICE_NAME_PTH_GPU_NOTERM": {
+                "image": "${DOCKER_IMAGE_BASE_PTH_GPU_NOTERM}_$ARCH:$SERVICE_VERSION_PTH_GPU_NOTERM",
                 "privileged": true,
 		"binds": [
-		    "$APP_BIND_HORIZON_PTH_MDOEL_DIR:$APP_BIND_HORIZON_PTH_MDOEL_DIR:rw",
+		    "$APP_BIND_HORIZON_PTH_GPU_MDOEL_DIR:$APP_BIND_HORIZON_PTH_GPU_MDOEL_DIR:rw",
 		    "/tmp:/tmp"
                 ]
             }

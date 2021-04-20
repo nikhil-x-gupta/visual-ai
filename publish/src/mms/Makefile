@@ -11,20 +11,55 @@ export ARCH ?= $(shell hzn architecture)
 
 all: build push publish-service deploy-policy
 
+config-all: config-build config-push config-publish-service config-deploy-policy
+
+model-all: model-build model-push model-publish-service model-deploy-policy
+
 # Build the docker container
 build:
 	docker build -t $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION) -f ./Dockerfile.$(ARCH) .
 
+config-build:
+	docker build -t $(DOCKER_IMAGE_BASE_CONFIG)_$(ARCH):$(SERVICE_VERSION_CONFIG) -f ./Dockerfile.config.$(ARCH) .
+
+model-build:
+	docker build -t $(DOCKER_IMAGE_BASE_MODEL)_$(ARCH):$(SERVICE_VERSION_MODEL) -f ./Dockerfile.model.$(ARCH) .
+
 # Push the docker container to the DockerHub registry
 push:
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
 	docker push $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION)
+
+config-push:
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
+	docker push $(DOCKER_IMAGE_BASE_CONFIG)_$(ARCH):$(SERVICE_VERSION_CONFIG)
+
+model-push:
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
+	docker push $(DOCKER_IMAGE_BASE_MODEL)_$(ARCH):$(SERVICE_VERSION_MODEL)
 
 # Publish a Horizon service (per service.json) and pull image to get its sha256
 publish-service:
-	hzn exchange service publish -f horizon/service.definition.json --pull-image
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
+	hzn exchange service publish -f horizon/service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+
+config-publish-service:
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_CONFIG).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+
+model-publish-service:
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_MODEL).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+
 
 deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/deploy_policy_$(IMAGE_NAME).json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME)_$(ARCH)
+
+config-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_CONFIG).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_CONFIG)_$(ARCH)
+
+model-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_MODEL).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_MODEL)_$(ARCH)
 
 # Remove the local container image
 clean:

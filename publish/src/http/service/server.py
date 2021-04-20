@@ -12,11 +12,6 @@ import uuid
 import threading
 import time
 
-EVENTSTREAMS_BROKER_URLS = os.environ['EVENTSTREAMS_BROKER_URLS']
-EVENTSTREAMS_API_KEY = os.environ['EVENTSTREAMS_API_KEY']
-EVENTSTREAMS_ENHANCED_TOPIC = os.environ['EVENTSTREAMS_ENHANCED_TOPIC']
-
-PUBLISH_KAFKA_COMMAND = ' kafkacat -P -b ' + EVENTSTREAMS_BROKER_URLS + ' -X api.version.request=true -X security.protocol=sasl_ssl -X sasl.mechanisms=PLAIN -X sasl.username=token -X sasl.password="' + EVENTSTREAMS_API_KEY + '" -t ' + EVENTSTREAMS_ENHANCED_TOPIC + ' '
 
 # edge-css/api/v1/objects
 ieam_api_css_objects = os.environ['APP_IEAM_API_CSS_OBJECTS']
@@ -24,13 +19,16 @@ username = os.environ['APP_APIKEY_USERNAME']
 password = os.environ['APP_APIKEY_PASSWORD']
 
 hzn_org_id = os.environ['HZN_ORGANIZATION']
-object_id_cfg = os.environ['APP_MMS_OBJECT_ID_CONFIG']
-object_type_cfg = os.environ['APP_MMS_OBJECT_TYPE_CONFIG']
+
+object_type_cfg = "mmsconfig"
+object_id_cfg = "config.json"
 object_service_name_cfg = os.environ['APP_MMS_OBJECT_SERVICE_NAME_CONFIG']
 
-object_id_model = os.environ['APP_MMS_OBJECT_ID_MODEL']
-object_type_model = os.environ['APP_MMS_OBJECT_TYPE_MODEL']
-object_service_name_model = os.environ['APP_MMS_OBJECT_SERVICE_NAME_MODEL']
+EVENTSTREAMS_BROKER_URLS = os.environ['EVENTSTREAMS_BROKER_URLS']
+EVENTSTREAMS_API_KEY = os.environ['EVENTSTREAMS_API_KEY']
+EVENTSTREAMS_ENHANCED_TOPIC = os.environ['EVENTSTREAMS_ENHANCED_TOPIC']
+
+PUBLISH_KAFKA_COMMAND = ' kafkacat -P -b ' + EVENTSTREAMS_BROKER_URLS + ' -X api.version.request=true -X security.protocol=sasl_ssl -X sasl.mechanisms=PLAIN -X sasl.username=token -X sasl.password="' + EVENTSTREAMS_API_KEY + '" -t ' + EVENTSTREAMS_ENHANCED_TOPIC + ' '
 
 server = Flask(__name__)
 
@@ -241,17 +239,15 @@ def css_status():
     return response
 
 @server.route('/update/model', methods=['POST'])
-def update_model_policy():
+def update_model_policy(object_type_model, object_id_model, object_service_name_model):
     if request.headers['Content-Type'] == 'application/json':
-        print("updating model")
+        print("updating model - TODO")
         obj_type_d = object_type_policy(hzn_org_id, object_service_name_model, object_id_model, object_type_model)
 
         config_d = {}
 
         obj_type_json_str = json.dumps(obj_type_d)
         config_json_str = json.dumps(config_d)
-
-
     
 if __name__ == '__main__':
     server.run(debug=True, host='0.0.0.0')

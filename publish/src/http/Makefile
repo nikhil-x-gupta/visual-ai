@@ -18,11 +18,13 @@ build:
 
 # Push the docker container to the DockerHub registry
 push:
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
 	docker push $(DOCKER_IMAGE_BASE)_$(ARCH):$(SERVICE_VERSION)
 
 # Publish a Horizon service (per service.json) and pull image to get its sha256
 publish-service:
-	hzn exchange service publish -f horizon/service.definition.json --pull-image
+	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
+	hzn exchange service publish -f horizon/service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
 # Not applicable
 #deploy-policy:

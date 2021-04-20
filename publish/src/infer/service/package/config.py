@@ -12,6 +12,7 @@ import json
 import os
 import requests
 import time
+import zipfile
 
 class Config:
     def __init__(self, fmwk, resolution=(640, 480), framerate=30):
@@ -41,6 +42,9 @@ class Config:
         self.modelVersion = None
 
         self.modelUpdatedAt = datetime.datetime.now()
+        self.reloadTFLiteModel = False
+        self.reloadPTHModel = False
+        self.detectorInitialized = False
 
         if self.getIsVino():
             self.setVinoDefaults()
@@ -53,6 +57,12 @@ class Config:
 
         print ("{:.7f} Config initialized".format(time.time()))
 
+    def setDetectorInitialized(self, flag):
+        self.detectorInitialized = flag
+
+    def getDetectorInitialized(self):
+        return self.detectorInitialized
+        
     def getIsTFLite(self):
         return self.fmwk == 'tflite'
 
@@ -67,19 +77,26 @@ class Config:
 
     # os.path.join - leading / only for the first path. NO leading / in sub paths
     def setTFLiteDefaults(self):
+        self.detectTFLite = "detect.tflite"
+        self.labelmap = "labelmap.txt"
+
         self.tool = "TensorFlow Lite OpenCV"
         self.modelTFLite = None
-        self.labelmap = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
-        self.defaultModelTFLite = os.environ['APP_MODEL_TFLITE']
-        self.defaultLabelmap = os.environ['APP_MODEL_LABELMAP']
-        self.modelObjectId = os.environ['APP_MI_MODEL'] 
-
+        self.defaultModelTFLite = "default-" + os.environ['APP_MODEL_TFLITE']
+        self.modelObjectId = self.defaultModelTFLite
+        with zipfile.ZipFile(os.path.join(self.defaultModelDir, self.defaultModelTFLite), 'r') as zip_ref:
+            zip_ref.extractall(self.defaultModelDir)
+        
     def setPTHDefaults(self):
         self.tool = "Pytorch OpenCV"
         self.modelPTH = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
-        self.defaultModelPTH = os.environ['APP_MODEL_PTH']
+        self.defaultModelPTH = "default-" + os.environ['APP_MODEL_PTH']
+        self.modelObjectId = self.defaultModelPTH
+
+    def setMVIDefaults(self):
+        self.tool = "MVI OpenCV"
         self.modelObjectId = os.environ['APP_MI_MODEL'] 
 
     def setVinoDefaults(self):
@@ -91,10 +108,6 @@ class Config:
         self.defaultModelBin = os.environ['APP_MODEL_BIN']
         self.modelObjectId = self.defaultModelXML.split('.')[0]
         self.objectName = "Face"
-
-    def setMVIDefaults(self):
-        self.tool = "MVI OpenCV"
-        self.modelObjectId = os.environ['APP_MI_MODEL'] 
 
     def getObjectName(self):
         return self.objectName
@@ -109,7 +122,7 @@ class Config:
         return self.defaultModelTFLite if self.modelTFLite is None else self.modelTFLite
 
     def getLabelmap(self):
-        return self.defaultLabelmap if self.labelmap is None else self.labelmap
+        return self.labelmap
 
     def getModelXML(self):
         return self.defaultModelXML if self.modelXML is None else self.modelXML
@@ -121,7 +134,7 @@ class Config:
         return os.path.join(self.getModelDir(), self.getModelPTH())
 
     def getModelPathTFLite(self):
-        return os.path.join(self.getModelDir(), self.getModelTFLite())
+        return os.path.join(self.getModelDir(), self.detectTFLite)
 
     def getLabelmapPath(self):
         return os.path.join(self.getModelDir(), self.getLabelmap())
@@ -166,7 +179,7 @@ class Config:
     def getDeviceName(self):
         return os.environ['DEVICE_NAME'] if 'DEVICE_NAME' in os.environ else 'DEVICE_NAME'
     
-    # Vino container uses network:host , so use host network IP . TFLite container uses default bridge network, so use netowrk alias
+    # Vino container uses network:host , so use host network IP . TFLite container uses default bridge network, so use network alias
     def getPublishPayloadStreamUrl(self):
         if self.getIsTFLite():
             return os.environ['HTTP_PUBLISH_STREAM_URL'] if 'HTTP_PUBLISH_STREAM_URL' in os.environ else 'Missing HTTP_PUBLISH_STREAM_URL'
@@ -183,7 +196,6 @@ class Config:
         return float(os.environ['MIN_CONFIDENCE_THRESHOLD'] if 'MIN_CONFIDENCE_THRESHOLD' in os.environ else "0.6")
 
     def shouldShowOverlay(self):
-        print ("shouldShowOverlay")
         return self.env_dict['SHOW_OVERLAY'] == 'true'
 
     def shouldPublishKafka(self):
@@ -220,7 +232,8 @@ class Config:
         return 127.5
 
     def getModelText(self):
-        return os.path.basename(self.modelObjectId)
+        #return os.path.basename(self.modelObjectId)
+        return self.modelObjectId 
 
     def getModelUpdatedAtText(self):
         return self.modelUpdatedAt.strftime("%Y-%m-%d %H:%M:%S")
@@ -230,11 +243,11 @@ class Config:
 
     # uses network:host . Use host network IP
     def getMMSConfigProviderUrl(self):
-        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsconfig"
+        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7771/mmsconfig"
 
     # uses network:host . Use host network IP
     def getMMSModelProviderUrl(self):
-        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7778/mmsmodel"
+        return "http://" + os.environ['DEVICE_IP_ADDRESS'] + ":7772/mmsmodel"
 
     def mmsConfig(self):
         url = self.getMMSConfigProviderUrl()
@@ -242,62 +255,73 @@ class Config:
             resp = requests.get(url)
             dict = resp.json()
             if dict['mms_action'] == 'updated':
-                value_dict = dict['value']
-                if 'SHOW_OVERLAY' in value_dict:
-                    self.env_dict['SHOW_OVERLAY'] = value_dict['SHOW_OVERLAY']
+                value_list = dict['value'] 
+                for value_dict in value_list:
+                    if 'SHOW_OVERLAY' in value_dict:
+                        self.env_dict['SHOW_OVERLAY'] = value_dict['SHOW_OVERLAY']
 
-                if 'PUBLISH_KAFKA' in value_dict:
-                    self.env_dict['PUBLISH_KAFKA'] = value_dict['PUBLISH_KAFKA']
+                    if 'PUBLISH_KAFKA' in value_dict:
+                        self.env_dict['PUBLISH_KAFKA'] = value_dict['PUBLISH_KAFKA']
 
-                if 'PUBLISH_STREAM' in value_dict:
-                    self.env_dict['PUBLISH_STREAM'] = value_dict['PUBLISH_STREAM']
+                    if 'PUBLISH_STREAM' in value_dict:
+                        self.env_dict['PUBLISH_STREAM'] = value_dict['PUBLISH_STREAM']
 
-                if 'DETECT_FACE' in value_dict:
-                    self.env_dict['DETECT_FACE'] = value_dict['DETECT_FACE']
+                    if 'DETECT_FACE' in value_dict:
+                        self.env_dict['DETECT_FACE'] = value_dict['DETECT_FACE']
 
-                if 'BLUR_FACE' in value_dict:
-                    self.env_dict['BLUR_FACE'] = value_dict['BLUR_FACE']
+                    if 'BLUR_FACE' in value_dict:
+                        self.env_dict['BLUR_FACE'] = value_dict['BLUR_FACE']
 
         except requests.exceptions.HTTPError as errh:
             print ("{:.7f}V mmsConfig: HttpError".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.ConnectionError as errc:
             None
-            print ("{:.7f}V mmsConfig: ConnectionError".format(time.time()), errc, end="\n", flush=True)
         except requests.exceptions.Timeout as errt:
             print ("{:.7f}V mmsConfig: Timeout".format(time.time()), errt, end="\n", flush=True)
         except requests.exceptions.RequestException as err:
             print ("{:.7f}V mmsConfig: Other Error".format(time.time()), err, end="\n", flush=True)
 
     #{"mms_action":"updated","value":{"OBJECT_TYPE":"tflite-mmsmodel","OBJECT_ID":"mobilenet-tflite-1.0.0-mms.tar.gz","MODEL_NET":"mobilenet","MODEL_FMWK":"tflite","MODEL_VERSION":"1.0.0","MODEL_DIR":"/var/tmp/horizon/tflite-mmsmodel/mobilenet/tflite/1.0.0/files","FILES":"detect.tflite labelmap.txt"}}
+    #{"query_http_code":"204","message":"OK","mms_action":"updated","value":[{"OBJECT_TYPE":"mmsmodel","OBJECT_ID":"pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip","MODEL_NET":"frcnn-resnet50-dct","MODEL_FMWK":"pth","MODEL_VERSION":"1.0.0","MODEL_DIR":"/var/local/horizon/ai/mi/model/pth_cpu"}]}
     def mmsModel(self):
         url = self.getMMSModelProviderUrl()
         try:
             resp = requests.get(url)
             dict = resp.json()
             if dict['mms_action'] == 'updated':
-                value_dict = dict['value']
-                if self.getIsTFLite():
-                    self.modelObjectId = value_dict['OBJECT_ID']
-                    self.modelObjectType = value_dict['OBJECT_TYPE']
-                    self.modelNet = value_dict['MODEL_NET']
-                    self.modelFmwk = value_dict['MODEL_FMWK']
-                    self.modelVersion = value_dict['MODEL_VERSION']
-                    self.modelDir = value_dict['MODEL_DIR']
-
-                    files = value_dict['FILES'].split(" ")
-                    for file in files:
-                        if(file.startswith("labelmap.")):
-                            self.labelmap = file
-                        elif(file.endswith(".tflite")):
-                            self.model = file
-
+                value_list = dict['value']
+                for value_dict in value_list:
                     self.modelUpdatedAt = datetime.datetime.now()
+                    if self.getIsPTH():
+                        '''
+                        # Large model download takes too much time. So currently commented out
+                        self.modelObjectType = value_dict['OBJECT_TYPE']
+                        self.modelPTH = "mmsmodel-" + value_dict['OBJECT_ID']
+                        self.modelObjectId = self.modelPTH
+                        self.modelNet = value_dict['MODEL_NET']
+                        self.modelFmwk = value_dict['MODEL_FMWK']
+                        self.modelVersion = value_dict['MODEL_VERSION']
+                        self.modelDir = value_dict['MODEL_DIR']
+                        self.setReloadPTHModel(True)
+                        '''
+                        
+                    elif self.getIsTFLite():
+                        self.modelObjectType = value_dict['OBJECT_TYPE']
+                        self.modelTFLite = "mmsmodel-" + value_dict['OBJECT_ID']
+                        self.modelObjectId = value_dict['OBJECT_ID']
+                        self.modelNet = value_dict['MODEL_NET']
+                        self.modelFmwk = value_dict['MODEL_FMWK']
+                        self.modelVersion = value_dict['MODEL_VERSION']
+                        self.modelDir = value_dict['MODEL_DIR']
 
+                        with zipfile.ZipFile(os.path.join(self.modelDir, self.modelTFLite), 'r') as zip_ref:
+                            zip_ref.extractall(self.modelDir)
+                            self.setReloadTFLiteModel(True)
+                            
         except requests.exceptions.HTTPError as errh:
             print ("{:.7f}V mmsModel: Http Error".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.ConnectionError as errc:
             None
-            print ("{:.7f}V mmsModel: ConnectionError".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.Timeout as errt:
             print ("{:.7f}V mmsModel: Timeout".format(time.time()), errh, end="\n", flush=True)
         except requests.exceptions.RequestException as err:
@@ -311,27 +335,23 @@ class Config:
     def mmsModelProcessor(self, interval):
         while True:
             time.sleep(interval)
-            self.mmsModel()
+            if self.getDetectorInitialized():
+                self.mmsModel()
 
     def mmsPoller(self):
-        Thread(target=self.mmsConfigProcessor, args=(1,)).start()
-        Thread(target=self.mmsModelProcessor, args=(1,)).start()
+        Thread(target=self.mmsConfigProcessor, args=(5,)).start()
+        Thread(target=self.mmsModelProcessor, args=(11,)).start()
 
-    """
-    def mmsConfigProcessor(self):
-        while True:
-            time.sleep(1)
-            self.mmsConfig()
+    def getReloadTFLiteModel(self):
+        return self.reloadTFLiteModel
 
-    def mmsModelProcessor(self):
-        while True:
-            time.sleep(1)
-            self.mmsModel()
+    def setReloadTFLiteModel(self, flag):
+        self.reloadTFLiteModel = flag
 
-    def mmsConfigPoller(self):
-        Thread(target=self.mmsConfigProcessor, args=()).start()
+    def getReloadPTHModel(self):
+        return self.reloadPTHModel
 
-    def mmsModelPoller(self):
-        Thread(target=self.mmsModelProcessor, args=()).start()
-    """
+    def setReloadPTHModel(self, flag):
+        self.reloadPTHModel = flag
+        
             
