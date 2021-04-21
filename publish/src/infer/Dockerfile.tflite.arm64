@@ -59,23 +59,19 @@ RUN mkdir -p /usr/local/lib/python3.7/site-packages/cv2/data && \
 RUN pip3 install requests
 RUN pip3 install https://dl.google.com/coral/python/tflite_runtime-2.1.0.post1-cp37-cp37m-linux_aarch64.whl
 
-WORKDIR /
 ENV APP_MODEL_FMWK tflite
-ENV APP_MODEL_DIR /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/
-ENV APP_MODEL_TFLITE detect.tflite
-ENV APP_MODEL_LABELMAP labelmap.txt
-RUN mkdir -p /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/ && \
-    cd /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/ && \
-    wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip && \
-    unzip coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip && \
-    rm coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
-
-ENV APP_MI_MODEL coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/tflite
+ENV APP_MODEL_TFLITE coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
 
 WORKDIR /
-RUN mkdir -p package/detect package/util package/video 
+
+RUN mkdir -p package/detect/tflite package/util package/video 
+COPY service/package/detect/tflite/*.py package/detect/tflite/
 COPY service/package/detect/*.py package/detect/
-COPY service/package/video/*.py package/video/
+COPY service/package/video/__init__.py package/video/
+COPY service/package/video/videoSourceProcessor.py package/video/ 
+COPY service/package/video/videoSource.py package/video/
+COPY service/package/video/videoStream.py package/video/
 COPY service/package/util/*.py package/util/
 COPY service/package/*.py package/
 COPY service/videoObjectDetector.py .
