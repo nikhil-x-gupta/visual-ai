@@ -1,7 +1,18 @@
 ### Instructions to `Register` an edge device node to detect objects in a video stream
     
-  These instructions will guide you through the steps to register an edge node to detect objects in a video stream using **TensorFlow Lite** or **OpenVINO** framework. 
-    
+  These instructions will guide you through the steps to register an edge node to detect objects in a video stream using 
+  - TensorFlow Lite
+  - OpenVINO
+  - Pytorch
+  - MVI 
+
+While registering the node, ML model needs to be provided. Download models and have them ready.
+
+TFLite
+```
+wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+```
+
 #### Pre-requisite
   - API-KEY from the IEAM mgmt hub admin to register the edge node.
   - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera connected.
