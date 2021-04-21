@@ -12,7 +12,7 @@ export ARCH ?= $(shell hzn architecture)
 
 model-mvi: model-mvi-publish-service 
 
-mi-mvi: mi-mvi-build mi-mvi-push mi-mvi-publish-service mi-mvi-deploy-policy
+mi-mvi: mi-mvi-build mi-mvi-push mi-mvi-publish-service mi-mvi-deploy-policy model-mvi-p100-publish-pattern
 
 # Build the docker container
 tflite-build:

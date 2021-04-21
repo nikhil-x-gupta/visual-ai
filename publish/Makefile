@@ -63,6 +63,7 @@ publish-vino:
 publish-mvi:
 	make -C src/infer model-mvi-publish-service 
 	make -C src/infer model-mvi-p100-publish-service
+	make -C src/infer model-mvi-p100-publish-pattern
 	make -C src/infer mi-mvi-build 
 	make -C src/infer mi-mvi-push
 	make -C src/infer mi-mvi-publish-service
