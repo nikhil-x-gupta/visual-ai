@@ -23,7 +23,7 @@
     },
     {
 	"org": "$HZN_ORG_ID",
-	"url": "$EDGE_OWNER.$EDGE_DEPLOY.pth.gpu.noterm",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.pth.gpu",
 	"versionRange": "[0.0.0,INFINITY)",
 	"variables": {
             "DEVICE_ID"                : "$DEVICE_ID",

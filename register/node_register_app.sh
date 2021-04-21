@@ -11,7 +11,7 @@ OFF="\033[0m"
 usage() {                      
   echo "Usage: $0 -e -k -m -r -u -p -l"
   echo "where "
-  echo "   -k framework tflite | vino | mvi | mvi_p100 | pth_cpu | pth_gpu_noterm "
+  echo "   -k framework tflite | vino | mvi | mvi_p100 | pth_cpu | pth_gpu"
   echo "   -e file path to environemnt veriables "
   echo "   -m file path to mvi model file "
   echo "   -r register "
@@ -118,18 +118,18 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pth_cpu | pth_gpu_noterm "
+    echo "Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pth_cpu | pth_gpu"
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu_noterm" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu" ]; then
 
     . $ENVVAR
 
     fn_chk_env
 
     echo "\n${GREEN}Application Deployment Framework $FMWK"
-    if [ "$FMWK" = "tflite" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu_noterm" ]; then
+    if [ "$FMWK" = "tflite" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
 		echo "${RED}Creating directory "

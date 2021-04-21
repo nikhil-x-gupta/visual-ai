@@ -6,7 +6,6 @@
       { "name": "mmsmodel", "value": true },
       { "name": "pth", "value": true },
       { "name": "gpu", "value": true },
-      { "name": "noterm", "value": true },
       { "name": "openhorizon.allowPrivileged", "value": true }
   ],
   "constraints": [
