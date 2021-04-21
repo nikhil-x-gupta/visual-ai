@@ -21,8 +21,8 @@ tflite-build:
 pth-cpu-build:
 	 envsubst < ./Dockerfile.pth.cpu.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_CPU)_$(ARCH):$(SERVICE_VERSION_PTH_CPU) . -f -
 
-pth-gpu-noterm-build:
-	 envsubst < ./Dockerfile.pth.gpu.noterm.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU_NOTERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_NOTERM) . -f -
+pth-gpu-build:
+	 envsubst < ./Dockerfile.pth.gpu.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU)_$(ARCH):$(SERVICE_VERSION_PTH_GPU) . -f -
 
 pth-gpu-term-build:
 	 envsubst < ./Dockerfile.pth.gpu.term.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU_TERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_TERM) . -f -
@@ -45,9 +45,9 @@ pth-cpu-push:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
 	docker push $(DOCKER_IMAGE_BASE_PTH_CPU)_$(ARCH):$(SERVICE_VERSION_PTH_CPU)
 
-pth-gpu-noterm-push:
+pth-gpu-push:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	docker push $(DOCKER_IMAGE_BASE_PTH_GPU_NOTERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_NOTERM)
+	docker push $(DOCKER_IMAGE_BASE_PTH_GPU)_$(ARCH):$(SERVICE_VERSION_PTH_GPU)
 
 pth-gpu-term-push:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
@@ -74,9 +74,9 @@ pth-cpu-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
 	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH_CPU).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
-pth-gpu-noterm-publish-service:
+pth-gpu-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH_GPU_NOTERM).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+	hzn exchange service publish -f horizon/$(IMAGE_NAME_PTH_GPU).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
 pth-gpu-term-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
@@ -117,8 +117,8 @@ tflite-deploy-policy:
 pth-cpu-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_CPU).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_CPU)_$(ARCH)
 
-pth-gpu-noterm-deploy-policy:
-	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU_NOTERM).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU_NOTERM)_$(ARCH)
+pth-gpu-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU)_$(ARCH)
 
 pth-gpu-term-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU_TERM).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU_TERM)_$(ARCH)

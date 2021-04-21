@@ -51,9 +51,9 @@ publish-pth-cpu:
 	make -C src/infer pth-cpu-publish-service
 
 publish-pth-gpu:
-	make -C src/infer pth-gpu-noterm-build
-	make -C src/infer pth-gpu-noterm-push
-	make -C src/infer pth-gpu-noterm-publish-service
+	make -C src/infer pth-gpu-build
+	make -C src/infer pth-gpu-push
+	make -C src/infer pth-gpu-publish-service
 
 publish-vino:
 	make -C src/infer vino-build
@@ -91,7 +91,7 @@ deploy-policy-pth-cpu:
 deploy-policy-pth-gpu:
 	make -C src/mms config-deploy-policy
 	make -C src/mms model-deploy-policy
-	make -C src/infer pth-gpu-noterm-deploy-policy
+	make -C src/infer pth-gpu-deploy-policy
 
 deploy-policy-vino:
 	make -C src/mms config-deploy-policy

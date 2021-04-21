@@ -1,11 +1,11 @@
 {
     "org": "$HZN_ORG_ID",
-    "label": "$SERVICE_NAME_PTH_GPU_NOTERM for $ARCH",
+    "label": "$SERVICE_NAME_PTH_GPU for $ARCH",
     "description": "",
     "public": true,
     "documentation": "",
-    "url": "$SERVICE_NAME_PTH_GPU_NOTERM",
-    "version": "$SERVICE_VERSION_PTH_GPU_NOTERM",
+    "url": "$SERVICE_NAME_PTH_GPU",
+    "version": "$SERVICE_VERSION_PTH_GPU",
     "arch": "$ARCH",
     "sharable": "singleton",
     "requiredServices": [
@@ -29,8 +29,8 @@
     ],
     "deployment": {
         "services": {
-            "$SERVICE_NAME_PTH_GPU_NOTERM": {
-                "image": "${DOCKER_IMAGE_BASE_PTH_GPU_NOTERM}_$ARCH:$SERVICE_VERSION_PTH_GPU_NOTERM",
+            "$SERVICE_NAME_PTH_GPU": {
+                "image": "${DOCKER_IMAGE_BASE_PTH_GPU}_$ARCH:$SERVICE_VERSION_PTH_GPU",
                 "privileged": true,
 		"binds": [
 		    "$APP_BIND_HORIZON_PTH_GPU_MDOEL_DIR:$APP_BIND_HORIZON_PTH_GPU_MDOEL_DIR:rw",
