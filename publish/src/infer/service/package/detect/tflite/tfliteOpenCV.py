@@ -12,7 +12,7 @@ class TFLiteOpenCV(BaseOpenCV):
     def __init__(self):
         super().__init__()
     
-    def annotateFrame(self, config, detector, frame_current, src_name, frame_faces, frame_gray, boxes, classes, scores):
+    def annotateFrame(self, config, labels, frame_current, src_name, frame_faces, frame_gray, boxes, classes, scores):
         entities_dict = {}
         for i in range(len(scores)):
             if ((scores[i] > config.getMinConfidenceThreshold()) and (scores[i] <= 1.0)):
@@ -27,7 +27,7 @@ class TFLiteOpenCV(BaseOpenCV):
                 cv2.rectangle(frame_current, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
 
                 # Draw label
-                object_name = detector.getLabels()[int(classes[i])]
+                object_name = labels[int(classes[i])]
                 label = '%s: %d%%' % (object_name,  int(scores[i] * 100))
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
                 label_ymin = max(ymin, labelSize[1] + 8)

@@ -33,18 +33,19 @@ class VideoSourceProcessor:
             from package.detect.tflite import TFLiteOpenCV
 
             print ("{:.7f} VideoSourceProcessor TFLite".format(time.time()), end="\n", flush=True)
-            self.detector = TFLiteDetector(self.config)
+            videoSource.setDetector(TFLiteDetector(self.config))
             opencv = TFLiteOpenCV()
 
             self.config.setDetectorInitialized(True)
             while True:
-                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, self.detector.getFloatingModel(), self.detector.getHeight(), self.detector.getWidth())
-                inference_interval, boxes, classes, scores = self.detector.getInferResults(frame_normalized)
-                self.update(self.config, self.videoSources, videoSource, self.detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
+                detector = videoSource.getDetector()
+                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
+                inference_interval, boxes, classes, scores = detector.getInferResults(frame_normalized)
+                self.update(self.config, self.videoSources, videoSource, detector.getLabels(), opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
 
                 if self.config.getReloadTFLiteModel():
                     self.config.setReloadTFLiteModel(False)
-                    self.detector = TFLiteDetector(self.config)
+                    videoSource.setDetector(TFLiteDetector(self.config))
                 
             videoStream.stop()
 
@@ -53,12 +54,15 @@ class VideoSourceProcessor:
             from package.detect.pth import PTHOpenCV
 
             print ("{:.7f} VideoSourceProcessor PTH".format(time.time()), end="\n", flush=True)
-            self.detector = PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"])
+            videoSource.setDetector(PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"]))
             opencv = PTHOpenCV()
+
+            self.config.setDetectorInitialized(True)
             while True:
-                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, self.detector.getFloatingModel(), self.detector.getHeight(), self.detector.getWidth())
-                inference_interval, boxes, classes, scores = self.detector.getInferResults(frame_current)
-                self.update(self.config, self.videoSources, videoSource, self.detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
+                detector = videoSource.getDetector()
+                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
+                inference_interval, boxes, classes, scores = detector.getInferResults(frame_current)
+                self.update(self.config, self.videoSources, videoSource, [], opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
                 #if detector.getModelPath() != self.config.getModelPathPTH():
                 #    detector = PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"])
             videoStream.stop()
@@ -68,12 +72,15 @@ class VideoSourceProcessor:
             from package.detect.vino import VinoOpenCV
 
             print ("{:.7f} VideoSourceProcessor OpenVINO".format(time.time()), end="\n", flush=True)
-            self.detector = VinoDetector(self.config)
+            videoSource.setDetector(VinoDetector(self.config))
             opencv = VinoOpenCV()
+
+            self.config.setDetectorInitialized(True)
             while True:
-                frame_current, frame_normalized, frame_faces, frame_gray, images, images_hw = opencv.getFrame(self.config, videoStream, self.detector.getN(), self.detector.getC(), self.detector.getHeight(), self.detector.getWidth())
-                inference_interval, boxes, classes, scores = self.detector.getInferResults(images, images_hw, frame_current)
-                self.update(self.config, self.videoSources, videoSource, self.detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
+                detector = videoSource.getDetector()
+                frame_current, frame_normalized, frame_faces, frame_gray, images, images_hw = opencv.getFrame(self.config, videoStream, detector.getN(), detector.getC(), detector.getHeight(), detector.getWidth())
+                inference_interval, boxes, classes, scores = detector.getInferResults(images, images_hw, frame_current)
+                self.update(self.config, self.videoSources, videoSource, [], opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
                 #if detector.getModelPath() != self.config.getModelPath():
                 #    detector = VinoDetector(self.config)
             videoStream.stop()
@@ -83,13 +90,15 @@ class VideoSourceProcessor:
             from package.detect.mvi import MVIOpenCV
 
             print ("{:.7f} VideoSourceProcessor MVI".format(time.time()), end="\n", flush=True)
-            self.detector = MVIDetector(self.config)
+            videoSource.setDetector(MVIDetector(self.config))
             opencv = MVIOpenCV()
+
+            self.config.setDetectorInitialized(True)
             while True:
-                print ("{:.7f} VideoSourceProcessor MVI capture loop".format(time.time()), end="\n", flush=True)
-                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, self.detector.getFloatingModel(), self.detector.getHeight(), self.detector.getWidth())
-                inference_interval, boxes, classes, scores = self.detector.getInferResults(frame_current, index, opencv)
-                self.update(self.config, self.videoSources, videoSource, self.detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
+                detector = videoSource.getDetector()
+                frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
+                inference_interval, boxes, classes, scores = detector.getInferResults(frame_current, index, opencv)
+                self.update(self.config, self.videoSources, videoSource, [], opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
                 #if detector.getModelPath() != self.config.getModelPath():
                 #    detector = VinoDetector(self.config)
 
@@ -101,8 +110,8 @@ class VideoSourceProcessor:
         else:
             self.process(index)
 
-    def update(self, config, video_sources, video_source, detector, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval):
-        entities_dict = opencv.annotateFrame(config, detector, frame_current, video_source.getName(), frame_faces, frame_gray, boxes, classes, scores)
+    def update(self, config, video_sources, video_source, labels, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval):
+        entities_dict = opencv.annotateFrame(config, labels, frame_current, video_source.getName(), frame_faces, frame_gray, boxes, classes, scores)
         if config.shouldShowOverlay():
             opencv.addOverlay(frame_current, config.getTool(), config.getDeviceName(), inference_interval, opencv.getFrameRate())
         video_source.frame_annotated = frame_current.copy()
