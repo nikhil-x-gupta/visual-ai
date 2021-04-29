@@ -41,15 +41,15 @@ model-push:
 # Publish a Horizon service (per service.json) and pull image to get its sha256
 publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -f horizon/service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+	hzn exchange service publish -O -f horizon/service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
 config-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -f horizon/$(IMAGE_NAME_CONFIG).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_CONFIG).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
 model-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -f horizon/$(IMAGE_NAME_MODEL).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_MODEL).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
 
 deploy-policy:

@@ -24,7 +24,7 @@ push:
 # Publish a Horizon service (per service.json) and pull image to get its sha256
 publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -f horizon/service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+	hzn exchange service publish -O -f horizon/service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
 # Not applicable
 #deploy-policy:
