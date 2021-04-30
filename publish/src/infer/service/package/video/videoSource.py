@@ -9,6 +9,7 @@ class VideoSource:
         self.source = source
         self.frame_annotated = None
         self.detector = None
+        self.resolution = None
         
     def getName(self):
         return self.name
@@ -22,3 +23,14 @@ class VideoSource:
     def setDetector(self, detector):
         self.detector = detector
     
+    def setResolution(self, resolution):
+        self.resolution = resolution
+
+    def getResolution(self):
+        return self.resolution
+
+    def getResolutionWidth(self):
+        return self.resolution[0]
+
+    def getResolutionHeight(self):
+        return self.resolution[1]

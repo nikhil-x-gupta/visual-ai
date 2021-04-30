@@ -93,10 +93,14 @@ class BaseOpenCV:
                 v = r * ncols + c
                 if v < nsrc:
                     videoSource = video_sources[v]
+                    print ("{:.7f} baseOpenCV".format(time.time()), videoSource.getSource(), videoSource.getResolution(), end="\n", flush=True)
                     if videoSource.frame_annotated is not None:
                         colFrames.append(videoSource.frame_annotated)
                     else:
-                        colFrames.append(config.getBlankFrame())
+                        if videoSource.getResolution() is not None:
+                            colFrames.append(cv2.resize(config.getBlankFrame(), videoSource.getResolution()))
+                        else:
+                            colFrames.append(config.getBlankFrame())
                 else:
                     colFrames.append(config.getBlankFrame())
 

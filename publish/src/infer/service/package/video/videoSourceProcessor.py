@@ -24,7 +24,7 @@ class VideoSourceProcessor:
 
     def process(self, index):
         videoSource = self.videoSources[index]
-        videoStream = VideoStream(self.config, videoSource.getSource())
+        videoStream = VideoStream(self.config, videoSource)
         videoStream.startThread()
         time.sleep(1)
 
