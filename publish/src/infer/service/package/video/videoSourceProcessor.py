@@ -13,18 +13,24 @@ from . import VideoSource
 import time
 
 class VideoSourceProcessor:
-    def __init__(self, config, name, source):
+    def __init__(self, config, sourceType, source, name):
         self.videoSources = []
         self.config = config
-        self.videoSources.append(VideoSource(name, source))
+        self.videoSources.append(VideoSource(sourceType, source, name))
         self.detector = None
        
-    def addVideoSource(self, name, source):
-        self.videoSources.append(VideoSource(name, source))
+    def addVideoSource(self, sourceType, source, name):
+        self.videoSources.append(VideoSource(sourceType, source, name))
+
+    def processThread(self, index, threaded):
+        if threaded:
+            Thread(target=self.process, args=(index,)).start()
+        else:
+            self.process(index)
 
     def process(self, index):
         videoSource = self.videoSources[index]
-        videoStream = VideoStream(self.config, videoSource)
+        videoStream = VideoStream(self.config, videoSource, index)
         videoStream.startThread()
         time.sleep(1)
 
@@ -104,20 +110,20 @@ class VideoSourceProcessor:
 
             videoStream.stop()
 
-    def processThread(self, index, threaded):
-        if threaded:
-            Thread(target=self.process, args=(index,)).start()
-        else:
-            self.process(index)
-
     def update(self, config, video_sources, video_source, labels, opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval):
         entities_dict = opencv.annotateFrame(config, labels, frame_current, video_source.getName(), frame_faces, frame_gray, boxes, classes, scores)
+
         if config.shouldShowOverlay():
             opencv.addOverlay(frame_current, config.getTool(), config.getDeviceName(), inference_interval, opencv.getFrameRate())
+
         video_source.frame_annotated = frame_current.copy()
+
         inference_data_json = opencv.getInferenceDataJSON(config, inference_interval, entities_dict, video_sources)
+
         if config.shouldPublishKafka():
             util.inference_publish(config.getPublishPayloadKafkaUrl(), inference_data_json)
+
         if config.shouldPublishStream():
             util.inference_publish(config.getPublishPayloadStreamUrl(), inference_data_json)
+
         opencv.updateFrameRate()

@@ -75,6 +75,16 @@ class BaseOpenCV:
         cv2.putText(frame_current, "Updated at: " + config.getModelUpdatedAtText(), (10, h-40), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.putText(frame_current, "Detector: " + config.getDetectorURL(), (10, h-20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1, cv2.LINE_AA)
 
+    def hconcatResizeMin(self, frames, interpolation=cv2.INTER_CUBIC):
+        hMin = min(frame.shape[0] for frame in frames)
+        framesResize = [cv2.resize(frame, (int(frame.shape[1] * hMin / frame.shape[0]), hMin), interpolation=interpolation) for frame in frames]
+        return cv2.hconcat(framesResize)
+
+    def vconcatResizeMin(self, frames, interpolation=cv2.INTER_CUBIC):
+        wMin = min(frame.shape[1] for frame in frames)
+        framesResize = [cv2.resize(frame, (wMin, int(frame.shape[0] * wMin / frame.shape[1])), interpolation=interpolation) for frame in frames]
+        return cv2.vconcat(framesResize) 
+
     def getInferenceDataJSON(self, config, inference_interval, entities_dict, video_sources):
         entities = []
         for key in entities_dict:
@@ -93,7 +103,6 @@ class BaseOpenCV:
                 v = r * ncols + c
                 if v < nsrc:
                     videoSource = video_sources[v]
-                    print ("{:.7f} baseOpenCV".format(time.time()), videoSource.getSource(), videoSource.getResolution(), end="\n", flush=True)
                     if videoSource.frame_annotated is not None:
                         colFrames.append(videoSource.frame_annotated)
                     else:
@@ -104,10 +113,12 @@ class BaseOpenCV:
                 else:
                     colFrames.append(config.getBlankFrame())
 
-            hframe = cv2.hconcat(colFrames)
+            hframe = self.hconcatResizeMin(colFrames, interpolation=cv2.INTER_CUBIC)
+            #hframe = cv2.hconcat(colFrames)
             rowFrames.append(hframe)
 
-        fullFrame = cv2.vconcat(rowFrames)
+        fullFrame = self.vconcatResizeMin(rowFrames, interpolation=cv2.INTER_CUBIC)
+        #fullFrame = cv2.vconcat(rowFrames)
 
         bgColor = [15, 15, 15]
         fullFrame = cv2.copyMakeBorder(fullFrame, 0, 60, 0, 0, cv2.BORDER_CONSTANT, value=bgColor)
@@ -149,8 +160,8 @@ class BaseOpenCV:
             status_x = 60
         else:
             font_scale = 2
-            ht, wd, ch = config.getBlankFrame().shape
-            status_x = int((ncols * wd - 1040)/2)
+            ht, wd, ch = fullFrame.shape
+            status_x = int((wd - 1080)/2)
 
         alpha = 0.7
         status = fullFrame.copy()

@@ -4,25 +4,30 @@
 # Sanjeev Gupta, April 2020
 
 class VideoSource:
-    def __init__(self, name, source):
-        self.name = name
+    def __init__(self, sourceType, source, name):
+        self.sourceType = sourceType
         self.source = source
-        self.frame_annotated = None
-        self.detector = None
+        self.name = name
+        self.index = None
         self.resolution = None
+        self.detector = None
+        self.frame_annotated = None
         
-    def getName(self):
-        return self.name
+    def getSourceType(self):
+        return self.sourceType
 
     def getSource(self):
         return self.source
 
-    def getDetector(self):
-        return self.detector
+    def getName(self):
+        return self.name
 
-    def setDetector(self, detector):
-        self.detector = detector
-    
+    def setIndex(self, index):
+        self.index = index
+
+    def getIndex(self):
+        return self.index
+
     def setResolution(self, resolution):
         self.resolution = resolution
 
@@ -34,3 +39,11 @@ class VideoSource:
 
     def getResolutionHeight(self):
         return self.resolution[1]
+
+    def setDetector(self, detector):
+        self.detector = detector
+ 
+    def getDetector(self):
+        return self.detector
+
+    

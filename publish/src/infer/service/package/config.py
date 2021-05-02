@@ -15,17 +15,18 @@ import time
 import zipfile
 
 class Config:
-    def __init__(self, fmwk, resolution=(640, 480), framerate=30):
+    def __init__(self, fmwk, framerate=30):
         self.fmwk = fmwk
-        self.resolution = resolution
         self.framerate = framerate
 
+        # seed resolution for blankFrame to be used as base blankFrame
+        resolution = (640, 480)
         b_frame_border = 8
         bg_color = [32, 32, 32]
-        b_frame = numpy.zeros([self.resolution[1] - 2 * b_frame_border, self.resolution[0] - 2 * b_frame_border, 3], dtype=numpy.uint8)
+        b_frame = numpy.zeros([resolution[1] - 2 * b_frame_border, resolution[0] - 2 * b_frame_border, 3], dtype=numpy.uint8)
         b_frame[:] = (48, 48, 48) # gray fill
         self.blankFrame = cv2.copyMakeBorder(b_frame, b_frame_border, b_frame_border, b_frame_border, b_frame_border, cv2.BORDER_CONSTANT, value=bg_color)
-
+        
         self.env_dict = {}
         self.env_dict['SHOW_OVERLAY'] = os.environ['SHOW_OVERLAY'] if 'SHOW_OVERLAY' in os.environ else True
         self.env_dict['DETECT_FACE'] = os.environ['DETECT_FACE'] if 'DETECT_FACE' in os.environ else True
@@ -79,7 +80,6 @@ class Config:
     def setTFLiteDefaults(self):
         self.detectTFLite = "detect.tflite"
         self.labelmap = "labelmap.txt"
-
         self.tool = "TensorFlow Lite OpenCV"
         self.modelTFLite = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
@@ -210,17 +210,13 @@ class Config:
     def shouldBlurFace(self):
         return self.env_dict['BLUR_FACE']  == 'true'
 
-    def getResolution(self):
-        return self.resolution
-
     def getFramerate(self):
         return self.framerate
 
-    def getResolutionWidth(self):
-        return self.resolution[0]
-
-    def getResolutionHeight(self):
-        return self.resolution[1]
+    def getVideoFiles(self):
+        videoFilesStr = os.environ['VIDEO_FILES'] if 'VIDEO_FILES' in os.environ else ''
+        videoFiles =  (videoFilesStr.replace(" ", "")).split(",")
+        return videoFiles
 
     def getTool(self):
         return self.tool
@@ -353,5 +349,4 @@ class Config:
 
     def setReloadPTHModel(self, flag):
         self.reloadPTHModel = flag
-        
-            
+    

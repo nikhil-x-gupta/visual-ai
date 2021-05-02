@@ -12,6 +12,7 @@
         { "url": "$EDGE_OWNER.$EDGE_DEPLOY.http", "org": "$HZN_ORG_ID", "version": "1.0.0", "versionRange": "1.0.0", "arch": "$ARCH" }
     ],
     "userInput": [
+	{ "name": "VIDEO_FILES", "label": "optional-video-files", "type": "string", "defaultValue": "VIDEO_FILES" },
         { "name": "DEVICE_ID", "label": "device-id", "type": "string", "defaultValue": "DEVICE_ID" },
         { "name": "DEVICE_NAME", "label": "device-name", "type": "string", "defaultValue": "DEVICE_NAME" },
         { "name": "DEVICE_IP_ADDRESS", "label": "device-ip-address", "type": "string", "defaultValue": "DEVICE_IP_ADDRESS" },

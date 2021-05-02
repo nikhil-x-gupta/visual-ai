@@ -9,7 +9,7 @@ GREEN="\033[32m"
 OFF="\033[0m"
 
 usage() {                      
-  echo "Usage: $0 -e -k -m -r -u -p -l"
+  echo "Usage: $0 -e -k -m -r -u -p -l -f"
   echo "where "
   echo "   -k framework tflite | vino | mvi | mvi_p100 | pth_cpu | pth_gpu"
   echo "   -e file path to environemnt veriables "
@@ -18,6 +18,7 @@ usage() {
   echo "   -u unregister "
   echo "   -p pattern based deployment "
   echo "   -l policy based deployment "
+  echo "   -f video file optional"
 }
 
 fn_chk_env() {
@@ -75,7 +76,7 @@ fn_unregister() {
     hzn unregister -vrD
 }
 
-while getopts 'e:k:m:rlupm' option; do
+while getopts 'e:k:m:rlupmf:' option; do
   case "$option" in
     h) usage
        exit 1
@@ -96,6 +97,8 @@ while getopts 'e:k:m:rlupm' option; do
        ;;
     m) mmspattern=1
        ;;
+    f) vfiles=$OPTARG
+       ;;
     :) printf "missing argument for -%s\n" "$OPTARG" >&2
        usage
        exit 1
@@ -107,6 +110,8 @@ while getopts 'e:k:m:rlupm' option; do
   esac
 done
 shift $((OPTIND - 1))
+
+if [ -z $vfiles ]; then export VIDEO_FILES=""; else export VIDEO_FILES="$vfiles"; fi
 
 if [ -z $ENVVAR ]; then
     echo ""
