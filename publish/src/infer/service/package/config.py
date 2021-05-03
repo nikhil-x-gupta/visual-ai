@@ -145,8 +145,32 @@ class Config:
     def getModelPathVinoBin(self):
         return os.path.join(self.getModelDir(), self.getModelBin())
 
+    def getAppCameras(self, limit):
+        if 'APP_CAMERAS' in os.environ:
+            if os.environ['APP_CAMERAS'] == 'all':
+                return self.discoverVideoDeviceSources(limit)
+            else:
+                deviceSources = []
+                sources =  (os.environ['APP_CAMERAS'].replace(" ", "")).split(",")
+                for source in sources:
+                    vcap = cv2.VideoCapture(int(source))
+                    if vcap.read()[0]:
+                        deviceSources.append(source)
+                        vcap.release()
+                    time.sleep(1) 
+        else:
+            return []
+
     def getRTSPStreams(self):
-        rtspStr = os.environ['RTSP_STREAMS'] if 'RTSP_STREAMS' in os.environ else ''
+        rtspStr = ''
+        if 'APP_RTSPS' in os.environ:
+            if os.environ['APP_RTSPS'] == '-':
+                rtspStr = ''
+            else:
+                rtspStr = os.environ['APP_RTSPS'] 
+        else:
+            rtspStr = ''
+
         rtsps =  (rtspStr.replace(" ", "")).split(",")
         rtsp = [rtsp for rtsp in rtsps if "rtsp" in rtsp]  
         return rtsps if rtsp else None
@@ -157,14 +181,14 @@ class Config:
         return x
 
     def getViewColumn(self):
-        return int(os.environ['VIEW_COLUMN'] if 'VIEW_COLUMN' in os.environ else '3')
+        return int(os.environ['APP_VIEW_COLUMNS'] if 'APP_VIEW_COLUMNS' in os.environ else '1')
 
     def getBlankFrame(self):
         return self.blankFrame
 
-    def discoverVideoDeviceSources(self, bound):
+    def discoverVideoDeviceSources(self, limit):
         deviceSources = []
-        for source in range(0, bound):
+        for source in range(0, limit):
             vcap = cv2.VideoCapture(source)
             if vcap.read()[0]:
                 deviceSources.append(source)
@@ -214,7 +238,7 @@ class Config:
         return self.framerate
 
     def getVideoFiles(self):
-        videoFilesStr = os.environ['VIDEO_FILES'] if 'VIDEO_FILES' in os.environ else ''
+        videoFilesStr = os.environ['APP_VIDEO_FILES'] if 'APP_VIDEO_FILES' in os.environ else ''
         videoFiles =  (videoFilesStr.replace(" ", "")).split(",")
         return videoFiles
 

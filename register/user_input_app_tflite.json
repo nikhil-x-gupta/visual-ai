@@ -29,15 +29,16 @@
             "DEVICE_ID"                : "$DEVICE_ID",
             "DEVICE_NAME"              : "$DEVICE_NAME",
 	    "DEVICE_IP_ADDRESS"        : "$DEVICE_IP_ADDRESS",
-	    "RTSP_STREAMS"             : "$RTSP_STREAMS",
 	    "APP_BIND_HORIZON_DIR"     : "$APP_BIND_HORIZON_DIR",
-	    "VIDEO_FILES"              : "$VIDEO_FILES",
+	    "APP_CAMERAS"              : "$APP_CAMERAS",
+	    "APP_VIDEO_FILES"          : "$APP_VIDEO_FILES",
+	    "APP_RTSPS"                : "$APP_RTSPS",
+	    "APP_VIEW_COLUMNS"         : $APP_VIEW_COLUMNS,
 	    "SHOW_OVERLAY"             : $SHOW_OVERLAY,
 	    "PUBLISH_KAFKA"            : $PUBLISH_KAFKA,
 	    "PUBLISH_STREAM"           : $PUBLISH_STREAM,
 	    "DETECT_FACE"              : $DETECT_FACE,
 	    "BLUR_FACE"                : $BLUR_FACE,
-	    "VIEW_COLUMN"              : $VIEW_COLUMN,
 	    "MIN_CONFIDENCE_THRESHOLD" : 0.6
 	}
     }
