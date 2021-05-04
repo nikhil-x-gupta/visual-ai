@@ -79,7 +79,7 @@ if __name__ == '__main__':
     if sources['file'] is not None:
         for source in sources['file']:
             if source: 
-                sourceName = "Video " + str(index + 1) + "    " + source
+                sourceName = "Video " + str(index + 1) + "    " + os.path.basename(source)
                 #createVideoSourceProcessor(config, "file", source, sourceName, index, videoSourceProcessor, True)
                 print ("{:.7f} Video source: ".format(time.time()), sourceName, index, end="\n", flush=True)
                 if videoSourceProcessor is None:
