@@ -161,6 +161,20 @@ class Config:
         else:
             return []
 
+    def getVideoFiles(self):
+        videoFilesStr = ''
+        if 'APP_VIDEO_FILES' in os.environ:
+            if os.environ['APP_VIDEO_FILES'] == '-':
+                videoFilesStr = ''
+            else:
+                videoFilesStr = os.environ['APP_VIDEO_FILES']
+        else:
+            videoFilesStr = ''
+
+        videoFiles = (videoFilesStr.replace(" ", "")).split(",")
+        videoFile = [videoFile for videoFile in videoFiles if len(videoFile) > 0]
+        return videoFiles if videoFile else None
+
     def getRTSPStreams(self):
         rtspStr = ''
         if 'APP_RTSPS' in os.environ:
@@ -171,7 +185,7 @@ class Config:
         else:
             rtspStr = ''
 
-        rtsps =  (rtspStr.replace(" ", "")).split(",")
+        rtsps = (rtspStr.replace(" ", "")).split(",")
         rtsp = [rtsp for rtsp in rtsps if "rtsp" in rtsp]  
         return rtsps if rtsp else None
 
@@ -236,11 +250,6 @@ class Config:
 
     def getFramerate(self):
         return self.framerate
-
-    def getVideoFiles(self):
-        videoFilesStr = os.environ['APP_VIDEO_FILES'] if 'APP_VIDEO_FILES' in os.environ else ''
-        videoFiles =  (videoFilesStr.replace(" ", "")).split(",")
-        return videoFiles
 
     def getTool(self):
         return self.tool
