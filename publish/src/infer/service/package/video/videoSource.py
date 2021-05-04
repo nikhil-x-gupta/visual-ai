@@ -4,14 +4,16 @@
 # Sanjeev Gupta, April 2020
 
 class VideoSource:
-    def __init__(self, sourceType, source, name):
+    def __init__(self, sourceType, source, name, framework):
         self.sourceType = sourceType
         self.source = source
         self.name = name
+        self.framework = framework
         self.index = None
         self.resolution = None
         self.detector = None
         self.frame_annotated = None
+        self.reloadModel = False
         
     def getSourceType(self):
         return self.sourceType
@@ -21,6 +23,9 @@ class VideoSource:
 
     def getName(self):
         return self.name
+
+    def getFramework(self):
+        return self.framework
 
     def setIndex(self, index):
         self.index = index
@@ -46,4 +51,10 @@ class VideoSource:
     def getDetector(self):
         return self.detector
 
+    def setReloadModel(self, flag):
+        self.reloadModel = flag
+ 
+    def getReloadModel(self):
+        return self.reloadModel
+ 
     

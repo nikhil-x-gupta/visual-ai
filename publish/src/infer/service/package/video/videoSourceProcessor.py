@@ -13,14 +13,14 @@ from . import VideoSource
 import time
 
 class VideoSourceProcessor:
-    def __init__(self, config, sourceType, source, name):
+    def __init__(self, config, sourceType, source, name, framework):
         self.videoSources = []
         self.config = config
-        self.videoSources.append(VideoSource(sourceType, source, name))
+        self.videoSources.append(VideoSource(sourceType, source, name, framework))
         self.detector = None
        
-    def addVideoSource(self, sourceType, source, name):
-        self.videoSources.append(VideoSource(sourceType, source, name))
+    def addVideoSource(self, sourceType, source, name, framework):
+        self.videoSources.append(VideoSource(sourceType, source, name, framework))
 
     def processThread(self, index, threaded):
         if threaded:
@@ -49,8 +49,14 @@ class VideoSourceProcessor:
                 inference_interval, boxes, classes, scores = detector.getInferResults(frame_normalized)
                 self.update(self.config, self.videoSources, videoSource, detector.getLabels(), opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
 
+                # Any one thread may happen to check if reloadTFLite is True, then marks all videoSource to reload. Each thread will update the model looking at videoSource.reloadModel
                 if self.config.getReloadTFLiteModel():
                     self.config.setReloadTFLiteModel(False)
+                    for vSource in self.videoSources:
+                        vSource.setReloadModel(True)
+
+                if videoSource.getReloadModel():
+                    videoSource.setReloadModel(False)
                     videoSource.setDetector(TFLiteDetector(self.config))
                 
             videoStream.stop()
