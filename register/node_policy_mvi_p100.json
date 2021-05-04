@@ -1,7 +1,7 @@
 {
   "properties": [
       { "name": "owner",  "value": "sg.edge" },
-      { "name": "deploy",  "value": "example.ai" },
+      { "name": "deploy",  "value": "example.ml.video" },
       { "name": "mmsconfig", "value": true },
       { "name": "mi.mvi.p100", "value": true },
       { "name": "openhorizon.allowPrivileged", "value": true }
