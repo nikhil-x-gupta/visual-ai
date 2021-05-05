@@ -11,7 +11,7 @@ import subprocess
 import uuid
 import threading
 import time
-
+import logging
 
 # edge-css/api/v1/objects
 ieam_api_css_objects = os.environ['APP_IEAM_API_CSS_OBJECTS']
@@ -249,5 +249,8 @@ def update_model_policy(object_type_model, object_id_model, object_service_name_
         obj_type_json_str = json.dumps(obj_type_d)
         config_json_str = json.dumps(config_d)
     
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 if __name__ == '__main__':
     server.run(debug=True, host='0.0.0.0')
