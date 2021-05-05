@@ -24,6 +24,9 @@ class VideoStream:
         videoSource.setIndex(index)
         videoSource.setResolution((int(self.videoCapture.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.videoCapture.get(cv2.CAP_PROP_FRAME_HEIGHT))))
 
+        if self.frame is not None:
+            self.frame_valid = self.frame
+
         self.stopped = False
         print ("{:.7f} VideoStream initialized index resolution".format(time.time()), index, videoSource.getResolution(), end="\n", flush=True)
 
@@ -35,14 +38,15 @@ class VideoStream:
         self.stopped = True
 
     def read(self):
-        return self.frame
+        if self.frame is not None:
+            self.frame_valid = self.frame
+
+        return self.frame_valid
 
     def setup(self):
-        print ("{:.7f} VideoStream setup props CAP_PROP_FRAME_WIDTH".format(time.time()), self.videoSource.getName(), self.videoCapture.get(cv2.CAP_PROP_FRAME_WIDTH), end="\n", flush=True)
-        print ("{:.7f} VideoStream setup props CAP_PROP_PROP_FPS ".format(time.time()), self.videoSource.getName(), self.videoCapture.get(cv2.CAP_PROP_FPS), end="\n", flush=True)
-        print ("{:.7f} VideoStream setup props CAP_PROP_FOURCC".format(time.time()), self.videoSource.getName(), self.videoCapture.get(cv2.CAP_PROP_FOURCC), end="\n", flush=True)
-        print ("{:.7f} VideoStream setup props CAP_PROP_FRAME_COUNT".format(time.time()), self.videoSource.getName(), self.videoCapture.get(cv2.CAP_PROP_FRAME_COUNT), end="\n", flush=True)
-        #while self.videoSource.isOpened():
+        if self.videoSource.getSourceType() == 'file':
+            if self.videoCapture.get(cv2.CAP_PROP_FPS) is not None:
+                self.captureInterval = 1/self.videoCapture.get(cv2.CAP_PROP_FPS)
         while True:
             if self.stopped:
                 self.videoCapture.release()
@@ -54,6 +58,7 @@ class VideoStream:
                         if self.grabbed is False:
                             ret = self.videoCapture.set(cv2.CAP_PROP_POS_FRAMES, 0)
                             self.grabbed = True
+                            
                     time.sleep(self.captureInterval)
                 except cv2.error as e:
                     print ("{:.7f} VideoStream setup error".format(time.time()), self.videoSource.getName(), self.videoSource.getSourceType(), e, end="\n", flush=True)
