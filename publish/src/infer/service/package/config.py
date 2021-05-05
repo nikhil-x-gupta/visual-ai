@@ -147,7 +147,9 @@ class Config:
 
     def getAppCameras(self, limit):
         if 'APP_CAMERAS' in os.environ:
-            if os.environ['APP_CAMERAS'] == 'all':
+            if os.environ['APP_CAMERAS'] == '-':
+                return None
+            elif os.environ['APP_CAMERAS'] == 'all':
                 return self.discoverVideoDeviceSources(limit)
             else:
                 deviceSources = []
@@ -159,7 +161,7 @@ class Config:
                         vcap.release()
                     time.sleep(1) 
         else:
-            return []
+            return None
 
     def getVideoFiles(self):
         videoFilesStr = ''
