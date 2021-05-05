@@ -40,7 +40,7 @@ if __name__ == '__main__':
     config = Config(fmwk, framerate=30)
 
     sources = {}
-    sources['camera'] = config.discoverVideoDeviceSources(8)
+    sources['camera'] = config.getAppCameras(8)
     sources['rtsp'] = config.getRTSPStreams()
     sources['file'] = config.getVideoFiles()
 
