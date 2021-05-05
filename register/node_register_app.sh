@@ -177,9 +177,9 @@ else
 fi
 
 echo "Application ML Model Framework: $FMWK"
-if [ "$APP_CAMERAS" != "-" ]; then echo "Video Source: Cameras: $APP_CAMERAS"; fi
-if [ "$APP_VIDEO_FILES" != "-" ]; then echo "Video Source: Files: $APP_VIDEO_FILES"; fi
-if [ "$APP_RTSPS" != "-" ]; then echo "Video Source: RTSP Streams: $APP_RTSPS"; fi
+if [ "$APP_CAMERAS" = "-" ]; then echo "Video Source: Cameras: None"; else echo "Video Source: Cameras: $APP_CAMERAS"; fi
+if [ "$APP_VIDEO_FILES" = "-" ]; then echo "Video Source: Files: None"; else echo "Video Source: Files: $APP_VIDEO_FILES"; fi
+if [ "$APP_RTSPS" = "-" ]; then echo "Video Source: RTSP: None"; else echo "Video Source: RTSP Streams: $APP_RTSPS"; fi
 echo "View column: $APP_VIEW_COLUMNS"
 echo "Application bind directory: $APP_BIND_HORIZON_DIR"
 
