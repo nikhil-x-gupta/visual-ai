@@ -59,9 +59,9 @@ RUN mkdir -p /usr/local/lib/python3.7/site-packages/cv2/data && \
 RUN pip3 install requests
 RUN pip3 install https://dl.google.com/coral/python/tflite_runtime-2.1.0.post1-cp37-cp37m-linux_aarch64.whl
 
-ENV APP_MODEL_FMWK tflite
-ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/tflite
-ENV APP_MODEL_TFLITE coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+#ENV APP_MODEL_FMWK tflite
+#ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/tflite
+#ENV APP_MODEL_TFLITE coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
 
 WORKDIR /
 

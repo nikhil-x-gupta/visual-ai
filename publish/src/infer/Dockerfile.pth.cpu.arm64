@@ -31,9 +31,9 @@ RUN wget https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6
     mkdir -p /root/.cache/torch/hub/checkpoints/ && \
     mv fasterrcnn_resnet50_fpn_coco-258fb6c6.pth /root/.cache/torch/hub/checkpoints/ 
 
-ENV APP_MODEL_FMWK pth
-ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/pth_cpu
-ENV APP_MODEL_PTH pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip
+#ENV APP_MODEL_FMWK pth
+#ENV APP_MODEL_DIR /var/local/horizon/ai/mi/model/pth_cpu
+#ENV APP_MODEL_PTH pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip
 
 WORKDIR /
 RUN mkdir -p package/detect/pth package/util package/video /var/local/horizon/ai/mi/model/pth_cpu

@@ -38,11 +38,11 @@ class VideoSourceProcessor:
             from package.detect.tflite import TFLiteDetector
             from package.detect.tflite import TFLiteOpenCV
 
-            print ("{:.7f} VideoSourceProcessor TFLite".format(time.time()), end="\n", flush=True)
             videoSource.setDetector(TFLiteDetector(self.config))
             opencv = TFLiteOpenCV()
-
             self.config.setDetectorInitialized(True)
+
+            print ("{:.7f} VideoSourceProcessor TFLite detection loop begins index ".format(time.time()), index, end="\n", flush=True)
             while True:
                 detector = videoSource.getDetector()
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
@@ -65,11 +65,11 @@ class VideoSourceProcessor:
             from package.detect.pth import PTHDetector
             from package.detect.pth import PTHOpenCV
 
-            print ("{:.7f} VideoSourceProcessor PTH".format(time.time()), end="\n", flush=True)
             videoSource.setDetector(PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"]))
             opencv = PTHOpenCV()
-
             self.config.setDetectorInitialized(True)
+
+            print ("{:.7f} VideoSourceProcessor PTH detection loop begins index ".format(time.time()), index, end="\n", flush=True)
             while True:
                 detector = videoSource.getDetector()
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
@@ -83,11 +83,11 @@ class VideoSourceProcessor:
             from package.detect.vino import VinoDetector
             from package.detect.vino import VinoOpenCV
 
-            print ("{:.7f} VideoSourceProcessor OpenVINO".format(time.time()), end="\n", flush=True)
             videoSource.setDetector(VinoDetector(self.config))
             opencv = VinoOpenCV()
-
             self.config.setDetectorInitialized(True)
+
+            print ("{:.7f} VideoSourceProcessor OpenVINO detection loop begins index ".format(time.time()), index, end="\n", flush=True)
             while True:
                 detector = videoSource.getDetector()
                 frame_current, frame_normalized, frame_faces, frame_gray, images, images_hw = opencv.getFrame(self.config, videoStream, detector.getN(), detector.getC(), detector.getHeight(), detector.getWidth())
@@ -101,11 +101,11 @@ class VideoSourceProcessor:
             from package.detect.mvi import MVIDetector
             from package.detect.mvi import MVIOpenCV
 
-            print ("{:.7f} VideoSourceProcessor MVI".format(time.time()), end="\n", flush=True)
             videoSource.setDetector(MVIDetector(self.config))
             opencv = MVIOpenCV()
-
             self.config.setDetectorInitialized(True)
+
+            print ("{:.7f} VideoSourceProcessor MVI detection loop begins index ".format(time.time()), index, end="\n", flush=True)
             while True:
                 detector = videoSource.getDetector()
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())

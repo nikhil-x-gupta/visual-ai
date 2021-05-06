@@ -34,12 +34,12 @@ class Config:
         self.env_dict['PUBLISH_KAFKA'] = os.environ['PUBLISH_KAFKA'] if 'PUBLISH_KAFKA' in os.environ else False
         self.env_dict['PUBLISH_STREAM'] = os.environ['PUBLISH_STREAM'] if 'PUBLISH_STREAM' in os.environ else True
 
+        self.modelFmwk = None
         self.modelDir = None
 
         self.modelObjectType = None
         self.modelObjectId = None
         self.modelNet = None
-        self.modelFmwk = None
         self.modelVersion = None
 
         self.modelUpdatedAt = datetime.datetime.now()
@@ -68,7 +68,7 @@ class Config:
         return self.fmwk == 'tflite'
 
     def getIsPTH(self):
-        return self.fmwk == 'pth'
+        return self.fmwk == 'pth_cpu' or self.fmwk == 'pth_gpu'
 
     def getIsVino(self):
         return self.fmwk == 'vino'
@@ -83,7 +83,7 @@ class Config:
         self.tool = "TensorFlow Lite OpenCV"
         self.modelTFLite = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
-        self.defaultModelTFLite = "default-" + os.environ['APP_MODEL_TFLITE']
+        self.defaultModelTFLite = "default-" + os.environ['APP_MI_MODEL']
         self.modelObjectId = self.defaultModelTFLite
         with zipfile.ZipFile(os.path.join(self.defaultModelDir, self.defaultModelTFLite), 'r') as zip_ref:
             zip_ref.extractall(self.defaultModelDir)
@@ -92,7 +92,7 @@ class Config:
         self.tool = "Pytorch OpenCV"
         self.modelPTH = None
         self.defaultModelDir = os.environ['APP_MODEL_DIR']
-        self.defaultModelPTH = "default-" + os.environ['APP_MODEL_PTH']
+        self.defaultModelPTH = "default-" + os.environ['APP_MI_MODEL']
         self.modelObjectId = self.defaultModelPTH
 
     def setMVIDefaults(self):

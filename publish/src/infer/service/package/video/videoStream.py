@@ -17,10 +17,15 @@ class VideoStream:
 
         self.videoCapture = cv2.VideoCapture(videoSource.getSource())
         (self.grabbed, self.frame) = self.videoCapture.read()
+
+        loopCount = 0
         while not self.grabbed:
             time.sleep(0.5)
             (self.grabbed, self.frame) = self.videoCapture.read()
-
+            loopCount += 1
+            if loopCount % 100 == 0:
+                print ("{:.7f} VideoStream initializing index loopCount ".format(time.time()), index, loopCount, end="\n", flush=True)
+        
         videoSource.setIndex(index)
         videoSource.setResolution((int(self.videoCapture.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.videoCapture.get(cv2.CAP_PROP_FRAME_HEIGHT))))
 
