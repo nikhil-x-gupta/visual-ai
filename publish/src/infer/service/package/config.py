@@ -74,7 +74,7 @@ class Config:
         return self.fmwk == 'vino'
 
     def getIsMVI(self):
-        return self.fmwk == 'mvi'
+        return self.fmwk == 'mvi' or self.fmwk == 'mvi_p100'
 
     # os.path.join - leading / only for the first path. NO leading / in sub paths
     def setTFLiteDefaults(self):
@@ -98,6 +98,7 @@ class Config:
     def setMVIDefaults(self):
         self.tool = "MVI OpenCV"
         self.modelObjectId = os.environ['APP_MI_MODEL'] 
+        #self.defaultModelDir = os.environ['APP_MODEL_DIR']
 
     def setVinoDefaults(self):
         self.tool = "OpenVINO OpenCV"
@@ -157,9 +158,10 @@ class Config:
                 for source in sources:
                     vcap = cv2.VideoCapture(int(source))
                     if vcap.read()[0]:
-                        deviceSources.append(source)
+                        deviceSources.append(int(source))
                         vcap.release()
                     time.sleep(1) 
+                return deviceSources
         else:
             return None
 

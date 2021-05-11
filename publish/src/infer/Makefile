@@ -20,6 +20,12 @@ model-mvi: model-mvi-publish-service
 
 mi-mvi: mi-mvi-build mi-mvi-push mi-mvi-publish-service mi-mvi-deploy-policy model-mvi-p100-publish-pattern
 
+model-mvi-p100: model-mvi-p100-publish-service
+
+mi-mvi-p100: mi-mvi-p100-publish-service mi-mvi-p100-deploy-policy
+
+vino: vino-build vino-push vino-publish-service vino-deploy-policy
+
 # Build the docker container
 tflite-build:
 	 envsubst < ./Dockerfile.tflite.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_TFLITE)_$(ARCH):$(SERVICE_VERSION_TFLITE) . -f -

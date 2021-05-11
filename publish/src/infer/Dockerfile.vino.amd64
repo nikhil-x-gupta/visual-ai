@@ -59,7 +59,6 @@ RUN if [ -f "/opt/intel/openvino/bin/setupvars.sh" ]; then \
     fi;
 
 # Model download
-ENV APP_MODEL_FMWK vino
 ENV APP_MODEL_DIR /opt/horizon/inference/models/openvino/2020.1/FP16/
 ENV APP_MODEL_XML face-detection-adas-0001.xml
 ENV APP_MODEL_BIN face-detection-adas-0001.bin
@@ -69,7 +68,7 @@ RUN mkdir -p /opt/horizon/inference/models/openvino/2020.1/FP16/ && \
     wget --no-check-certificate https://download.01.org/opencv/2020/openvinotoolkit/2020.1/open_model_zoo/models_bin/1/face-detection-adas-0001/FP16/face-detection-adas-0001.xml
     
 WORKDIR /
-RUN mkdir -p package/detect/vino package/util package/video test
+RUN mkdir -p package/detect/vino package/util package/video
 COPY service/package/detect/vino/*.py package/detect/vino/
 COPY service/package/detect/*.py package/detect/
 COPY service/package/video/*.py package/video/

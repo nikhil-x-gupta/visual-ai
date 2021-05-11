@@ -21,7 +21,7 @@ RUN pip3 install requests opencv-python==4.2.0.32
 RUN apt-get update && apt-get --no-install-recommends -y install \
     curl
 
-ENV APP_MODEL_FMWK mvi
+#ENV APP_MODEL_FMWK mvi
 
 WORKDIR /
 RUN mkdir -p package/detect/mvi package/util package/video

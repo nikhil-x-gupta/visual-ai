@@ -137,6 +137,28 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 
     export APP_MODEL_FMWK="$FMWK"
 
+    if [ -z "$VIDEO_FILES" ]; then
+	export APP_VIDEO_FILES="-"
+    else
+	APP_SAMPLE_VIDEO_DIR="$APP_BIND_HORIZON_DIR/sample/video"
+	mkdir -p $APP_SAMPLE_VIDEO_DIR
+	files=(${VIDEO_FILES//,/ })
+	APP_SAMPLE_VIDEO_FILES=""
+	echo ""
+
+	for file in "${files[@]}"; do
+	    SAMPLE_FILE="$(basename $file)"
+	    echo "Copying $file to $APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
+	    cp $file "$APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
+	    if [ "$APP_SAMPLE_VIDEO_FILES"  == "" ]; then
+		APP_SAMPLE_VIDEO_FILES="$APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
+	    else
+		APP_SAMPLE_VIDEO_FILES="$APP_SAMPLE_VIDEO_FILES,$APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
+	    fi 
+	done
+	export APP_VIDEO_FILES="$APP_SAMPLE_VIDEO_FILES"
+    fi
+
     if [ "$FMWK" = "tflite" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
@@ -166,25 +188,6 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 		    echo "Provide 777 privilege to $APP_BIND_HORIZON_DIR directory so that model files can be copied."
 		    exit 1
 		fi
-
-		if [ ! -z "$VIDEO_FILES" ]; then
-		    APP_SAMPLE_VIDEO_DIR="$APP_BIND_HORIZON_DIR/sample/video"
-		    mkdir -p $APP_SAMPLE_VIDEO_DIR
-		    files=(${VIDEO_FILES//,/ })
-		    APP_SAMPLE_VIDEO_FILES=""
-		    echo ""
-		    for file in "${files[@]}"; do
-			SAMPLE_FILE="$(basename $file)"
-			echo "Copying $file to $APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
-			cp $file "$APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
-			if [ "$APP_SAMPLE_VIDEO_FILES"  == "" ]; then
-			    APP_SAMPLE_VIDEO_FILES="$APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
-			else
-			    APP_SAMPLE_VIDEO_FILES="$APP_SAMPLE_VIDEO_FILES,$APP_SAMPLE_VIDEO_DIR/$SAMPLE_FILE"
-			fi 
-		    done
-		    export APP_VIDEO_FILES="$APP_SAMPLE_VIDEO_FILES"
-		fi
 	    else
 		echo "Model file $MI_MODEL does not exist."
 		exit 1
@@ -195,9 +198,11 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 	fi
     elif [ "$FMWK" = "mvi_p100" ]; then
 	export APP_MI_MODEL="Remote model"
+	export APP_MODEL_DIR="-"
 	echo "Make sure that remote model detector is running"
     else
 	export APP_MI_MODEL="Local model $FMWK"
+	export APP_MODEL_DIR="-"
     fi
 else
     echo ""
