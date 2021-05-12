@@ -1,0 +1,15 @@
+<html ng-app="VisualApp">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </head>
+  <body ng-controller="FormCtrl">
+    <h1>IBM Edge Application Manager (IEAM)</h1>
+    <p>Edge deployment of container workload and ML model</p>
+    <div col="12"><img width="640" heigh="480" src="{{ url_for('stream_video') }}"/></div>
+    <h3>Machine Inferencing and Object Detection</h3>
+  </body>
+</html>
+

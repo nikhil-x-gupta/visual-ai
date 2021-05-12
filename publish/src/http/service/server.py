@@ -18,6 +18,10 @@ ieam_api_css_objects = os.environ['APP_IEAM_API_CSS_OBJECTS']
 username = os.environ['APP_APIKEY_USERNAME']
 password = os.environ['APP_APIKEY_PASSWORD']
 
+view_cols = int(os.environ['APP_VIEW_COLUMNS'])
+admin_html = 'admin1.html' if view_cols == 1 else 'admin.html'
+stream_html = 'stream1.html' if view_cols == 1 else 'stream.html'
+
 hzn_org_id = os.environ['HZN_ORGANIZATION']
 
 object_type_cfg = "mmsconfig"
@@ -77,11 +81,11 @@ def stream_video():
 # End point for the host as http://<ip-address>:5000/stream 
 @server.route('/admin')
 def admin():
-    return render_template('admin.html')
+    return render_template(admin_html)
 
 @server.route('/stream')
 def stream():
-    return render_template('stream.html')
+    return render_template(stream_html)
 
 @server.route('/test')
 def test():
