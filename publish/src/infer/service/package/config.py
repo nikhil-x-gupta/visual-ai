@@ -68,7 +68,7 @@ class Config:
         return self.fmwk == 'tflite'
 
     def getIsPTH(self):
-        return self.fmwk == 'pth_cpu' or self.fmwk == 'pth_gpu'
+        return self.fmwk == 'pth_cpu' or self.fmwk == 'pth_nano' or self.fmwk == 'pth_nx'
 
     def getIsVino(self):
         return self.fmwk == 'vino'

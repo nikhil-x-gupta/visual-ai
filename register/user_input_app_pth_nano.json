@@ -24,7 +24,7 @@
     },
     {
 	"org": "$HZN_ORG_ID",
-	"url": "$EDGE_OWNER.$EDGE_DEPLOY.pth.gpu",
+	"url": "$EDGE_OWNER.$EDGE_DEPLOY.pth.nx",
 	"versionRange": "[0.0.0,INFINITY)",
 	"variables": {
 	    "APP_MODEL_FMWK"           : "$APP_MODEL_FMWK",

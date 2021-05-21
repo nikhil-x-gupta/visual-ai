@@ -14,7 +14,9 @@ tflite: tflite-build tflite-push tflite-publish-service tflite-deploy-policy
 
 pth-cpu: pth-cpu-build pth-cpu-push pth-cpu-publish-service pth-cpu-deploy-policy
 
-pth-gpu: pth-gpu-build pth-gpu-push pth-gpu-publish-service pth-gpu-deploy-policy
+pth-nano: pth-nano-build pth-nano-push pth-nano-publish-service pth-nano-deploy-policy
+
+pth-nx: pth-nx-build pth-nx-push pth-nx-publish-service pth-nx-deploy-policy
 
 model-mvi: model-mvi-publish-service 
 
@@ -33,14 +35,11 @@ tflite-build:
 pth-cpu-build:
 	 envsubst < ./Dockerfile.pth.cpu.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_CPU)_$(ARCH):$(SERVICE_VERSION_PTH_CPU) . -f -
 
-pth-gpu-build:
-	 envsubst < ./Dockerfile.pth.gpu.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU)_$(ARCH):$(SERVICE_VERSION_PTH_GPU) . -f -
+pth-nano-build:
+	 envsubst < ./Dockerfile.pth.nano.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_NANO)_$(ARCH):$(SERVICE_VERSION_PTH_NANO) . -f -
 
-pth-gpu-term-build:
-	 envsubst < ./Dockerfile.pth.gpu.term.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU_TERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_TERM) . -f -
-
-pth-gpu-custom-build:
-	 envsubst < ./Dockerfile.pth.gpu.custom.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_GPU_CUSTOM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_CUSTOM) . -f -
+pth-nx-build:
+	 envsubst < ./Dockerfile.pth.nx.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_PTH_NX)_$(ARCH):$(SERVICE_VERSION_PTH_NX) . -f -
 
 vino-build:
 	 envsubst < ./Dockerfile.vino.$(ARCH) | docker build -t $(DOCKER_IMAGE_BASE_VINO)_$(ARCH):$(SERVICE_VERSION_VINO) . -f -
@@ -57,17 +56,13 @@ pth-cpu-push:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
 	docker push $(DOCKER_IMAGE_BASE_PTH_CPU)_$(ARCH):$(SERVICE_VERSION_PTH_CPU)
 
-pth-gpu-push:
+pth-nano-push:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	docker push $(DOCKER_IMAGE_BASE_PTH_GPU)_$(ARCH):$(SERVICE_VERSION_PTH_GPU)
+	docker push $(DOCKER_IMAGE_BASE_PTH_NANO)_$(ARCH):$(SERVICE_VERSION_PTH_NANO)
 
-pth-gpu-term-push:
+pth-nx-push:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	docker push $(DOCKER_IMAGE_BASE_PTH_GPU_TERM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_TERM)
-
-pth-gpu-custom-push:
-	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	docker push $(DOCKER_IMAGE_BASE_PTH_GPU_CUSTOM)_$(ARCH):$(SERVICE_VERSION_PTH_GPU_CUSTOM)
+	docker push $(DOCKER_IMAGE_BASE_PTH_NX)_$(ARCH):$(SERVICE_VERSION_PTH_NX)
 
 vino-push:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
@@ -86,17 +81,13 @@ pth-cpu-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
 	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_PTH_CPU).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
-pth-gpu-publish-service:
+pth-nano-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_PTH_GPU).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_PTH_NANO).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
-pth-gpu-term-publish-service:
+pth-nx-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_PTH_GPU_TERM).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
-
-pth-gpu-custom-publish-service:
-	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
-	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_PTH_GPU_CUSTOM).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
+	hzn exchange service publish -O -f horizon/$(IMAGE_NAME_PTH_NX).service.definition.json --pull-image -r "$(CR_DOCKER_HOST):$(CR_DOCKER_USERNAME):$(CR_DOCKER_APIKEY)" 
 
 vino-publish-service:
 	docker login -u $(CR_DOCKER_USERNAME) -p $(CR_DOCKER_APIKEY) $(CR_DOCKER_HOST)
@@ -129,14 +120,11 @@ tflite-deploy-policy:
 pth-cpu-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_CPU).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_CPU)_$(ARCH)
 
-pth-gpu-deploy-policy:
-	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU)_$(ARCH)
+pth-nano-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_NANO).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_NANO)_$(ARCH)
 
-pth-gpu-term-deploy-policy:
-	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU_TERM).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU_TERM)_$(ARCH)
-
-pth-gpu-custom-deploy-policy:
-	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_GPU_CUSTOM).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_GPU_CUSTOM)_$(ARCH)
+pth-nx-deploy-policy:
+	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_PTH_NX).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_PTH_NX)_$(ARCH)
 
 vino-deploy-policy:
 	hzn exchange deployment addpolicy -f horizon/$(IMAGE_NAME_VINO).deploy.policy.json deploy-$(EDGE_OWNER).$(EDGE_DEPLOY).$(IMAGE_NAME_VINO)_$(ARCH)

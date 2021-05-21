@@ -1,0 +1,13 @@
+{
+  "properties": [
+      { "name": "owner",  "value": "sg.edge" },
+      { "name": "deploy",  "value": "example.ml.video" },
+      { "name": "mmsconfig", "value": true },
+      { "name": "mmsmodel", "value": true },
+      { "name": "pth", "value": true },
+      { "name": "gpu", "value": "nx" },
+      { "name": "openhorizon.allowPrivileged", "value": true }
+  ],
+  "constraints": [
+  ]
+}

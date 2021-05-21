@@ -8,7 +8,7 @@
 export ARCH ?= $(shell hzn architecture)
 
 ifeq ($(ARCH),arm64)
-all: tflite-all pth-all publish-pth-gpu deploy-policy-pth-gpu 
+all: tflite-all pth-all publish-pth-nano publish-pth-nx deploy-policy-pth-nano deploy-policy-pth-nx
 else
 all: arch-all
 endif
@@ -50,10 +50,15 @@ publish-pth-cpu:
 	make -C src/infer pth-cpu-push
 	make -C src/infer pth-cpu-publish-service
 
-publish-pth-gpu:
-	make -C src/infer pth-gpu-build
-	make -C src/infer pth-gpu-push
-	make -C src/infer pth-gpu-publish-service
+publish-pth-nano:
+	make -C src/infer pth-nano-build
+	make -C src/infer pth-nano-push
+	make -C src/infer pth-nano-publish-service
+
+publish-pth-nx:
+	make -C src/infer pth-nx-build
+	make -C src/infer pth-nx-push
+	make -C src/infer pth-nx-publish-service
 
 publish-vino:
 	make -C src/infer vino-build
@@ -88,10 +93,15 @@ deploy-policy-pth-cpu:
 	make -C src/mms model-deploy-policy
 	make -C src/infer pth-cpu-deploy-policy
 
-deploy-policy-pth-gpu:
+deploy-policy-pth-nano:
 	make -C src/mms config-deploy-policy
 	make -C src/mms model-deploy-policy
-	make -C src/infer pth-gpu-deploy-policy
+	make -C src/infer pth-nano-deploy-policy
+
+deploy-policy-pth-nx:
+	make -C src/mms config-deploy-policy
+	make -C src/mms model-deploy-policy
+	make -C src/infer pth-nx-deploy-policy
 
 deploy-policy-vino:
 	make -C src/mms config-deploy-policy

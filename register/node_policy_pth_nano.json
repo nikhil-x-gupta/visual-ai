@@ -5,7 +5,7 @@
       { "name": "mmsconfig", "value": true },
       { "name": "mmsmodel", "value": true },
       { "name": "pth", "value": true },
-      { "name": "gpu", "value": true },
+      { "name": "gpu", "value": "nx" },
       { "name": "openhorizon.allowPrivileged", "value": true }
   ],
   "constraints": [

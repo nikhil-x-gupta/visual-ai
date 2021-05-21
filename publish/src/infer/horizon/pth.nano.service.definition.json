@@ -1,11 +1,11 @@
 {
     "org": "$HZN_ORG_ID",
-    "label": "$SERVICE_NAME_PTH_GPU for $ARCH",
+    "label": "$SERVICE_NAME_PTH_NANO for $ARCH",
     "description": "",
     "public": true,
     "documentation": "",
-    "url": "$SERVICE_NAME_PTH_GPU",
-    "version": "$SERVICE_VERSION_PTH_GPU",
+    "url": "$SERVICE_NAME_PTH_NANO",
+    "version": "$SERVICE_VERSION_PTH_NANO",
     "arch": "$ARCH",
     "sharable": "singleton",
     "requiredServices": [
@@ -33,8 +33,8 @@
     ],
     "deployment": {
         "services": {
-            "$SERVICE_NAME_PTH_GPU": {
-                "image": "${DOCKER_IMAGE_BASE_PTH_GPU}_$ARCH:$SERVICE_VERSION_PTH_GPU",
+            "$SERVICE_NAME_PTH_NANO": {
+                "image": "${DOCKER_IMAGE_BASE_PTH_NANO}_$ARCH:$SERVICE_VERSION_PTH_NANO",
                 "privileged": true,
 		"binds": [
 		    "$APP_BIND_HORIZON_DIR:$APP_BIND_HORIZON_DIR:rw",

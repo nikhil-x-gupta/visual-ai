@@ -1,31 +1,21 @@
-FROM python:3.8-alpine
+# 1st stage to build kafkacat
+FROM python:3.8-slim
 
-RUN apk update \
-    && apk add --no-cache \
-      alpine-sdk \
-      bsd-compat-headers \
-      bash \
-      cmake \
-      curl-dev \
-      jq \
-      perl \
-      && rm -fr /tmp/*
-
-# RUN apk add python3-pip
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    build-essential zlib1g-dev liblz4-dev libssl-dev libsasl2-dev cmake libcurl4-openssl-dev libzstd-dev pkg-config \
+    libssl1.1 libsasl2-2 ca-certificates curl
 
 RUN curl https://codeload.github.com/edenhill/kafkacat/tar.gz/master | tar xzf - && cd kafkacat-* && bash ./bootstrap.sh
-RUN make -C /kafkacat-master bin-install
+RUN make -C /kafkacat-master bin-install && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /kafkacat-master
+
+# 2nd stage. Copy statically linked kafkacat to second stage. Reduced the image size from 785MB -> 136MB
+FROM python:3.8-slim
+COPY --from=0 /usr/local/bin/kafkacat /usr/local/bin/
 
 RUN pip3 install flask requests
-
-# TODO
-# Required to make IEAM instance connection and make direct API calls to CSS and exchange
-# Install correct ca-certificate for site. Certificates give following error.
-# SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain
-# Python application requests call calls with verify=Flase
-#COPY agent-install.site.crt
-#COPY agent-install.ca.crt /usr/local/share/ca-certificates/
-#RUN /usr/sbin/update-ca-certificates
 
 # DO NOT CHANGE the script name from server.py to http.py. It breaks the docker run 
 WORKDIR /

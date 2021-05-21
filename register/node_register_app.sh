@@ -8,7 +8,7 @@ usage() {
   echo "Usage: $0 -e -k -m -c -f -r -v "
   echo "where "
   echo "   -e file path to environemnt veriables "
-  echo "   -k framework tflite | vino | mvi | mvi_p100 | pth_cpu | pth_gpu"
+  echo "   -k framework tflite | vino | mvi | mvi_p100 | pth_cpu | pth_nano | pth_nx"
   echo "   -m file path to ML model file "
   echo "   -c Video source as a comma separated list of camera devices or all"
   echo "   -f Video source as a comma separated list of video files "
@@ -90,7 +90,7 @@ else
 fi
 
 if [ -z "$VIDEO_FILES" ]; then
-    APP_VIDEO_FILES="-"
+   export APP_VIDEO_FILES="-"
 else
     files=(${VIDEO_FILES//,/ })
     for file in "${files[@]}"; do
@@ -125,11 +125,11 @@ fi
 
 if [ -z $FMWK ]; then
     echo ""
-    echo "Missing -k . Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pth_cpu | pth_gpu"
+    echo "Missing -k . Must provide one of the options to set framework vino | tflite | mvi | mvi_p100 | pth_cpu | pth_nano | pth_nx"
     echo ""
     usage
     exit 1
-elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu" ]; then
+elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "mvi_p100" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_nano" ] || [ "$FMWK" = "pth_nx" ]; then
 
     . $ENVVAR
 
@@ -159,7 +159,7 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 	export APP_VIDEO_FILES="$APP_SAMPLE_VIDEO_FILES"
     fi
 
-    if [ "$FMWK" = "tflite" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_gpu" ]; then
+    if [ "$FMWK" = "tflite" ] || [ "$FMWK" = "mvi" ] || [ "$FMWK" = "pth_cpu" ] || [ "$FMWK" = "pth_nano" ] || [ "$FMWK" = "pth_nx" ]; then
 	if [ ! -z $MI_MODEL ]; then 
 	    if [ -f $MI_MODEL ]; then 
 		APP_MODEL_SUB_DIR="ml/model/$FMWK"
@@ -169,7 +169,7 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 		export APP_MODEL_DIR="$APP_MODEL_DIR"
 
 		echo ""
-		echo "Using $APP_BIND_HORIZON_DIR as bind volume for containers"
+		echo "Using $APP_BIND_HORIZON_DIR as bind volume"
 		echo ""
 		echo "Creating directory $APP_MODEL_DIR"
 

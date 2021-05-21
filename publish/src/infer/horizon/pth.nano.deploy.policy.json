@@ -1,8 +1,8 @@
 {
-    "label": "deploy-policy-pth-gpu-$ARCH",
-    "description": "A deploy policy for pth gpu on $ARCH",
+    "label": "deploy-policy-pth-nano-$ARCH",
+    "description": "A deploy policy for pth nano on $ARCH",
     "service": {
-	"name": "$EDGE_OWNER.$EDGE_DEPLOY.pth.gpu",
+	"name": "$EDGE_OWNER.$EDGE_DEPLOY.pth.nano",
 	"org": "$HZN_ORG_ID",
 	"arch": "$ARCH",
 	"serviceVersions": [
@@ -18,12 +18,12 @@
 	"owner == $EDGE_OWNER",
 	"deploy == $EDGE_DEPLOY",
 	"pth == true",
-	"gpu == true"
+	"gpu == nano"
     ],
     "userInput": [
 	{
 	    "serviceOrgid": "$HZN_ORG_ID",
-	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.pth.gpu",
+	    "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.pth.nano",
 	    "serviceVersionRange": "[0.0.0,INFINITY)",
 	    "inputs": [
 		{ "name" : "DEVICE_ID", "value" : "DEVICE_ID"  },
