@@ -34,8 +34,6 @@ class VideoSourceProcessor:
         videoStream.startThread()
         time.sleep(1)
 
-        print ("{:.7f} VideoSourceProcessor PTH detection self.config.getIsPTH()= ".format(time.time()), self.config.getIsPTH(), end="\n", flush=True)
-
         if self.config.getIsTFLite():
             from package.detect.tflite import TFLiteDetector
             from package.detect.tflite import TFLiteOpenCV
