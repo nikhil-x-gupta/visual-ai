@@ -1,11 +1,11 @@
 ## IBM Edge Application Manager (IEAM)
 ### Edge deployment of container workload and ML model
 
-**Machine Inferencing and Object Detection** examples using `TensorFlow Lite` and `OpenVINO` frameworks. Implemented with **IEAM + MMS + OpenCV + Python**
+**Machine Inferencing and Object Detection** examples using `TensorFlow Lite, OpenVINO, pyTorch and MVI` frameworks. Implemented with **IEAM + MMS + OpenCV + Python**
 
 ### Introduction
 
-This python based example implementation uses three containers and can be deployed on **Intel NUC(amd64), Jetson Nano(arm64) and RaspberryPi 4(arm32)** using Tensorflow Lite and/or OpenVINO
+This python based example implementation uses multiple containers and can be deployed on **Intel NUC(amd64), Jetson Nano(arm64) and RaspberryPi 4(arm32)** using Tensorflow Lite / OpenVINO / PyTorch and MVI frameworks.
 
 - Image capture and classification
 - HTTP and kafka message bridge
@@ -16,6 +16,8 @@ This python based example implementation uses three containers and can be deploy
 - Movidius MyriadX VPU
 - coco_ssd_mobilenet_v1_1.0 model 
 - OpenVINO with NCS2 and Movidius VPU
+- PyTorch framework
+- MVI  
 
 ### Publish
 Development of containers, services, policies and corresponding defintion files.
