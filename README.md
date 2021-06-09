@@ -20,8 +20,6 @@ This python based example implementation uses multiple containers and can be dep
 - Movidius MyriadX VPU
 - coco_ssd_mobilenet_v1_1.0 model 
 - OpenVINO with NCS2 and Movidius VPU
-- PyTorch framework
-- MVI  
 - HTTP and kafka message bridge
 
 #### Publish
