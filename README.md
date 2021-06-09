@@ -3,12 +3,16 @@
 
 **Machine Inferencing and Object Detection** examples using `TensorFlow Lite, OpenVINO, pyTorch and MVI` frameworks. Implemented with **IEAM + MMS + OpenCV + Python**
 
-### Introduction
+#### Introduction
 
-This python based example implementation uses multiple containers and can be deployed on **Intel NUC(amd64), Jetson Nano(arm64) and RaspberryPi 4(arm32)** using Tensorflow Lite / OpenVINO / PyTorch and MVI frameworks.
+This python based example implementation uses multiple containers and can be deployed on **Intel NUC(amd64), Jetson Nano(arm64) and RaspberryPi 4(arm32)** using following frameworks
+- Tensorflow Lite 
+- OpenVINO
+- PyTorch 
+- MVI
 
-- Image capture and classification
-- HTTP and kafka message bridge
+#### High level features:
+- OpenCV based image capture and annotation
 - MJPEG based streaming available on http:<edge-device-ip-address:5000> 
 - A simple Web UI to interactivly upload config using MMS to edge nodes.
 - Frameworks - TensorFlow Lite and OpenVINO
@@ -18,16 +22,17 @@ This python based example implementation uses multiple containers and can be dep
 - OpenVINO with NCS2 and Movidius VPU
 - PyTorch framework
 - MVI  
+- HTTP and kafka message bridge
 
-### Publish
+#### Publish
 Development of containers, services, policies and corresponding defintion files.
 See `publish` directory.
 
-### Register
+#### Register
 Instructions to register an edge device node to detect objects in a video stream
 See `register` directory.
 
-### Research, reference and acknowledgements
+#### Research, reference and acknowledgements
 
   https://opencv.org
   
