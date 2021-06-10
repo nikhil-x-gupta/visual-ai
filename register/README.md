@@ -125,7 +125,7 @@ export EVENTSTREAMS_BROKER_URLS=<change-as-needed>
     source APP_ENV
 
 ### 5. Register node
-Use comprehensive node_register_app.sh to register node. Various example commands below with different options 
+Use comprehensive `node_register_app.sh` to register node. Various example commands below with different options 
 
 #### MVI Local
 Predictor is running locally on CPU (no GPU) with a specified model. Local detector is started in a separate container with passed model.
