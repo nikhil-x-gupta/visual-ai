@@ -1,24 +1,17 @@
 ### Instructions to `Register` an edge device node to detect objects in a video stream
     
-  These instructions will guide you through the steps to register an edge node to detect objects in a video stream using 
+  These instructions will guide you through the steps to register an edge node to detect objects in a video stream using one of the frameworks
   - TensorFlow Lite
   - OpenVINO
   - Pytorch
   - MVI 
 
-While registering the node, ML model needs to be provided. Download models and have them ready.
-
-TFLite
-```
-wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
-```
-
 #### Pre-requisite
   - API-KEY from the IEAM mgmt hub admin to register the edge node.
-  - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera connected.
+  - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera connected. You also use a video file or RTSP stream if available
    
   For OpenVINO
-  
+ 
   - Either have a Neural Compute Stick 2 (NCS2) plugged in one of the USB ports or Movidius VPU card in the desktop.
 
 #### 1. Verify the output of the following command. 
@@ -131,9 +124,73 @@ export EVENTSTREAMS_BROKER_URLS=<change-as-needed>
     source APP_ENV
 
 #### 5. Register node
-Use comprehensive node_register_app.sh to register node
+Use comprehensive node_register_app.sh to register node. Various example commands below with different options 
 
+##### TensorFlow lite
 
+Intel NUC
+```
+./node_register_app.sh -e ~/developer/project/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp,rtsp://192.168
+.200.79:8554/rtsp -f sample/industrial-control-room-640x360.mp4 -k tflite -m model/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip -v 2
+
+./node_register_app.sh -e ~/developer/project/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp -f sample/indu
+strial-control-room-640x360.mp4 -k tflite -m model/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip -v 2
+```
+
+##### pyTorch
+
+Intel NUC : Inference time 9-10 secs : pth_cpu
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp,rtsp://192.168.2
+00.79:8554/rtsp -f sample/industrial-control-room-640x360.mp4 -k pth_cpu -m model/pth/pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip -v
+```
+
+On Jetson nano: Pytorch models are bigger in comparison with tflite models
+
+* pth_cpu on Jetson Nano is very slow. In the three video streams below 70, 60, 84s etc secs detection time. Works but not could be better.
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -r rtsp://192.168.200.75:8554/rtsp,rtsp://192.168.200.79:8
+554/rtsp -f /var/local/horizon/sample/video/industrial-control-room-640x360.mp4 -v 2 -k pth_cpu -m model/pth/pth-frcnn-resnet50-dct-facemask-
+kaggle-1.0.0-mms.zip 
+```
+
+* pth_gpu on Jetson Nano is still slow. In the one video stream 3-4 secs deteection time. Takes longer to load so wait.
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -r rtsp://192.168.200.75:8554/rtsp -v 1 -k pth_gpu -m mode
+l/pth/pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip 
+
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -k pth_gpu -m model/pth/pth-frcnn-resnet50-dct-facemask-ka
+ggle-1.0.0-mms.zip -r rtsp://192.168.200.75:8554/rtsp,rtsp://192.168.200.79:8554/rtsp  -v 2
+```
+
+##### MVI predictor running locally on CPU with specified model. Local detector is started in a separate container with passed model
+
+NUC with 4 streams : 20 secs
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp,rtsp://192.168.2
+00.79:8554/rtsp -f sample/industrial-control-room-640x360.mp4 -v 2 -k mvi -m model/mvi/caffe-frcnn-facemask-mvi/caffe-frcnn-facemask-mvi-1.0.
+0.zip
+```
+NUC with 2 streams : 10 secs
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -f sample/industrial-control-room-640x360.mp4 -v 1 -k mvi 
+-m model/mvi/caffe-frcnn-facemask-mvi/caffe-frcnn-facemask-mvi-1.0.0.zip
+```
+
+NUC with 1 streams : 5 secs
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -f sample/industrial-control-room-640x360.mp4 -v 1 -k mvi 
+-m model/mvi/caffe-frcnn-facemask-mvi/caffe-frcnn-facemask-mvi-1.0.0.zip
+```
+##### MVI predictor running locally but accesses a detector running in cloud on GPU P100. Round trip: 0.8 sec 
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp -k mvi_p100 -v 2
+```
+##### OpenVINO. Default model is included in the detector. Works with one input as there can be only one instace of vinoDetector. TODO: Need to figure
+ out a way to share the same instance
+```
+./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp -k vino -v 1
+```
 
 #### 7. View/access result by one or more methods
 
