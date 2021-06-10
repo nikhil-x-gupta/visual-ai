@@ -127,7 +127,7 @@ export EVENTSTREAMS_BROKER_URLS=<change-as-needed>
 ### 5. Register node
 Use comprehensive node_register_app.sh to register node. Various example commands below with different options 
 
-#### MVI 
+#### MVI Local
 Predictor is running locally on CPU (no GPU) with a specified model. Local detector is started in a separate container with passed model.
 
 `Intel NUC` with 4 video streams : 20 secs
@@ -148,13 +148,13 @@ Predictor is running locally on CPU (no GPU) with a specified model. Local detec
 ./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -f sample/industrial-control-room-640x360.mp4 -v 1 -k mvi 
 -m model/mvi/caffe-frcnn-facemask-mvi/caffe-frcnn-facemask-mvi-1.0.0.zip
 ```
-#### MVI 
+#### MVI Remote
 Predictor is running locally but accesses a detector running in cloud on GPU P100. Round trip: 0.8 sec 
 ```
 ./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp -k mvi_p100 -v 2
 ```
 
-#### TensorFlow lite
+#### TensorFlow lite Local
 
 `Intel NUC`
 ```
@@ -165,7 +165,7 @@ Predictor is running locally but accesses a detector running in cloud on GPU P10
 strial-control-room-640x360.mp4 -k tflite -m model/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip -v 2
 ```
 
-#### PyTorch
+#### PyTorch Local
 
 `Intel NUC` Inference time 9-10 secs : pth_cpu
 ```
@@ -192,7 +192,7 @@ l/pth/pth-frcnn-resnet50-dct-facemask-kaggle-1.0.0-mms.zip
 ggle-1.0.0-mms.zip -r rtsp://192.168.200.75:8554/rtsp,rtsp://192.168.200.79:8554/rtsp  -v 2
 ```
 
-#### OpenVINO
+#### OpenVINO Local
 Default model is included in the detector. Works with one input as there can be only one instace of vinoDetector. TODO: Need to figure
  out a way to share the same instance
 ```
