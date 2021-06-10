@@ -5,11 +5,12 @@
 
 #### Introduction
 
-This python based example implementation uses multiple containers and can be deployed on **Intel NUC(amd64), Jetson Nano(arm64) and RaspberryPi 4(arm32)** using following frameworks
+This python based example implementation uses multiple containers and can be deployed on **Intel NUC(amd64), Jetson Nano(arm64) and RaspberryPi 4(arm32)** using following frameworks. The end-to-end deployment of containerized services via IEAM is the focus of these examples NOT the accuracy or performance of the ML model, though occasionally that is mentioned.
+
+- MVI (IBM)
 - Tensorflow Lite 
 - OpenVINO
 - PyTorch 
-- MVI
 
 #### High level features:
 - OpenCV based image capture and annotation
