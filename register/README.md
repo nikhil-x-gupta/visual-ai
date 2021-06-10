@@ -192,7 +192,7 @@ NUC with 1 streams : 5 secs
 ./node_register_app.sh -e ~/developer/agent/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp -k vino -v 1
 ```
 
-#### 7. View/access result by one or more methods
+#### 6. View/access result by one or more methods
 
 - View streaming output in a browser 
     
