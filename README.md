@@ -13,14 +13,12 @@ This python based example implementation uses multiple containers and can be dep
 - PyTorch 
 
 #### High level features:
+- Object detection using various framewworks 
 - OpenCV based image capture and annotation
 - MJPEG based streaming available on http:<edge-device-ip-address:5000> 
 - A simple Web UI to interactivly upload config using MMS to edge nodes.
-- Frameworks - TensorFlow Lite and OpenVINO
 - Intel Neural Compute Stick 2 (NCS2)
 - Movidius MyriadX VPU
-- coco_ssd_mobilenet_v1_1.0 model 
-- OpenVINO with NCS2 and Movidius VPU
 - HTTP and kafka message bridge
 
 #### Publish
