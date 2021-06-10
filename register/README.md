@@ -44,108 +44,98 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
    
         - node_policy_vino.json
         - user_input_app_vino.json
+      
+   - PyTorch 
+   
+        - node_policy_pth_cpu.json
+        - node_policy_pth_nano.json
+        - user_input_app_pth_cpu.json
+        - user_input_app_pth_nano.json
+      
+   - MVI Local
+        - node_policy_mvi.json
+        - user_input_app_mvi.json
    
 #### 3. Setup ENV variables. 
    Add all of the following `export` in a file `APP_ENV` and **source** them in your current shell before you can register the node. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment. You may copy and paste this ENV block in an editor.
 
 ```
-#### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service. Keep them as such
-export EDGE_OWNER=sg.edge           
-export EDGE_DEPLOY=example.visual 
-    
-#### IEAM specific. Update values in < > brackets
-# Keep this value
-export HZN_ORG_ID=<org-id>  
-# Update iam-api-key with the value provided to you
-export HZN_EXCHANGE_USER_AUTH=iamapikey:<iam-api-key> 
-# Update with arbitrary values for your node 
-export HZN_EXCHANGE_NODE_AUTH="<UNIQUE-NODE-NAME>:<node-token>"
-# No change needed here
-export HZN_DEVICE_ID=`grep HZN_DEVICE_ID /etc/default/horizon | cut -d'=' -f2` 
+#### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service. Change as needed to organize your service, policy-names etc
+export EDGE_OWNER=<change-as-needed> e.g sg.edge           
+export EDGE_DEPLOY=<change-as-needed> e.g example.visual 
 
-#### Application specific 
-# Provide any arbitrary name as the node should appear in IEAM. Keep it same as above
-export APP_NODE_NAME=<UNIQUE-NODE-ANME> 
-# Provide any arbitrary id for the node that may identify your edge-node
-export DEVICE_ID=<device-id>
-# Provide any arbitrary short name for the node 
-export DEVICE_NAME="<short device name>"
-# Automtically created based on work done in step 1 above.
-export DEVICE_IP_ADDRESS=`hostname -i`  
-  
-#### Application specific for MMS. Used by UI for configration update via MMS 
-# Automtically created. Keep this as such
-export APP_IEAM_API_CSS_OBJECTS=https://`grep -viE '^$|^#' /etc/default/horizon |  grep HZN_EXCHANGE_URL | cut -d'=' -f2 | cut -d'/' -f3`/edge-css/api/v1/objects
-# Provide same api-key value provided to you
-export APP_APIKEY_PASSWORD=<api-key-provided-to-you>
-# Keep this as such
-export APP_MMS_OBJECT_ID_CONFIG="config.json"
-# Keep this as such
-export APP_MMS_OBJECT_TYPE_CONFIG="tflite-mmsconfig"
-# Automtically updated. Keep this as such. 
-export APP_MMS_OBJECT_SERVICE_NAME_CONFIG="$EDGE_OWNER.$EDGE_DEPLOY.mms"
-# Keep this as such. Will change in future
-export APP_MMS_OBJECT_ID_MODEL="mobilenet-tflite-1.0.0-mms.tar.gz"
-# Keep this as such. 
-export APP_MMS_OBJECT_TYPE_MODEL="tflite-mmsmodel"
-# Automtically updated. Keep this as such.
-export APP_MMS_OBJECT_SERVICE_NAME_MODEL="$EDGE_OWNER.$EDGE_DEPLOY.mms"   
- 
-# Keep this as such.
+#### Specify your docker base
+export DOCKER_BASE=<change-as-needed> e.g edgedock
+
+### Authenticated docker access ###
+export CR_DOCKER_HOST=index.docker.io
+export CR_DOCKER_USERNAME=<change-as-needed> e.g edgedock
+export CR_DOCKER_APIKEY=<change-as-needed>
+##################################
+
+### Authenticated IBM CR access ###
+export CR_IBM_HOST=us.icr.io
+export CR_IBM_USERNAME=iamapikey
+export CR_IBM_HOST_NAMESPACE=<change-as-needed> e.g ieam-mvi
+export APP_CR_API_KEY_RO_PULL=<change-as-needed>
+##################################
+    
+# Sets the root of teh bind volume. Create this before running the applciation with 777 access
 export APP_BIND_HORIZON_DIR=/var/local/horizon
-    
-# Keep these as such. face detection disabled for now as haarscascade based detection is not reliable
-export SHOW_OVERLAY=true # false to hide OVERLAY
-export DETECT_FACE=false
+
+### MVI specfic
+export APP_BIND_HORIZON_MVI_MDOEL_DIR=$APP_BIND_HORIZON_DIR/ml/model/mvi
+export APP_MODEL_MVI_DOCKER_IMAGE_BASE=us.icr.io/<change-as-needed>/vision-dnn-deploy
+export APP_MODEL_MVI_ENVIRONMENT='"BASE=CAFFE","OMP_NUM_THREADS=4"'
+export APP_MODEL_MVI_COMMAND='"/opt/DNN/bin/setup_env_and_run.sh","/opt/DNN/bin/deploy_zipped_model.py","--gpu","-1"'
+export APP_MODEL_MVI_ENVIRONMENT_P100='"BASE=CAFFE","OMP_NUM_THREADS=16"'
+export APP_MODEL_MVI_COMMAND_P100='"/opt/DNN/bin/setup_env_and_run.sh","/opt/DNN/bin/deploy_zipped_model.py","--gpu","0"'
+export APP_MI_MVI_MODEL_ZIP=mi_mvi_model.zip
+export APP_CONFIG_MODEL_MVI_ZIP="/config/dropins/model.zip"
+export APP_MODEL_MVI_SERVICE_HOST_PORT=6011
+export APP_MODEL_MVI_SERVICE_PORT=5001
+export APP_REMOTE_MODEL_MVI_HOST=<remote-host-ip-address-if-using-this>
+### MVI specfic
+
+### mms example applicable for config management
+export APP_MMS_OBJECT_SERVICE_NAME_CONFIG="$EDGE_OWNER.$EDGE_DEPLOY.mmsconfig"
+
+### These values are used by the application and extracted from your environment. Change if you need to
+export HZN_DEVICE_ID=`grep HZN_DEVICE_ID /etc/default/horizon | cut -d'=' -f2 | tr '[a-z]' '[A-Z]'`
+export HZN_EXCHANGE_NODE_AUTH="$HZN_DEVICE_ID:"`echo $HZN_DEVICE_ID | tr '[A-Z]' '[a-z]'`
+
+#### Application specific ENV  ####
+export DEVICE_ID=`echo $HZN_DEVICE_ID | tr '[A-Z]' '[a-z]'`
+export DEVICE_NAME=<change-as-needed> e.g. "Intel NUC"
+# Make sure to update the /etc/hosts with One IP address that should be used by MMS to poll. Following command should rerurn one IP
+export DEVICE_IP_ADDRESS=`hostname -i`
+export APP_IEAM_API_CSS_OBJECTS=https://`grep -viE '^$|^#' /etc/default/horizon |  grep HZN_EXCHANGE_URL | cut -d'=' -f2 | cut -d'/' -f3`/edg
+e-css/api/v1/objects
+
+#### Application startup conditions
+export SHOW_OVERLAY=true
+export DETECT_FACE=true
 export BLUR_FACE=false
-export PUBLISH_KAFKA=false # To send kafka stream
-export PUBLISH_STREAM=true # to send local mjpeg stream and view in browser
-export VIEW_COLUMN=1
+export PUBLISH_KAFKA=false
+export PUBLISH_STREAM=true
+# Command line option -v 
+#export APP_VIEW_COLUMNs=3
 
-#### RTSP Streams
-# Keep this as such if do not have any RTSP_STREAM
-export RTSP_STREAMS=""
-# If have RTSP_STREAM setup, then add as below separated by comma
-export RTSP_STREAMS=rtsp://<ip-address>:<port>/rtsp,rtsp://<ip-address>:<port>/rtsp
-
-#### For streaming content to IBM Event Streams
-export EVENTSTREAMS_ENHANCED_TOPIC=<your-event-stream-topic>
-export EVENTSTREAMS_API_KEY=<your-event-stream-api-key>
-export EVENTSTREAMS_BROKER_URLS="your-event-stream-brokers"
+export EVENTSTREAMS_ENHANCED_TOPIC=<change-as-needed> e,g. es-topic-tflite
+export EVENTSTREAMS_API_KEY=<change-as-needed>
+export EVENTSTREAMS_BROKER_URLS=<change-as-needed>
 ```
+
 #### 4. Set and update ENV variables
 
     source APP_ENV
 
-#### 5. Verify the content of the `json` files 
-Review the output and verify that the contents look complete and there is no error. 
+#### 5. Register node
+Use comprehensive node_register_app.sh to register node
 
-    envsubst < node_policy_tflite.json | jq
-    envsubst < user_input_app_tflite.json | jq
 
-OR
 
-    envsubst < node_policy_vino.json | jq
-    envsubst < user_input_app_vino.json | jq
-
-#### 6. Create node
-
-    hzn exchange node create -n $HZN_EXCHANGE_NODE_AUTH
-    
-#### 7. Register node using one of the two frameworks - TensorFlow lite NUC (amd64), RPI (arm32)
-TensorFlow lite
- 
-    hzn register --policy=node_policy_tflite.json --input-file user_input_app_tflite.json
-  
-OpenVINO
-  
-    hzn register --policy=node_policy_vino.json --input-file user_input_app_vino.json
-
-MVI (IBM) in development
-
-    hzn register --policy=node_policy_mvi_test_1.json 
-
-#### 8. View/access result by one or more methods
+#### 7. View/access result by one or more methods
 
 - View streaming output in a browser 
     
