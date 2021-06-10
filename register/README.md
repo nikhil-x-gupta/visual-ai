@@ -31,22 +31,26 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
    - Copy one of the following set of files from this repo on the edge node depending upon the framework that you want to use:
    
    - MVI Local
-    - node_policy_mvi.json
-    - user_input_app_mvi.json
+  
+        - node_policy_mvi.json
+        - user_input_app_mvi.json
    
    - TensorFlow Lite
-    - node_policy_tflite.json 
-    - user_input_app_tflite.json
+        
+        - node_policy_tflite.json 
+        - user_input_app_tflite.json
   
    - PyTorch
-    - node_policy_pth_cpu.json
-    - node_policy_pth_nano.json
-    - user_input_app_pth_cpu.json
-    - user_input_app_pth_nano.json
+        
+        - node_policy_pth_cpu.json
+        - node_policy_pth_nano.json
+        - user_input_app_pth_cpu.json
+        - user_input_app_pth_nano.json
       
    - OpenVINO 
-    - node_policy_vino.json
-    - user_input_app_vino.json
+    
+        - node_policy_vino.json
+        - user_input_app_vino.json
       
 ### 3. Setup ENV variables. 
    Add all of the following `export` in a file `APP_ENV` and **source** them in your current shell before you can register the node. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment. You may copy and paste this ENV block in an editor.
