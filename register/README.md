@@ -8,7 +8,7 @@
 
 ### Pre-requisite
   - API-KEY from the IEAM mgmt hub admin to register the edge node.
-  - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) with at least one USB camera connected. You may also use a video file or RTSP stream if available
+  - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) You may use a video file or RTSP stream or USB camera. Using video file can be sometimes tricky based on file formats etc, I have found using an USB camera working the best. 
    
   For OpenVINO
  
