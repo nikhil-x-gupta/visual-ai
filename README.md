@@ -13,7 +13,7 @@ This python based example implementation uses multiple containers and can be dep
 - PyTorch 
 
 #### High level features:
-- Object detection using various framewworks 
+- Object detection using various frameworks 
 - OpenCV based image capture and annotation
 - MJPEG based streaming available on http:<edge-device-ip-address:5000> 
 - A simple Web UI to interactivly upload config using MMS to edge nodes.
