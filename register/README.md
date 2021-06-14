@@ -76,7 +76,7 @@ export CR_IBM_HOST_NAMESPACE=<change-as-needed> e.g ieam-mvi
 export APP_CR_API_KEY_RO_PULL=<change-as-needed>
 ##################################
     
-# Sets the root of the bind volume. Create this before running the applciation with 777 access
+# Sets the root of the bind volume. Create this before running the application with 777 access
 export APP_BIND_HORIZON_DIR=/var/local/horizon
 
 ### MVI specfic
