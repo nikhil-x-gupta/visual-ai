@@ -12,6 +12,8 @@ This python based example implementation uses multiple containers and can be dep
 - OpenVINO
 - PyTorch 
 
+<img width="1439" alt="Screen Shot 2021-06-14 at 11 37 38 AM" src="https://user-images.githubusercontent.com/49573998/121942318-330db900-cd05-11eb-83c2-2b713b097ae9.png">
+
 #### High level features:
 - Object detection using various frameworks 
 - OpenCV based image capture and annotation
