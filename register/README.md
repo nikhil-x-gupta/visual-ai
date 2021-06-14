@@ -108,7 +108,7 @@ e-css/api/v1/objects
 
 #### Application startup conditions
 export SHOW_OVERLAY=true
-export DETECT_FACE=true
+export DETECT_FACE=false
 export BLUR_FACE=false
 export PUBLISH_KAFKA=false
 export PUBLISH_STREAM=true
