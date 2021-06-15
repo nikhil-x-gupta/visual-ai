@@ -68,30 +68,9 @@ export CR_DOCKER_HOST=index.docker.io
 export CR_DOCKER_USERNAME=<change-as-needed> e.g edgedock
 export CR_DOCKER_APIKEY=<change-as-needed>
 ##################################
-
-### Authenticated IBM CR access. MVI images are stored locally and NOT published in docker hub ###
-export CR_IBM_HOST=us.icr.io
-export CR_IBM_USERNAME=iamapikey
-export CR_IBM_HOST_NAMESPACE=<change-as-needed> e.g ieam-mvi
-export APP_CR_API_KEY_RO_PULL=<change-as-needed>
-##################################
     
 # Sets the root of the bind volume. Create this before running the application with 777 access
 export APP_BIND_HORIZON_DIR=/var/local/horizon
-
-### MVI specfic
-export APP_BIND_HORIZON_MVI_MDOEL_DIR=$APP_BIND_HORIZON_DIR/ml/model/mvi
-export APP_MODEL_MVI_DOCKER_IMAGE_BASE=us.icr.io/<change-as-needed>/vision-dnn-deploy
-export APP_MODEL_MVI_ENVIRONMENT='"BASE=CAFFE","OMP_NUM_THREADS=4"'
-export APP_MODEL_MVI_COMMAND='"/opt/DNN/bin/setup_env_and_run.sh","/opt/DNN/bin/deploy_zipped_model.py","--gpu","-1"'
-export APP_MODEL_MVI_ENVIRONMENT_P100='"BASE=CAFFE","OMP_NUM_THREADS=16"'
-export APP_MODEL_MVI_COMMAND_P100='"/opt/DNN/bin/setup_env_and_run.sh","/opt/DNN/bin/deploy_zipped_model.py","--gpu","0"'
-export APP_MI_MVI_MODEL_ZIP=mi_mvi_model.zip
-export APP_CONFIG_MODEL_MVI_ZIP="/config/dropins/model.zip"
-export APP_MODEL_MVI_SERVICE_HOST_PORT=6011
-export APP_MODEL_MVI_SERVICE_PORT=5001
-export APP_REMOTE_MODEL_MVI_HOST=<remote-host-ip-address-if-using-this>
-### MVI specfic
 
 ### mms example being used for config management
 export APP_MMS_OBJECT_SERVICE_NAME_CONFIG="$EDGE_OWNER.$EDGE_DEPLOY.mmsconfig"
@@ -112,12 +91,33 @@ export DETECT_FACE=false
 export BLUR_FACE=false
 export PUBLISH_KAFKA=false
 export PUBLISH_STREAM=true
-# Command line option -v 
-#export APP_VIEW_COLUMNs=3
+# Use -v command line option to set the value
+export APP_VIEW_COLUMNS=3
 
+### Optional - If planning to stream to IBM kafka event stream
 export EVENTSTREAMS_ENHANCED_TOPIC=<change-as-needed> e,g. es-topic-tflite
 export EVENTSTREAMS_API_KEY=<change-as-needed>
 export EVENTSTREAMS_BROKER_URLS=<change-as-needed>
+
+### MVI specfic (OPTIONAL if using IBM MVI)
+### Authenticated IBM CR access. MVI images are stored locally and NOT published in docker hub ###
+export CR_IBM_HOST=us.icr.io
+export CR_IBM_USERNAME=iamapikey
+export CR_IBM_HOST_NAMESPACE=<change-as-needed> e.g ieam-mvi
+export APP_CR_API_KEY_RO_PULL=<change-as-needed>
+
+export APP_BIND_HORIZON_MVI_MDOEL_DIR=$APP_BIND_HORIZON_DIR/ml/model/mvi
+export APP_MODEL_MVI_DOCKER_IMAGE_BASE=us.icr.io/<change-as-needed>/vision-dnn-deploy
+export APP_MODEL_MVI_ENVIRONMENT='"BASE=CAFFE","OMP_NUM_THREADS=4"'
+export APP_MODEL_MVI_COMMAND='"/opt/DNN/bin/setup_env_and_run.sh","/opt/DNN/bin/deploy_zipped_model.py","--gpu","-1"'
+export APP_MODEL_MVI_ENVIRONMENT_P100='"BASE=CAFFE","OMP_NUM_THREADS=16"'
+export APP_MODEL_MVI_COMMAND_P100='"/opt/DNN/bin/setup_env_and_run.sh","/opt/DNN/bin/deploy_zipped_model.py","--gpu","0"'
+export APP_MI_MVI_MODEL_ZIP=mi_mvi_model.zip
+export APP_CONFIG_MODEL_MVI_ZIP="/config/dropins/model.zip"
+export APP_MODEL_MVI_SERVICE_HOST_PORT=6011
+export APP_MODEL_MVI_SERVICE_PORT=5001
+export APP_REMOTE_MODEL_MVI_HOST=<remote-host-ip-address-if-using-this>
+### MVI specfic
 ```
 
 ### 4. Set and update ENV variables
