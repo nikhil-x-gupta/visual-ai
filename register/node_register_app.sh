@@ -19,14 +19,17 @@ usage() {
 fn_chk_env() {
     if [ -z $HZN_ORG_ID ]; then 
 	echo "Must set HZN_ORG_ID in ENV file "
+	exit 1
     fi
 
     if [ -z $HZN_EXCHANGE_USER_AUTH ]; then 
 	echo "Must set HZN_EXCHANGE_USER_AUTH in ENV file "
+	exit 1
     fi
 
     if [ -z $APP_BIND_HORIZON_DIR ]; then 
 	echo "Must set APP_BIND_HORIZON_DIR in ENV file "
+	exit 1
     fi
 }
 
