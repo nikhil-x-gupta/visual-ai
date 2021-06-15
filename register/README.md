@@ -53,14 +53,14 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
         - user_input_app_vino.json
       
 ### 3. Setup ENV variables. 
-   Add all of the following `export` in a file `APP_ENV` and **source** them in your current shell before you can register the node. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment. You may copy and paste this ENV block in an editor.
+   Add all of the following `export` in a file `APP_ENV` and **source** them in your current shell before you can register the node or build and publish services. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment. You may copy and paste this ENV block in an editor.
 
 ```
 #### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service. Change as needed to organize your service, policy names etc.
 export EDGE_OWNER=<change-as-needed> e.g sg.edge           
 export EDGE_DEPLOY=<change-as-needed> e.g example.visual 
 
-#### Specify your docker base
+#### Specify your docker login name
 export DOCKER_BASE=<change-as-needed> e.g edgedock
 
 ### Authenticated docker access ###
@@ -72,7 +72,7 @@ export CR_DOCKER_APIKEY=<change-as-needed>
 # Sets the root of the bind volume. Create this before running the application with 777 access
 export APP_BIND_HORIZON_DIR=/var/local/horizon
 
-### mms example being used for config management
+### mms used for config management
 export APP_MMS_OBJECT_SERVICE_NAME_CONFIG="$EDGE_OWNER.$EDGE_DEPLOY.mmsconfig"
 
 ### These values are used by the application and extracted from your environment. Change if you need to
