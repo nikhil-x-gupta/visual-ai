@@ -20,7 +20,27 @@ Start with reviewing Makefile for targets.
 See `Register` directory for all the **ENVIRONMENT** variables. `All of them` apply here as well. Create a file `APP_ENV` and source them before starting to build and publish the services.  
 
 #### Build and publish images to docker and services to IEAM exchange.
+Suggest to start with `TensorFlow lite`. Review `Makefile` for the build targets.
 
-    make
+TensorFlow lite
+```
+make tflite-all
+```
+PyTorch
+```
+make pth-all
+```
+OpenVINO
+```
+make vino-all
+```
+MVI
+```
+mvi-all:
+```
 
+Build All
+```
+make
+```
 
