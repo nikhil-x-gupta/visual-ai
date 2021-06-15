@@ -1,6 +1,6 @@
 ## Instructions to `Register` an edge device node to detect objects in a video stream
     
-  These instructions will guide you through the steps to register an edge node to detect objects in a video stream using one of the frameworks.
+  These instructions will guide you through the steps to register an edge node to detect objects in a video stream using one of the frameworks. 
   - MVI
   - TensorFlow Lite
   - PyTorch
@@ -8,6 +8,7 @@
 
 ### Pre-requisite
   - API-KEY from the IEAM mgmt hub admin to register the edge node.
+  - Services, policies and patterns already built and published into IEAM mgmt hub. See `publish` directory. 
   - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) You may use a video file or RTSP stream or USB camera. Using video file can be sometimes tricky based on file formats etc, I have found using an USB camera working the best. 
    
   For OpenVINO
