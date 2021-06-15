@@ -2,7 +2,7 @@
 
 #### Using a shared IEAM environment to Build and Publish serrvices 
 
-Using a shared instance creates several challenges when services, patterns and policies need to be published in a common exchange under one org without multiple developers clobbering over each other.
+Using a shared instance creates some challenges when services, patterns and policies need to be published in a common exchange under one org without multiple developers clobbering over each other. 
 
 #### Issues
 
