@@ -22,24 +22,24 @@ See `Register` directory for all the **ENVIRONMENT** variables. `All of them` ap
 #### Build and publish images to docker and services to IEAM exchange.
 Suggest to start with `TensorFlow lite`. Review `Makefile` for the build targets.
 
-TensorFlow lite
+- TensorFlow lite
 ```
 make tflite-all
 ```
-PyTorch
+- PyTorch
 ```
 make pth-all
 ```
-OpenVINO
+- OpenVINO
 ```
 make vino-all
 ```
-MVI
+- MVI
 ```
-mvi-all:
+mvi-all
 ```
 
-Build All
+- Build for all frameworks
 ```
 make
 ```
