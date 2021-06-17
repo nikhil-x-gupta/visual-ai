@@ -157,6 +157,11 @@ Predictor is running locally but accesses a detector running in cloud on GPU P10
 
 #### TensorFlow lite Local
 
+- Download model
+```
+wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+```
+
 `Intel NUC`
 ```
 ./node_register_app.sh -e ~/developer/project/visual/infer/DEV_ENV_INFER_IEAM42_EDGE -c all -r rtsp://192.168.200.75:8554/rtsp,rtsp://192.168
