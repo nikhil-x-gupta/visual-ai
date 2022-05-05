@@ -1,19 +1,24 @@
-# 1st stage to build kafkacat
-FROM python:3.8-slim
+FROM debian:stretch-slim
+
+ENV BUILD_DEPS build-essential zlib1g-dev liblz4-dev libssl-dev libsasl2-dev cmake libcurl4-openssl-dev pkg-config
+ENV RUN_DEPS libssl1.1 libsasl2-2 ca-certificates curl
 
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    build-essential zlib1g-dev liblz4-dev libssl-dev libsasl2-dev cmake libcurl4-openssl-dev libzstd-dev pkg-config \
-    libssl1.1 libsasl2-2 ca-certificates curl
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $BUILD_DEPS $RUN_DEPS python3 python3-pip
 
-RUN curl https://codeload.github.com/edenhill/kafkacat/tar.gz/master | tar xzf - && cd kafkacat-* && bash ./bootstrap.sh
-RUN make -C /kafkacat-master bin-install && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /kafkacat-master
+RUN curl https://codeload.github.com/edenhill/kafkacat/tar.gz/master | tar xzf -
 
-# 2nd stage. Copy statically linked kafkacat to second stage. Reduced the image size from 785MB -> 136MB
-FROM python:3.8-slim
-COPY --from=0 /usr/local/bin/kafkacat /usr/local/bin/
+RUN cd /kcat-master && \
+  rm -rf tmp-bootstrap && \
+  grep ^github_download ./bootstrap.sh && ./bootstrap.sh --no-enable-static && \
+  mv kcat /usr/bin/kafkacat ; \
+  cd / ; \
+  rm -rf /kcat-master; \
+  apt-get purge -y --auto-remove $BUILD_DEPS ; \
+  apt-get clean -y ; \
+  apt-get autoclean -y ; \
+  rm /var/log/dpkg.log /var/log/alternatives.log /var/log/apt/*.log; \
+  rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install flask requests
 
@@ -37,10 +42,11 @@ COPY service/static/js/angular.min.js.map static/js/
 
 COPY service/static/css/style.css static/css/
 COPY service/templates/index.html templates/
+
 COPY service/templates/admin.html templates/
 COPY service/templates/stream.html templates/
 COPY service/templates/admin1.html templates/
 COPY service/templates/stream1.html templates/
 
 COPY service/server.py .
-CMD /usr/local/bin/python3 ./server.py
+CMD /usr/bin/python3 ./server.py
