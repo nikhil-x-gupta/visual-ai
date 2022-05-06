@@ -3,7 +3,7 @@
 # MMS publish model script
 # 
 
-MODEL_ROOT_DIR=model
+MODEL_ROOT_DIR=../model
 
 usage() {                      
   echo "Usage: $0 -e -k -m -f -v "
