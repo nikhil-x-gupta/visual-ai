@@ -25,3 +25,20 @@ For the system to work in an scalable fashion, the application requires (configu
 2. The `publish.definition.file` makes use of the `description` field to specify certain sub-directory structure to organize many applications on the same nooe and avoid overwriting each other.
 3. A convenient `publish_model.sh` is provided to organize and ease the publishing step.  
 
+### Pre-requisite for publish_model script
+
+#### publish_model.sh 
+1. The script requires model and its version organized in certain directory structure. See example.
+2. The model files must be named based on framework and version. See example.
+
+#### publish.definition.json
+1. Follow the guideline as described in IEAM doc
+2. This application uses `description` field and organizes the meta information that is passed to the application by the publisher and is used by the application.
+
+**description and sub-fields**
+
+
+
+
+
+
