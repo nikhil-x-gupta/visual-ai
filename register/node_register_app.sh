@@ -184,7 +184,11 @@ elif [ "$FMWK" = "tflite" ] || [ "$FMWK" = "vino" ] || [ "$FMWK" = "mvi" ] || [ 
 			cp $MI_MODEL $APP_MODEL_DIR/mi_mvi_model.zip
 		    else
 			echo "Copying $MI_MODEL to $APP_MODEL_DIR"
-			cp $MI_MODEL "$APP_MODEL_DIR/default-$APP_MI_MODEL"
+			if [ -f "$APP_MODEL_DIR/default-$APP_MI_MODEL" ]; then 
+			    echo "Skipping... File already exists."
+			else
+			    cp $MI_MODEL "$APP_MODEL_DIR/default-$APP_MI_MODEL"
+			fi
 		    fi
 		else
 		    echo "Failed creating directoy $APP_MODEL_DIR"
