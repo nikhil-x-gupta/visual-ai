@@ -1,0 +1,23 @@
+{
+    "objectID": "pth_cpu-model-1.0.0-mms.zip",
+    "objectType": "mmsmodel",
+    "destinationOrgID": "$HZN_ORG_ID",
+    "destinationPolicy": {
+	"properties": [],
+	"constraints": [
+	    "owner == $EDGE_OWNER",
+	    "deploy == $EDGE_DEPLOY",
+	    "pth == true",
+	    "cpu == true"
+	],
+	"services": [
+	    {
+		"orgID": "$HZN_ORG_ID",
+		"arch": "*",
+		"serviceName": "$EDGE_OWNER.$EDGE_DEPLOY.mmsmodel",
+		"version": "[0.0.0,INFINITY)"
+	    }
+	]
+    },
+    "description": "{\"fmwk\":\"pth_cpu\",\"net\":\"frcnn-resnet50-dct\",\"dataset\":\"facemask-kaggle\",\"version\":\"1.0.0\",\"format\":\"zip\",\"subdir\":\"ml/model/pth_cpu\"}"
+}
