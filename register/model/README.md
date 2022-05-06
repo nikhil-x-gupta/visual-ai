@@ -36,7 +36,7 @@ For the system to work in an scalable fashion, the application requires (configu
 2. This application uses `description` field and organizes the meta information that is passed to the application by the publisher and is used by the application.
 
 **description and sub-fields**
-- subdir  : Subdirectory to organize delivered model. Used by the application.
+- subdir  : Subdirectory to organize delivered model. **Used by the application.**
 
 - fmwk    : ML model framework (Can be used by the application. Currently not used) 
 - net     : ML network (Can be used by the application as additional info in UI. Currently not used) 
