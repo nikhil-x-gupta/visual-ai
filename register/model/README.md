@@ -1,6 +1,6 @@
-### Deploy Machine Learning model using IEAM Model Management System (MMS) 
+## Deploy Machine Learning model using IEAM Model Management System (MMS) 
 
-
+### Concept
 Deploying machine learning model on edge nodes using Model Management System (MMS), requires publishing model into IEAM Cloud Sync Service (CSS).  The edge agents running on the edge nodes pull the qualified models. The model is delivered to the edge nodes as an asynchronous process and it is upto the already running containerized application service to make use of the just delivered ML model. 
 
 While user simply publishes the ML model into IEAM and edge nodes receive the model in time, internally, the entire publishing process goes through several discrete steps: 
@@ -15,4 +15,13 @@ While user simply publishes the ML model into IEAM and edge nodes receive the mo
 
 User only performs the step 1. A properly written application, covering steps 6 and 7, makes use of the just delivered model. 
 
+### Application Specific;
+
+In this example application, a separate container `mmsmodel` manages the step 6. Step 7 is part of the application code to pull in the newly delivered model and recalibrate the ML inferencing engine.
+
+For the system to work in an scalable fashion, the application requires (configuarble) certain directory structure. 
+
+1. `/var/local/horizon` where all the newly delivered model files are stored for the application to make use of.
+2. The `publish.definition.file` makes use of the `description` field to specify certain sub-directory structure to organize many applications on the same mdoe and do not clobber each other.
+3. A convenient `publish_model.sh` is provided to orgnaize and ease the publishing step.  
 
