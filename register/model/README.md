@@ -31,11 +31,17 @@ For the system to work in an scalable fashion, the application requires (configu
 1. The script requires model and its version organized in certain directory structure. See example.
 2. The model files must be named based on framework and version. See example.
 
-#### publish.definition.json
+#### model.publish.definition.json
 1. Follow the guideline as described in IEAM doc
-2. This application uses `description` field and organizes the meta information that is passed to the application by the publisher and is used by the application.
+2. Uses several fields to capture some meta information that is passed to the application by the publisher, and to be used by the application.
+3. This application uses `description` field specifically and has guidelines for few other fields. 
+
+**objectID** - User specified unique objectID used in `-i` option of `hzn mms` commands. I use ML model file name. 
+
+**objectType** - User specified obejctType used in `-t` option of `hzn mms` commands. I use `mmsmodel` for ML models
 
 **description and sub-fields**
+
 - subdir  : Subdirectory to organize delivered model. **Used by the application.**
 
 - fmwk    : ML model framework (Can be used by the application. Currently not used) 
@@ -44,9 +50,33 @@ For the system to work in an scalable fashion, the application requires (configu
 - version : ML model version number. (Can be used by the application. Currently not used)
 - format  : ML model package format. (Can be used by the application. Currently not used) 
 
+**An exampple: model.publish.definition.json**
 ```
-"description": "{\"fmwk\":\"tflite\",\"net\":\"ssd_mobilenet_v1_1.0_quant\",\"dataset\":\"2018_06_29-coco\",\"version\":\"1.0.0\",\"format\":\"zip\",\"subdir\":\"ml/model/tflite\"}"
+{
+    "objectID": "tflite-model-1.0.0-mms.zip",
+    "objectType": "mmsmodel",
+    "destinationOrgID": "$HZN_ORG_ID",
+    "destinationPolicy": {
+        "properties": [],
+      	"constraints": [
+            "owner == $EDGE_OWNER",
+            "deploy == $EDGE_DEPLOY",
+            "tflite == true"
+      	],
+      	"services": [
+            {
+                "orgID": "$HZN_ORG_ID",
+                "arch": "*",
+                "serviceName": "$EDGE_OWNER.$EDGE_DEPLOY.mmsmodel",
+                "version": "[0.0.0,INFINITY)"
+            }
+        ]
+    },
+    "description": "{\"fmwk\":\"tflite\",\"net\":\"ssd_mobilenet_v1_1.0_quant\",\"dataset\":\"2018_06_29-coco\",\"version\":\"1.0.0\",\"format\":\"zip\",\"subdir\":\"ml/model/tflite\"}"
+}
 ```
+
+
 
 
 
