@@ -30,7 +30,7 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
 
    - Copy `./node_register_app.sh` on your node.
 ```
-https://raw.githubusercontent.com/SanjeevKGupta/visual/master/register/node_register_app.sh
+wget https://raw.githubusercontent.com/SanjeevKGupta/visual/master/register/node_register_app.sh
 ```
    - Copy one of the following set of files from this repo on the edge node depending upon the framework that you want to use:
    
