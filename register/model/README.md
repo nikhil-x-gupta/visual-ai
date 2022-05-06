@@ -36,9 +36,17 @@ For the system to work in an scalable fashion, the application requires (configu
 2. This application uses `description` field and organizes the meta information that is passed to the application by the publisher and is used by the application.
 
 **description and sub-fields**
+- subdir  : Subdirectory to organize delivered model. Used by the application.
 
+- fmwk    : ML model framework (Can be used by the application. Currently not used) 
+- net     : ML network (Can be used by the application as additional info in UI. Currently not used) 
+- dataset : Dataset used to train the model (Can be used by the application as additional info in UI. Currently not used)
+- version : ML model version number. (Can be used by the application. Currently not used)
+- format  : ML model package format. (Can be used by the application. Currently not used) 
 
-
+```
+"description": "{\"fmwk\":\"tflite\",\"net\":\"ssd_mobilenet_v1_1.0_quant\",\"dataset\":\"2018_06_29-coco\",\"version\":\"1.0.0\",\"format\":\"zip\",\"subdir\":\"ml/model/tflite\"}"
+```
 
 
 
