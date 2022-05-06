@@ -75,8 +75,19 @@ class VideoSourceProcessor:
                 frame_current, frame_normalized, frame_faces, frame_gray = opencv.getFrame(self.config, videoStream, detector.getFloatingModel(), detector.getHeight(), detector.getWidth())
                 inference_interval, boxes, classes, scores = detector.getInferResults(frame_current)
                 self.update(self.config, self.videoSources, videoSource, [], opencv, frame_current, frame_faces, frame_gray, boxes, classes, scores, inference_interval)
+
+                if self.config.getReloadPTHModel():
+                    self.config.setReloadPTHModel(False)
+                    for vSource in self.videoSources:
+                        vSource.setReloadModel(True)
+
+                if videoSource.getReloadModel():
+                    videoSource.setReloadModel(False)
+                    videoSource.setDetector(PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"]))
+                
                 #if detector.getModelPath() != self.config.getModelPathPTH():
                 #    detector = PTHDetector(self.config, classes=["mask", "no_mask", "incorrect"])
+
             videoStream.stop()
 
         elif self.config.getIsVino():

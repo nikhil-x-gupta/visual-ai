@@ -326,17 +326,16 @@ class Config:
                 for value_dict in value_list:
                     self.modelUpdatedAt = datetime.datetime.now()
                     if self.getIsPTH():
-                        '''
+
                         # Large model download takes too much time. So currently commented out
                         self.modelObjectType = value_dict['OBJECT_TYPE']
                         self.modelPTH = "mmsmodel-" + value_dict['OBJECT_ID']
-                        self.modelObjectId = self.modelPTH
+                        self.modelObjectId = value_dict['OBJECT_ID']
                         self.modelNet = value_dict['MODEL_NET']
                         self.modelFmwk = value_dict['MODEL_FMWK']
                         self.modelVersion = value_dict['MODEL_VERSION']
                         self.modelDir = value_dict['MODEL_DIR']
                         self.setReloadPTHModel(True)
-                        '''
                         
                     elif self.getIsTFLite():
                         self.modelObjectType = value_dict['OBJECT_TYPE']
