@@ -6,8 +6,9 @@
 MODEL_ROOT_DIR=../model
 
 usage() {                      
-  echo "Usage: $0 -e -k -m -f -v "
+  echo "Usage: $0 -c -e -k -m -f -v "
   echo "where "
+  echo "   -c (Optional) Chunk size of publishing block"
   echo "   -e (Optional) Environemnt veriables full file path"
   echo "   -k (Required) Framework tflite | pth "
   echo "   -v (Required) ML model version"
@@ -16,11 +17,13 @@ usage() {
 #  echo "   -m Model definition file full path"
 }
 
-#while getopts 'he:k:v:f:m:' option; do
-while getopts 'he:k:v:' option; do
+#while getopts 'hc:e:k:v:f:m:' option; do
+while getopts 'hc:e:k:v:' option; do
   case "$option" in
     h) usage
        exit 1
+       ;;
+    c) CHUNKSIZE=$OPTARG
        ;;
     e) ENVVAR=$OPTARG
        ;;
@@ -53,6 +56,11 @@ else
     echo "Using provided HZN_ORG_ID, EDGE_OWNER, EDGE_DEPLOY from provided ENV file"
     echo ""
     . $ENVVAR
+fi 
+
+if [ -z $CHUNKSIZE ]; then
+    echo "Using default chunk size"
+    echo ""
 fi 
 
 if [ -z $MODEL_FMWK ]; then
@@ -91,14 +99,23 @@ else
 		    echo "Publish $MODEL_FILE using $MODEL_DEF_FILE"
 		    envsubst < $MODEL_DEF_FILE | jq
 		    echo ""
-		    echo "envsubst < $MODEL_DEF_FILE | hzn mms object publish -m- -f $MODEL_FILE"
-		    echo ""
 		    read -p "Will publish using above command and JSON. Continue? (Y/N) " yn
 		    case $yn in
 			[Yy]* ) ;;
 			[Nn]* ) exit;;
 		    esac
-		    envsubst < $MODEL_DEF_FILE | hzn mms object publish -m- -f $MODEL_FILE
+		    T_PUBLISH_START=$(date +%s)
+		    if [ -z $CHUNKSIZE ]; then
+			envsubst < $MODEL_DEF_FILE | hzn mms object publish -v -m- -f $MODEL_FILE
+			CHUNKSIZE=default
+		    else
+			envsubst < $MODEL_DEF_FILE | hzn mms object publish -v --chunkSize=$CHUNKSIZE -m- -f $MODEL_FILE
+		    fi
+		    T_PUBLISH_END=$(date +%s)
+		    T_PUBLISH=$(( $T_PUBLISH_END - $T_PUBLISH_START ))
+		    echo ""
+		    echo "Total Publish Time for $MODEL_FILE chunkSize $CHUNKSIZE in (secs) = $T_PUBLISH"
+		    echo ""
 		fi
 	    fi
 	else
