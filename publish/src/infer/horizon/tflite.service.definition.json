@@ -9,7 +9,7 @@
     "arch": "$ARCH",
     "sharable": "singleton",
     "requiredServices": [
-        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.http", "org": "$HZN_ORG_ID", "version": "1.0.0", "versionRange": "1.0.0", "arch": "$ARCH" }
+        { "url": "$EDGE_OWNER.$EDGE_DEPLOY.http", "org": "$HZN_ORG_ID", "versionRange": "[1.0.0,1.10.0)", "arch": "$ARCH" }
     ],
     "userInput": [
 	{ "name": "APP_MODEL_FMWK", "label": "app-model-fmwk-required", "type": "string", "defaultValue": "" },
