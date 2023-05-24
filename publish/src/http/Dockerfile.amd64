@@ -15,8 +15,8 @@ RUN make -C /kcat-$KCAT_VERSION bin-install && \
     rm $KCAT_VERSION.tar.gz
 
 # 2nd stage. Copy statically linked kafkacat to second stage. Reduced the image size from 785MB -> 136MB
-#FROM python:3.8-slim
-#COPY --from=0 /usr/local/bin/kcat /usr/local/bin/kafkacat
+FROM python:3.8-slim
+COPY --from=0 /usr/local/bin/kcat /usr/local/bin/kafkacat
 
 RUN pip3 install flask requests
 
