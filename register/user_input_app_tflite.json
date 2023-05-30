@@ -6,7 +6,6 @@
 	"versionRange": "[0.0.0,INFINITY)",
 	"variables": {
 	    "APP_APIKEY_PASSWORD"                : "$APP_APIKEY_PASSWORD",
-	    "APP_IEAM_API_CSS_OBJECTS"           : "$APP_IEAM_API_CSS_OBJECTS",
 	    "APP_MMS_OBJECT_SERVICE_NAME_CONFIG" : "$APP_MMS_OBJECT_SERVICE_NAME_CONFIG",
 	    "APP_VIEW_COLUMNS"                   : $APP_VIEW_COLUMNS,
             "EVENTSTREAMS_BROKER_URLS"           : "$EVENTSTREAMS_BROKER_URLS",

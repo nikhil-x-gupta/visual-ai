@@ -9,14 +9,13 @@
     "requiredServices": [
     ],
     "userInput": [
-	{ "name": "APP_APIKEY_PASSWORD", "label": "", "type": "string", "defaultValue": "" },
-	{ "name": "APP_IEAM_API_CSS_OBJECTS", "label": "", "type": "string", "defaultValue": "" },
-	{ "name": "APP_MMS_OBJECT_SERVICE_NAME_CONFIG", "label": "", "type": "string", "defaultValue": "" },
+	{ "name": "APP_APIKEY_PASSWORD", "label": "", "type": "string", "defaultValue": "-" },
+	{ "name": "APP_MMS_OBJECT_SERVICE_NAME_CONFIG", "label": "", "type": "string", "defaultValue": "-" },
         { "name": "APP_VIEW_COLUMNS", "label": "view-column", "type": "int", "defaultValue": "1" },
 	{ "name": "APP_APIKEY_USERNAME", "label": "", "type": "string", "defaultValue": "iamapikey" },
-	{ "name": "EVENTSTREAMS_BROKER_URLS", "label": "", "type": "string", "defaultValue": "" },
-	{ "name": "EVENTSTREAMS_API_KEY", "label": "", "type": "string", "defaultValue": "" },
-	{ "name": "EVENTSTREAMS_ENHANCED_TOPIC", "label": "", "type": "string", "defaultValue": "" }
+	{ "name": "EVENTSTREAMS_BROKER_URLS", "label": "", "type": "string", "defaultValue": "-" },
+	{ "name": "EVENTSTREAMS_API_KEY", "label": "", "type": "string", "defaultValue": "-" },
+	{ "name": "EVENTSTREAMS_ENHANCED_TOPIC", "label": "", "type": "string", "defaultValue": "-" }
     ],
     "deployment": {
 	"services": {

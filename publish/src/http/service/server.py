@@ -13,20 +13,47 @@ import threading
 import time
 import logging
 
-# edge-css/api/v1/objects
-ieam_api_css_objects = os.environ['APP_IEAM_API_CSS_OBJECTS']
-username = os.environ['APP_APIKEY_USERNAME']
-password = os.environ['APP_APIKEY_PASSWORD']
-
-view_cols = int(os.environ['APP_VIEW_COLUMNS'])
-admin_html = 'admin1.html' if view_cols == 1 else 'admin.html'
-stream_html = 'stream1.html' if view_cols == 1 else 'stream.html'
-
-hzn_org_id = os.environ['HZN_ORGANIZATION']
-
 object_type_cfg = "mmsconfig"
 object_id_cfg = "config.json"
-object_service_name_cfg = os.environ['APP_MMS_OBJECT_SERVICE_NAME_CONFIG']
+
+# Edge agent injects these in each container
+hzn_org_id = os.environ['HZN_ORGANIZATION']
+ieam_api_css_objects = os.environ['HZN_EXCHANGE_URL'] + "../../edge-css/api/v1/objects"
+
+# Set in http service.definition.json
+username = os.environ['APP_APIKEY_USERNAME']
+
+mms_publish_dict = {}
+
+try:
+    tmp_key = 'APP_APIKEY_PASSWORD'
+    tmp_env = os.environ[tmp_key]
+    if tmp_env != '-':
+        mms_publish_dict[tmp_key] = tmp_env
+except:
+    None
+
+try:
+    tmp_key = 'APP_MMS_OBJECT_SERVICE_NAME_CONFIG'
+    tmp_env = os.environ[tmp_key]
+    if tmp_env != '-':
+        mms_publish_dict[tmp_key] = tmp_env
+except:
+    None
+
+# Screen view columns width based on columb
+try:
+    app_view_cols = os.environ['APP_VIEW_COLUMNS']
+    view_cols = int(app_view_cols)
+except:
+    view_cols = 1
+width = 1280 if view_cols == 1 else 640
+height = 960 if view_cols == 1 else 480
+
+#admin_html = 'admin1.html' if view_cols == 1 else 'admin.html'
+#stream_html = 'stream1.html' if view_cols == 1 else 'stream.html'
+admin_html = 'admin.html'
+stream_html = 'stream.html'
 
 EVENTSTREAMS_BROKER_URLS = os.environ['EVENTSTREAMS_BROKER_URLS']
 EVENTSTREAMS_API_KEY = os.environ['EVENTSTREAMS_API_KEY']
@@ -81,11 +108,11 @@ def stream_video():
 # End point for the host as http://<ip-address>:5000/stream 
 @server.route('/admin')
 def admin():
-    return render_template(admin_html)
+    return render_template(admin_html, width=width, height=height)
 
 @server.route('/stream')
 def stream():
-    return render_template(stream_html)
+    return render_template(stream_html, width=width, height=height)
 
 @server.route('/test')
 def test():
@@ -165,6 +192,9 @@ def object_type_policy(org_id, obj_service_name, obj_id, obj_type):
 @server.route('/update/config', methods=['POST'])
 def update_config_policy():
     if request.headers['Content-Type'] == 'application/json':
+        object_service_name_cfg = mms_publish_dict['APP_MMS_OBJECT_SERVICE_NAME_CONFIG']
+        #ieam_api_css_objects = mms_publish_dict['APP_IEAM_API_CSS_OBJECTS']
+        password = mms_publish_dict['APP_APIKEY_PASSWORD']
         obj_type_d = object_type_policy(hzn_org_id, object_service_name_cfg, object_id_cfg, object_type_cfg)
 
         config_d = {}
