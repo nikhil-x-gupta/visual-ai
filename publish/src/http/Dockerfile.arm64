@@ -1,19 +1,26 @@
 # 1st stage to build kafkacat
+
 FROM python:3.8-slim
-
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     build-essential zlib1g-dev liblz4-dev libssl-dev libsasl2-dev cmake libcurl4-openssl-dev libzstd-dev pkg-config \
-    libssl1.1 libsasl2-2 ca-certificates curl
+    libssl1.1 libsasl2-2 ca-certificates curl wget
 
-RUN curl https://codeload.github.com/edenhill/kafkacat/tar.gz/master | tar xzf - && cd kafkacat-* && bash ./bootstrap.sh
-RUN make -C /kafkacat-master bin-install && \
+ARG KCAT_VERSION=1.7.0
+
+RUN wget "https://github.com/edenhill/kcat/archive/refs/tags/$KCAT_VERSION.tar.gz" && \
+    tar xzf "$KCAT_VERSION.tar.gz" && \
+    cd kcat-$KCAT_VERSION && \
+    bash ./bootstrap.sh
+
+RUN make -C /kcat-$KCAT_VERSION bin-install && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -rf /kafkacat-master
+    rm -rf /kcat-$KCAT_VERSION && \
+    rm $KCAT_VERSION.tar.gz
 
 # 2nd stage. Copy statically linked kafkacat to second stage. Reduced the image size from 785MB -> 136MB
 FROM python:3.8-slim
-COPY --from=0 /usr/local/bin/kafkacat /usr/local/bin/
+COPY --from=0 /usr/local/bin/kcat /usr/local/bin/kafkacat
 
 RUN pip3 install flask requests
 
@@ -39,8 +46,6 @@ COPY service/static/css/style.css static/css/
 COPY service/templates/index.html templates/
 COPY service/templates/admin.html templates/
 COPY service/templates/stream.html templates/
-COPY service/templates/admin1.html templates/
-COPY service/templates/stream1.html templates/
 
 COPY service/server.py .
 CMD /usr/local/bin/python3 ./server.py
