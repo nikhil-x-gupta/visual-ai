@@ -42,6 +42,16 @@
             $scope.panel.stream = true;
         };
 
+	$scope.showWarning = false;
+        $scope.showHideWarning = function() {
+            $scope.showWarning = $scope.showWarning ? false : true;
+        };
+
+	$scope.showDetail = false;
+        $scope.showHideDetail = function() {
+            $scope.showDetail = $scope.showDetail ? false : true;
+        };
+	
         $scope.reset();
 
       }]);

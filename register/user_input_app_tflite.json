@@ -5,9 +5,6 @@
 	"url": "$EDGE_OWNER.$EDGE_DEPLOY.http",
 	"versionRange": "[0.0.0,INFINITY)",
 	"variables": {
-	    "APP_APIKEY_PASSWORD"                : "$APP_APIKEY_PASSWORD",
-	    "APP_MMS_OBJECT_SERVICE_NAME_CONFIG" : "$APP_MMS_OBJECT_SERVICE_NAME_CONFIG",
-	    "APP_VIEW_COLUMNS"                   : $APP_VIEW_COLUMNS,
             "EVENTSTREAMS_BROKER_URLS"           : "$EVENTSTREAMS_BROKER_URLS",
             "EVENTSTREAMS_API_KEY"               : "$EVENTSTREAMS_API_KEY",
             "EVENTSTREAMS_ENHANCED_TOPIC"        : "$EVENTSTREAMS_ENHANCED_TOPIC"

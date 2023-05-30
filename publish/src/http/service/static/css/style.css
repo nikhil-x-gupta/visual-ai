@@ -24,7 +24,7 @@ h3 {
 p {
     color: #eee;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 img {
@@ -176,6 +176,10 @@ a {
     font-size: 16px;
 }
 
+.btn-reset:hover {
+    background-color: #29F;
+}
+
 .btn-apply {
     background-color: #D35;
     color: white;
@@ -191,6 +195,10 @@ a {
     font-size: 16px;
 }
 
+.btn-apply:hover {
+    background-color: #29F;
+}
+
 .btn-browse {
     display: block;
     color: white;
@@ -201,13 +209,21 @@ a {
     font-size: 16px;
 }
 
-.btn-reset:hover {
-    background-color: #29F;
-}
-.btn-apply:hover {
-    background-color: #29F;
-}
 .btn-browse:hover {
     background-color: #29F;
 }
+
+.btn-warn {
+    background-color: #e00;
+    display: inline;
+    color: white;
+    padding: 3px 3px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    font-size: 12px;
+}
+.btn-warn:hover {
+    background-color: #d60
+
 

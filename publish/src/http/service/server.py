@@ -15,6 +15,8 @@ import logging
 
 object_type_cfg = "mmsconfig"
 object_id_cfg = "config.json"
+admin_html = 'admin.html'
+stream_html = 'stream.html'
 
 # Edge agent injects these in each container
 hzn_org_id = os.environ['HZN_ORGANIZATION']
@@ -41,6 +43,13 @@ try:
 except:
     None
 
+if mms_publish_dict.get('APP_MMS_OBJECT_SERVICE_NAME_CONFIG') and mms_publish_dict.get('APP_MMS_OBJECT_SERVICE_NAME_CONFIG'):
+    show_config = 'contents'
+    show_warning = 'none' 
+else:
+    show_config = 'none'
+    show_warning = 'contents'
+
 # Screen view columns width based on columb
 try:
     app_view_cols = os.environ['APP_VIEW_COLUMNS']
@@ -48,12 +57,6 @@ try:
 except:
     view_cols = 1
 width = 1280 if view_cols == 1 else 640
-height = 960 if view_cols == 1 else 480
-
-#admin_html = 'admin1.html' if view_cols == 1 else 'admin.html'
-#stream_html = 'stream1.html' if view_cols == 1 else 'stream.html'
-admin_html = 'admin.html'
-stream_html = 'stream.html'
 
 EVENTSTREAMS_BROKER_URLS = os.environ['EVENTSTREAMS_BROKER_URLS']
 EVENTSTREAMS_API_KEY = os.environ['EVENTSTREAMS_API_KEY']
@@ -108,11 +111,11 @@ def stream_video():
 # End point for the host as http://<ip-address>:5000/stream 
 @server.route('/admin')
 def admin():
-    return render_template(admin_html, width=width, height=height)
+    return render_template(admin_html, width=width, mms_publish_dict=mms_publish_dict, show_config=show_config, show_warning=show_warning)
 
 @server.route('/stream')
 def stream():
-    return render_template(stream_html, width=width, height=height)
+    return render_template(stream_html, width=width)
 
 @server.route('/test')
 def test():

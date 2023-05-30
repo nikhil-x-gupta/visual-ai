@@ -10,7 +10,18 @@
     <p>Edge deployment of container workload and ML model</p>
     <div col="12"><img width="{{ width }}" height="{{ height }}" src="{{ url_for('stream_video') }}"/></div>
     <h3>Machine Inferencing and Object Detection</h3>
-    <div class="row">
+    <div col="12" style="display:{{ show_warning }}">
+      <p style="color:#e22">Incomplete MMS publish setup. <button ng-click="showHideWarning()" class="btn-warn">Show Warning</button></p> 
+      <div col="12" ng-show="showWarning">
+        <p style="color:#ddd">Update ENV for edge device using user_input OR for edge cluster using configMap. </p>
+        <p style="color:#bbb">{{ mms_publish_dict }}</p>
+      </div>
+    </div>
+    <div class="row" style="display:{{ show_config }}">
+      <p>MMS publish setup: <button ng-click="showHideDetail()" class="btn-warn">Show Detail</button></p> 
+      <div col="12" ng-show="showDetail">
+        <p style="color:#bbb">{{ mms_publish_dict }}</p>
+      </div>
       <form class="container">
 	<span class="section">Configuration:</span>
         <div class="left-panel">
@@ -26,14 +37,14 @@
 	    <input type="checkbox" ng-model="panel.blur">
 	    <span class="checkmark"></span>
 	  </label-->
-	  <label class="label">Publish Kafka
+	  <label class="label" {{ kafka_disabled }}>Publish Kafka
 	    <input type="checkbox" ng-model="panel.kafka">
 	    <span class="checkmark"></span>
 	  </label>
-	  <label class="label">Publish Stream
+	  <!--label class="label">Publish Stream
 	    <input type="checkbox" ng-model="panel.stream">
 	    <span class="checkmark"></span>
-	  </label>
+	  </label-->
         </div>
         <div class="mid-panel">
 	  <div class="label" style="padding-left:5px;margin-top:0px;">
