@@ -14,13 +14,13 @@
       <p style="color:#e22">Incomplete MMS publish setup. <button ng-click="showHideWarning()" class="btn-warn">Show Warning</button></p> 
       <div col="12" ng-show="showWarning">
         <p style="color:#ddd">Update ENV for edge device using user_input OR for edge cluster using configMap. </p>
-        <p style="color:#bbb">{{ mms_publish_dict }}</p>
+        <p style="color:#bbb">{{ mms_publish_dict }}<br>{{ mms_publish_kafka_dict }}</p>
       </div>
     </div>
     <div class="row" style="display:{{ show_config }}">
       <p>MMS publish setup: <button ng-click="showHideDetail()" class="btn-warn">Show Detail</button></p> 
       <div col="12" ng-show="showDetail">
-        <p style="color:#bbb">{{ mms_publish_dict }}</p>
+        <p style="color:#bbb">{{ mms_publish_dict }}<br>{{ mms_publish_kafka_dict }}</p>
       </div>
       <form class="container">
 	<span class="section">Configuration:</span>

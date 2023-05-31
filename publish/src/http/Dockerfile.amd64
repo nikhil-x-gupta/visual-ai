@@ -14,11 +14,14 @@ RUN make -C /kcat-$KCAT_VERSION bin-install && \
     rm -rf /kcat-$KCAT_VERSION && \
     rm $KCAT_VERSION.tar.gz
 
+# Removed the stage buiding as runs into misisng library files. TODO 
 # 2nd stage. Copy statically linked kafkacat to second stage. Reduced the image size from 785MB -> 136MB
-FROM python:3.8-slim
-COPY --from=0 /usr/local/bin/kcat /usr/local/bin/kafkacat
+#FROM python:3.8-slim
+#COPY --from=0 /usr/local/bin/kcat /usr/local/bin/kafkacat
 
 RUN pip3 install flask requests
+
+RUN ln -s /usr/local/bin/kcat /usr/local/bin/kafkacat
 
 # DO NOT CHANGE the script name from server.py to http.py. It breaks the docker run 
 WORKDIR /

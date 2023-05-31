@@ -58,11 +58,35 @@ except:
     view_cols = 1
 width = 1280 if view_cols == 1 else 640
 
-EVENTSTREAMS_BROKER_URLS = os.environ['EVENTSTREAMS_BROKER_URLS']
-EVENTSTREAMS_API_KEY = os.environ['EVENTSTREAMS_API_KEY']
-EVENTSTREAMS_ENHANCED_TOPIC = os.environ['EVENTSTREAMS_ENHANCED_TOPIC']
+mms_publish_kafka_dict = {}
+# kafka publish
+try:
+    tmp_key = 'EVENTSTREAMS_BROKER_URLS'
+    tmp_env = os.environ[tmp_key]
+    if tmp_env != '-':
+        mms_publish_kafka_dict[tmp_key] = tmp_env
+except:
+    None
 
-PUBLISH_KAFKA_COMMAND = ' kafkacat -P -b ' + EVENTSTREAMS_BROKER_URLS + ' -X api.version.request=true -X security.protocol=sasl_ssl -X sasl.mechanisms=PLAIN -X sasl.username=token -X sasl.password="' + EVENTSTREAMS_API_KEY + '" -t ' + EVENTSTREAMS_ENHANCED_TOPIC + ' '
+# kafka publish
+try:
+    tmp_key = 'EVENTSTREAMS_API_KEY'
+    tmp_env = os.environ[tmp_key]
+    if tmp_env != '-':
+        mms_publish_kafka_dict[tmp_key] = tmp_env
+except:
+    None
+
+# kafka publish
+try:
+    tmp_key = 'EVENTSTREAMS_VISUAL_ML_TOPIC'
+    tmp_env = os.environ[tmp_key]
+    if tmp_env != '-':
+        mms_publish_kafka_dict[tmp_key] = tmp_env
+except:
+    None
+
+kafka_disabled = '' if len(mms_publish_kafka_dict) == 3 else 'disabled'
 
 server = Flask(__name__)
 
@@ -111,7 +135,7 @@ def stream_video():
 # End point for the host as http://<ip-address>:5000/stream 
 @server.route('/admin')
 def admin():
-    return render_template(admin_html, width=width, mms_publish_dict=mms_publish_dict, show_config=show_config, show_warning=show_warning)
+    return render_template(admin_html, width=width, mms_publish_dict=mms_publish_dict, mms_publish_kafka_dict=mms_publish_kafka_dict, show_config=show_config, show_warning=show_warning)
 
 @server.route('/stream')
 def stream():
@@ -142,6 +166,7 @@ def publish_stream():
 @server.route('/publish/kafka', methods=['POST'])
 def publish_kafka():
     if request.headers['Content-Type'] == 'application/json':
+        PUBLISH_KAFKA_COMMAND = ' kafkacat -P -b ' + mms_publish_kafka_dict['EVENTSTREAMS_BROKER_URLS'] + ' -X api.version.request=true -X security.protocol=sasl_ssl -X sasl.mechanisms=PLAIN -X sasl.username=token -X sasl.password="' + mms_publish_kafka_dict['EVENTSTREAMS_API_KEY'] + '" -t ' + mms_publish_kafka_dict['EVENTSTREAMS_VISUAL_ML_TOPIC'] + ' '
         json_str = json.dumps(request.json)
         TMP_FILE = '/tmp/kafka-' + str(uuid.uuid4()) + '.json'
         with open(TMP_FILE, 'w+') as tmp_file:
