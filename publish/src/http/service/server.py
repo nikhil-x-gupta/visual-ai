@@ -26,7 +26,6 @@ ieam_api_css_objects = os.environ['HZN_EXCHANGE_URL'] + "../../edge-css/api/v1/o
 username = os.environ['APP_APIKEY_USERNAME']
 
 mms_publish_dict = {}
-
 try:
     tmp_key = 'APP_APIKEY_PASSWORD'
     tmp_env = os.environ[tmp_key]
@@ -43,7 +42,7 @@ try:
 except:
     None
 
-if mms_publish_dict.get('APP_MMS_OBJECT_SERVICE_NAME_CONFIG') and mms_publish_dict.get('APP_MMS_OBJECT_SERVICE_NAME_CONFIG'):
+if mms_publish_dict.get('APP_APIKEY_PASSWORD') and mms_publish_dict.get('APP_MMS_OBJECT_SERVICE_NAME_CONFIG'):
     show_config = 'contents'
     show_warning = 'none' 
 else:
@@ -86,7 +85,8 @@ try:
 except:
     None
 
-kafka_disabled = '' if len(mms_publish_kafka_dict) == 3 else 'disabled'
+show_publish_kafka = 'auto:opacity:1' if len(mms_publish_kafka_dict) == 3 else 'none;opacity:0.4'
+show_publish_kafka_error = 'none' if len(mms_publish_kafka_dict) == 3 else 'contents'
 
 server = Flask(__name__)
 
@@ -135,11 +135,11 @@ def stream_video():
 # End point for the host as http://<ip-address>:5000/stream 
 @server.route('/admin')
 def admin():
-    return render_template(admin_html, width=width, mms_publish_dict=mms_publish_dict, mms_publish_kafka_dict=mms_publish_kafka_dict, show_config=show_config, show_warning=show_warning)
+    return render_template(admin_html, width=width, mms_publish_dict=mms_publish_dict, mms_publish_kafka_dict=mms_publish_kafka_dict, show_config=show_config, show_warning=show_warning, show_publish_kafka=show_publish_kafka, show_publish_kafka_error=show_publish_kafka_error)
 
 @server.route('/stream')
 def stream():
-    return render_template(stream_html, width=width)
+    return render_template(stream_html, width=width, show_warning=show_warning)
 
 @server.route('/test')
 def test():

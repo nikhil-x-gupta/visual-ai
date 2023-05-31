@@ -13,14 +13,14 @@
     <div col="12" style="display:{{ show_warning }}">
       <p style="color:#e22">Incomplete MMS publish setup. <button ng-click="showHideWarning()" class="btn-warn">Show Warning</button></p> 
       <div col="12" ng-show="showWarning">
-        <p style="color:#ddd">Update ENV for edge device using user_input OR for edge cluster using configMap. </p>
-        <p style="color:#bbb">{{ mms_publish_dict }}<br>{{ mms_publish_kafka_dict }}</p>
+        <p style="color:#ddd">Register edge device with MMS setup using user_input.</p>
+        <p style="color:#bbb">MMS setup:<br>{{ mms_publish_dict }}<br>Event Stream Kafka setup:<br>{{ mms_publish_kafka_dict }}</p>
       </div>
     </div>
     <div class="row" style="display:{{ show_config }}">
-      <p>MMS publish setup: <button ng-click="showHideDetail()" class="btn-warn">Show Detail</button></p> 
+      <p>Configuration setup: <button ng-click="showHideDetail()" class="btn-warn">Show detail</button></p> 
       <div col="12" ng-show="showDetail">
-        <p style="color:#bbb">{{ mms_publish_dict }}<br>{{ mms_publish_kafka_dict }}</p>
+        <p style="color:#bbb">MMS setup:<br>{{ mms_publish_dict }}<br>Event Stream Kafka setup:<span style="display:{{ show_publish_kafka_error }}"> Missing.</span><br>{{ mms_publish_kafka_dict }}</p>
       </div>
       <form class="container">
 	<span class="section">Configuration:</span>
@@ -37,10 +37,12 @@
 	    <input type="checkbox" ng-model="panel.blur">
 	    <span class="checkmark"></span>
 	  </label-->
-	  <label class="label" {{ kafka_disabled }}>Publish Kafka
-	    <input type="checkbox" ng-model="panel.kafka">
-	    <span class="checkmark"></span>
-	  </label>
+	  <div style="pointer-events:{{ show_publish_kafka }}">
+   	    <label class="label">Publish Kafka
+	      <input type="checkbox" ng-model="panel.kafka">
+	      <span class="checkmark"></span>
+	    </label>
+          </div>
 	  <!--label class="label">Publish Stream
 	    <input type="checkbox" ng-model="panel.stream">
 	    <span class="checkmark"></span>
