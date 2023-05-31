@@ -42,8 +42,9 @@ wget https://raw.githubusercontent.com/SanjeevKGupta/visual/master/register/node
    - TensorFlow Lite
         
         - node_policy_tflite.json 
-        - user_input_app_tflite.json
-  
+        - user_input_app_tflite.json (Minimum. No variable for http)
+        - See `user_input_app_tflite.json.full` for MMS and Event Stream options.
+        
    - PyTorch
         
         - node_policy_pth_cpu.json
