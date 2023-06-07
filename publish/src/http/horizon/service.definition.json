@@ -10,9 +10,9 @@
     ],
     "userInput": [
         { "name": "APP_VIEW_COLUMNS", "label": "view-column", "type": "int", "defaultValue": "1" },
+	{ "name": "APP_MMS_OBJECT_SERVICE_NAME_CONFIG", "label": "", "type": "string", "defaultValue": "$EDGE_OWNER.$EDGE_DEPLOY.mmsconfig" },
 	{ "name": "APP_APIKEY_USERNAME", "label": "", "type": "string", "defaultValue": "iamapikey" },
 	{ "name": "APP_APIKEY_PASSWORD", "label": "", "type": "string", "defaultValue": "-" },
-	{ "name": "APP_MMS_OBJECT_SERVICE_NAME_CONFIG", "label": "", "type": "string", "defaultValue": "-" },
 	{ "name": "EVENTSTREAMS_BROKER_URLS", "label": "", "type": "string", "defaultValue": "-" },
 	{ "name": "EVENTSTREAMS_API_KEY", "label": "", "type": "string", "defaultValue": "-" },
 	{ "name": "EVENTSTREAMS_VISUAL_ML_TOPIC", "label": "", "type": "string", "defaultValue": "-" }
@@ -21,6 +21,11 @@
 	"services": {
 	    "$SERVICE_NAME": {
 		"image": "${DOCKER_IMAGE_BASE}_$ARCH:$SERVICE_VERSION",
+		"secrets": {
+		    "${SECRET_HTTP_MMS_NAME}": {
+			"description": "to publish from node"
+		    }
+		},
 		"ports": [
 		    {
 			"HostPort":"5000:5000:tcp",

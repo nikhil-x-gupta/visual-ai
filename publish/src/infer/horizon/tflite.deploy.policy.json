@@ -19,6 +19,17 @@
 	"deploy == $EDGE_DEPLOY",
 	"tflite == true"
     ],
+    "secretBinding": [
+        {
+          "serviceUrl": "$EDGE_OWNER.$EDGE_DEPLOY.http",
+          "serviceOrgid": "$HZN_ORG_ID",
+          "serviceArch": "$ARCH",
+          "serviceVersionRange": "[1.0.0,INFINITY)", 
+          "secrets": [
+              {"APP_APIKEY_PASSWORD": "secret_http_mms_name"}
+          ]
+        }
+    ],
     "userInput": [
 	{
 	    "serviceOrgid": "$HZN_ORG_ID",

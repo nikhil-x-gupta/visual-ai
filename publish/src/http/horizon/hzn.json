@@ -2,6 +2,7 @@
     "MetadataVars": {
         "IMAGE_NAME": "http",
         "DOCKER_IMAGE_BASE": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).http",
+        "SECRET_HTTP_MMS_NAME": "APP_APIKEY_PASSWORD",
         "SERVICE_NAME": "$(EDGE_OWNER).$(EDGE_DEPLOY).http",
         "SERVICE_VERSION": "1.1.0"
     }
