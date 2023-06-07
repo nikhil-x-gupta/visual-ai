@@ -1,13 +1,13 @@
 ## Instructions to `Register` an edge device node to detect objects in a video stream
     
   These instructions will guide you through the steps to register an edge node to detect objects in a video stream using one of the frameworks. 
-  - MVI
   - TensorFlow Lite
   - PyTorch
+  - MVI Edge
   - OpenVINO
 
 ### Pre-requisite
-  - API-KEY from the IEAM mgmt hub admin to register the edge node.
+  - API-Key from the IEAM mgmt hub admin to register the edge node. Also one extra APi-Key for MMS to work with IEAM mgmt hub. Just a good practice.
   - Services, policies and patterns already built and published into IEAM mgmt hub. See `publish` directory. 
   - An Intel NUC or Desktop (x86, amd64) or Raspberry PI4 (arm32) You may use a video file or RTSP stream or USB camera. Using video file can be sometimes tricky based on file formats etc, I have found using an USB camera working the best. 
    
@@ -20,44 +20,41 @@ It should return one IP address that you use to ssh into the edge device. e.g. `
 
         hostname -i
         
-   The output of above command should not be the local loopback address (e.g. 127.0.x.x) or have multiple addresses. If that is the case then edit **/etc/hosts** and make an entry for your hostname as below.
+The output of above command should not be the local loopback address (e.g. 127.0.x.x) or have multiple addresses. If that is the case then edit **/etc/hosts** and make an entry for your hostname as below.
 
         <ip-address> <your-hostname> 
         
    Verify the result of the above command again.
   
-### 2. Prepare node policy and user input files
+### 2. Use IEAM secret manager to setup API key to be used for MMS publishing 
+See `hzn sm secret --help` and `hzn sm secret add --help` for details on options
+```
+hzn sm secret add --secretKey APP_APIKEY_PASSWORD --secretDetail <api-key-separate-from-user-auth> secret_http_mms_name
+```
 
+### 3. Prepare node policy and user input files
    - Copy `./node_register_app.sh` on your node.
 ```
 wget https://raw.githubusercontent.com/SanjeevKGupta/visual/master/register/node_register_app.sh
 ```
    - Copy one of the following set of files from this repo on the edge node depending upon the framework that you want to use:
-   
    - MVI Local
-  
         - node_policy_mvi.json
         - user_input_app_mvi.json
-   
    - TensorFlow Lite
-        
         - node_policy_tflite.json 
         - user_input_app_tflite.json (Minimum. No variable for http)
-        - See `user_input_app_tflite.json.full` for MMS and Event Stream options.
-        
+        - See `user_input_app_tflite.json.full` for MMS and Event Stream options. 
    - PyTorch
-        
         - node_policy_pth_cpu.json
         - node_policy_pth_nano.json
         - user_input_app_pth_cpu.json
         - user_input_app_pth_nano.json
-      
    - OpenVINO 
-    
         - node_policy_vino.json
         - user_input_app_vino.json
       
-### 3. Setup ENV variables. 
+### 4. Setup ENV variables. 
    Add all of the following `export` in a file `APP_ENV` and **source** them in your current shell before you can register the node or build and publish services. These ENVIRONMENT variables are required to register the edge node. Review and provide values as per your environment. You may copy and paste this ENV block in an editor.
 
 ```
@@ -77,9 +74,6 @@ export CR_DOCKER_APIKEY=<change-as-needed>
 # Sets the root of the bind volume. Create this before running the application with 777 access
 export APP_BIND_HORIZON_DIR=/var/local/horizon
 
-### mms used for config management
-export APP_MMS_OBJECT_SERVICE_NAME_CONFIG="$EDGE_OWNER.$EDGE_DEPLOY.mmsconfig"
-
 ### These values are used by the application and extracted from your environment. Change if you need to
 export HZN_DEVICE_ID=`grep HZN_DEVICE_ID /etc/default/horizon | cut -d'=' -f2 | tr '[a-z]' '[A-Z]'`
 export HZN_EXCHANGE_NODE_AUTH="$HZN_DEVICE_ID:"`echo $HZN_DEVICE_ID | tr '[A-Z]' '[a-z]'`
@@ -97,7 +91,6 @@ export BLUR_FACE=false
 export PUBLISH_KAFKA=false
 export PUBLISH_STREAM=true
 # Use -v command line option to set the value
-export APP_VIEW_COLUMNS=3
 
 ### Optional - If planning to stream to IBM kafka event stream
 export EVENTSTREAMS_ENHANCED_TOPIC=<change-as-needed> e,g. es-topic-tflite
@@ -124,7 +117,6 @@ export APP_MODEL_MVI_SERVICE_PORT=5001
 export APP_REMOTE_MODEL_MVI_HOST=<remote-host-ip-address-if-using-this>
 ### MVI specfic
 ```
-
 ### 4. Set and update ENV variables
 
     source APP_ENV
