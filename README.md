@@ -1,12 +1,6 @@
 
-<<<<<<< HEAD
-
-## IBM Edge Application Manager (IEAM)
-### Edge deployment of container workload and ML model
-=======
 ## Edge deployment of container workload and ML model
 ### Forked from SanjeevKGupta IEAM project
->>>>>>> e41d41ec01f0366574678892fbdadbfe833e384d
 
 **Machine Inferencing and Object Detection** examples using `TensorFlow Lite, OpenVINO, pyTorch and MVI` frameworks. Implemented with **IEAM + MMS + OpenCV + Python**
 
