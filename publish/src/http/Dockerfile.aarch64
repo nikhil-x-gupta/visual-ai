@@ -1,0 +1,51 @@
+# 1st stage to build kafkacat
+
+FROM python:3.8-slim
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    build-essential zlib1g-dev liblz4-dev libssl-dev libsasl2-dev cmake libcurl4-openssl-dev libzstd-dev pkg-config \
+    libssl3 libsasl2-2 ca-certificates curl wget
+
+ARG KCAT_VERSION=1.7.0
+
+RUN wget "https://github.com/edenhill/kcat/archive/refs/tags/$KCAT_VERSION.tar.gz" && \
+    tar xzf "$KCAT_VERSION.tar.gz" && \
+    cd kcat-$KCAT_VERSION && \
+    bash ./bootstrap.sh
+
+RUN make -C /kcat-$KCAT_VERSION bin-install && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /kcat-$KCAT_VERSION && \
+    rm $KCAT_VERSION.tar.gz
+
+# 2nd stage. Copy statically linked kafkacat to second stage. Reduced the image size from 785MB -> 136MB
+FROM python:3.8-slim
+COPY --from=0 /usr/local/bin/kcat /usr/local/bin/kafkacat
+
+RUN pip3 install flask requests
+
+# DO NOT CHANGE the script name from server.py to http.py. It breaks the docker run 
+WORKDIR /
+
+RUN mkdir static templates
+RUN mkdir -p static/css
+RUN mkdir -p static/js
+
+COPY service/static/test-image-0.png static/
+COPY service/static/test-image-0.jpg static/
+COPY service/static/test-image-1.jpg static/
+COPY service/static/test-image-2.jpg static/
+COPY service/static/test-image-3.jpg static/
+COPY service/static/test-image-4.jpg static/
+
+COPY service/static/js/app.js static/js/
+COPY service/static/js/angular.min.js static/js/
+COPY service/static/js/angular.min.js.map static/js/
+
+COPY service/static/css/style.css static/css/
+COPY service/templates/index.html templates/
+COPY service/templates/admin.html templates/
+COPY service/templates/stream.html templates/
+
+COPY service/server.py .
+CMD /usr/local/bin/python3 ./server.py
