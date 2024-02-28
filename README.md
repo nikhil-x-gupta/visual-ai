@@ -19,16 +19,17 @@ This python based example implementation uses multiple containers and can be dep
 - Object detection using various frameworks 
 - OpenCV based image capture and annotation
 - MJPEG based streaming available on http:<edge-device-ip-address:5000> 
-- A simple Web UI to interactively upload config using MMS to edge nodes.
-- HTTP and kafka message bridge
+- HTTP and kafka message bridge (TODO)
 
-#### Improvements
-- Updated tensorflow-lite Docker container to use Python 3.10 and OpenCV 4.8.1 with tflite runtime v2.12
-- Created Docker compose file to simplify development, allow for better control of microservices, and make deployment easier and more secure
+#### Software
+- Python 3.10
+- OpenCV 4.8.1
+- Tensorflow-lite runtime v2.12
+- Docker compose v2.24
 
 ### Contents
 #### Publish
-Development of containers, services, policies and corresponding defintion files.
+Development of containers, services, policies and corresponding definition files
 See `publish` directory.
 
 #### Register
@@ -38,18 +39,22 @@ See `register` directory.
 ### How to Run
 1. Clone the repository
    - Run git clone
-2. Create and source your **ENVIRONMENT** variables
+2. Define and source your **ENVIRONMENT** variables
    - Outside the repository, create a file called `APP_ENV`
-   - Define the required **ENVIRONMENT** variables - refer to step 4 in the `README.md` file  in the `register` folder for the required variables (in this implementation, you only need upto `CR_DOCKER_APIKEY`)
+   - Define the required **ENVIRONMENT** variables - refer to step 4 in the `README.md` file  in the `register` directory for the required variables (in this implementation, you only need upto `CR_DOCKER_APIKEY`)
      - I defined two `CR_DOCKER_APIKEY` variables, one with read-write access (`..._RW_`) and one with read-only access (`..._RO`). This is to ensure the services run by Docker compose only have read-only access, while my development files can have read-write access to push images to Dockerhub. I recommend doing the same, or variables in the associated Makefiles and compose.yaml files will need to be changed.
    - Before building or publishing services, be sure to source this file in the terminal that you are using
 3. Build the Docker images
-   - In `publish/src/http`, run `make build` and then `make push`
-   - In `publish/src/infer`, run `make tflite-build` and then `make tflite-push`
-4. Define environment variables for Docker compose
+   - HTTP service
+     - Change to `publish/src/http` directory
+     - Run `make build`
+     - Run `make push`
+   - TFLite infer service
+     - In `publish/src/infer`, run `make tflite-build` and then `make tflite-push`
+5. Define environment variables for Docker compose
    - Based on the environment variables in the `compose.yaml` file in the `register/docker-compose` folder, create a file called `.env` and provide the appropriate definitions. Use the image names created in the previous build step.
    - For the file and RTSP inputs, if there is no input simply type "-"
-5. Start the services
+6. Start the services
    - To run all the services at once, while in the `register/docker-compose` folder, run `docker compose up`
      - To run specific services, run `docker compose up <SERVICE NAME>`
    - To stop the services, run `docker compose down`
@@ -65,5 +70,7 @@ See `register` directory.
   https://github.com/EdjeElectronics/TensorFlow-Object-Detection-on-the-Raspberry-Pi
   
   https://stackoverflow.com/questions/tagged/tensorflow
+
+  https://docs.docker.com/compose/intro/features-uses/
   
   OpenVINO
