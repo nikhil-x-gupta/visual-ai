@@ -28,34 +28,46 @@ This python based example implementation uses multiple containers and can be dep
 - Docker compose v2.24
 
 ### Contents
-#### Publish
-Development of containers, services, policies and corresponding definition files
-See `publish` directory.
+#### Build
+Development of containers, services, policies and corresponding definition files. See `build` directory.
 
-#### Register
-Instructions to register an edge device node to detect objects in a video stream
-See `register` directory.
+#### Run
+Docker compose and corresponding environment files for running services. See `run` directory.
 
 ### How to Run
 1. Clone the repository
    - Run git clone
 2. Define and source your **ENVIRONMENT** variables
    - Outside the repository, create a file called `APP_ENV`
-   - Define the required **ENVIRONMENT** variables - refer to step 4 in the `README.md` file  in the `register` directory for the required variables (in this implementation, you only need upto `CR_DOCKER_APIKEY`)
-     - I defined two `CR_DOCKER_APIKEY` variables, one with read-write access (`..._RW_`) and one with read-only access (`..._RO`). This is to ensure the services run by Docker compose only have read-only access, while my development files can have read-write access to push images to Dockerhub. I recommend doing the same, or variables in the associated Makefiles and compose.yaml files will need to be changed.
+   - Define the following required **ENVIRONMENT** variables
+     - You will need to create two API keys in DockerHub for the two `CR_DOCKER_APIKEY` variables, one with read-write access (`..._RW_`) and one with read-only access (`..._RO`). This is to ensure the services run by Docker compose only have read-only access, while my development files can have read-write access to push images to Dockerhub.
+       ```
+       #### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service. Change as needed to organize your service, policy names etc.
+       export EDGE_OWNER=<change-as-needed> e.g sg.edge           
+       export EDGE_DEPLOY=<change-as-needed> e.g example.visual 
+
+       #### Specify your docker login name
+       export DOCKER_BASE=<change-as-needed> e.g edgedock
+
+       ### Authenticated docker access ###
+       export CR_DOCKER_HOST=index.docker.io
+       export CR_DOCKER_USERNAME=<change-as-needed> e.g edgedock
+       export CR_DOCKER_APIKEY_RW=<change-as-needed> your read-write DockerHub apikey
+       export CR_DOCKER_APIKEY_RO=<change-as-needed> your read-only DockerHub apikey
+       ```
    - Before building or publishing services, be sure to source this file in the terminal that you are using
 3. Build the Docker images
    - HTTP service
-     - Change to `publish/src/http` directory
+     - Change to `build/src/http` directory
      - Run `make build`
      - Run `make push`
    - TFLite infer service
-     - In `publish/src/infer`, run `make tflite-build` and then `make tflite-push`
+     - In `build/src/infer`, run `make tflite-build` and then `make tflite-push`
 5. Define environment variables for Docker compose
-   - Based on the environment variables in the `compose.yaml` file in the `register/docker-compose` folder, create a file called `.env` and provide the appropriate definitions. Use the image names created in the previous build step.
+   - Based on the environment variables in the `compose.yaml` file in the `run` folder, create a file called `.env` and provide the appropriate definitions. Use the image names created in the previous build step.
    - For the file and RTSP inputs, if there is no input simply type "-"
 6. Start the services
-   - To run all the services at once, while in the `register/docker-compose` folder, run `docker compose up`
+   - To run all the services at once, while in the `run` folder, run `docker compose up`
      - To run specific services, run `docker compose up <SERVICE NAME>`
    - To stop the services, run `docker compose down`
 
