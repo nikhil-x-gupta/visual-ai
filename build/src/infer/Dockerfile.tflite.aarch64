@@ -1,0 +1,79 @@
+FROM python:3.10-slim
+
+RUN apt-get update && apt-get --no-install-recommends -y install \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    unzip \
+    yasm \
+    pkg-config \
+    libjpeg-dev \
+    libtiff-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libtbbmalloc2 \
+    libtbb-dev \
+    libpng-dev \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install numpy
+
+ENV OPENCV_VERSION=4.8.1
+RUN wget https://github.com/opencv/opencv/archive/4.8.1.zip 
+#COPY opencv-4.3.0.zip /opencv-4.3.0.zip 
+
+WORKDIR /
+RUN unzip 4.8.1.zip && \
+    mkdir /opencv-4.8.1/cmake_binary && \
+    cd /opencv-4.8.1/cmake_binary && \
+    cmake -DBUILD_TIFF=ON \
+      -DBUILD_opencv_java=OFF \
+      -DWITH_CUDA=OFF \
+      -DWITH_OPENGL=ON \
+      -DWITH_OPENCL=ON \
+      -DWITH_IPP=OFF \
+      -DWITH_TBB=ON \
+      -DWITH_EIGEN=ON \
+      -DWITH_V4L=ON \
+      -DBUILD_TESTS=OFF \
+      -DBUILD_PERF_TESTS=OFF \
+      -DCMAKE_BUILD_TYPE=RELEASE \
+      -DCMAKE_INSTALL_PREFIX=$(python3.10 -c "import sys; print(sys.prefix)") \
+      -DPYTHON_EXECUTABLE=$(which python3.10) \
+      -DPYTHON_INCLUDE_DIR=$(python3.10 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+      -DPYTHON_PACKAGES_PATH=$(python3.10 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
+      .. && \					 
+      make install && \
+      rm /4.8.1.zip && \
+      rm -r /opencv-4.8.1
+
+RUN ln -s \
+    /usr/local/python/cv2/python-3.10/cv2.cpython-310m-x86_64-linux-gnu.so \
+    /usr/local/lib/python3.10/site-packages/cv2.so
+
+RUN mkdir -p /usr/local/lib/python3.10/site-packages/cv2/data && \
+    cp /usr/local/share/opencv4/haarcascades/*.xml /usr/local/lib/python3.10/site-packages/cv2/data/.
+
+RUN pip3 install requests
+RUN wget https://github.com/tensorflow/tensorflow/files/10321885/tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl.zip
+RUN unzip tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl.zip
+RUN pip3 install tflite_runtime-2.12.0-cp310-cp310-linux_aarch64.whl
+
+WORKDIR /
+
+RUN mkdir -p package/detect/tflite package/util package/video 
+COPY service/package/detect/tflite/*.py package/detect/tflite/
+COPY service/package/detect/*.py package/detect/
+COPY service/package/video/__init__.py package/video/
+COPY service/package/video/videoSourceProcessor.py package/video/ 
+COPY service/package/video/videoSource.py package/video/
+COPY service/package/video/videoStream.py package/video/
+COPY service/package/util/*.py package/util/
+COPY service/package/*.py package/
+COPY service/videoObjectDetector.py .
+
+WORKDIR /
+CMD /usr/local/bin/python3 videoObjectDetector.py
+

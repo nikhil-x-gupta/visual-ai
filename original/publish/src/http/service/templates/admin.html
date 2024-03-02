@@ -1,0 +1,81 @@
+<html ng-app="VisualApp">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </head>
+  <body ng-controller="FormCtrl">
+    <h1>IBM Edge Application Manager (IEAM)</h1>
+    <p>Edge deployment of container workload and ML model</p>
+    <div col="12"><img width="{{ width }}" height="{{ height }}" src="{{ url_for('stream_video') }}"/></div>
+    <h3>Machine Inferencing and Object Detection</h3>
+    <h3><a href="../stream">Stream</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../admin/env">Admin Env</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../admin/secret">Admin Secret</a></h3>
+    <div col="12" style="display:{{ show_warning }}">
+      <p style="color:#e22">Incomplete MMS publish setup. <button ng-click="showHideWarning()" class="btn-warn">Show Warning</button></p> 
+      <div col="12" ng-show="showWarning">
+        <p style="color:#ddd">Register edge device using user_input or secret manager.</p>
+        <p style="color:#bbb">MMS setup:<br>{{ mms_publish_dict }}<br>Event Stream Kafka setup:<br>{{ mms_publish_kafka_dict }}</p>
+      </div>
+    </div>
+    <div class="row" style="display:{{ show_config }}">
+      <p>Configuration: <button ng-click="showHideDetail()" class="btn-warn">Show detail</button></p> 
+      <div col="12" ng-show="showDetail">
+        <p style="color:#bbb">MMS setup:<br>{{ mms_publish_dict }}<br>Event Stream Kafka setup:<span style="display:{{ show_publish_kafka_error }}"> Missing and hence disabled. Use user_inout to provide the credentials</span><br>{{ mms_publish_kafka_dict }}</p>
+      </div>
+      <form class="container">
+	<span class="section">Configuration:</span>
+        <div class="left-panel">
+	  <label class="label">Overlay
+	    <input type="checkbox" ng-model="panel.overlay">
+	    <span class="checkmark"></span>
+	  </label>
+	  <!--label class="label">Detect Face
+	    <input type="checkbox" ng-model="panel.face"/>
+	    <span class="checkmark"></span>
+	  </label>
+	  <label class="label">Blur Face
+	    <input type="checkbox" ng-model="panel.blur">
+	    <span class="checkmark"></span>
+	  </label-->
+	  <div style="pointer-events:{{ show_publish_kafka }}">
+   	    <label class="label">Publish Kafka
+	      <input type="checkbox" ng-model="panel.kafka">
+	      <span class="checkmark"></span>
+	    </label>
+          </div>
+	  <!--label class="label">Publish Stream
+	    <input type="checkbox" ng-model="panel.stream">
+	    <span class="checkmark"></span>
+	  </label-->
+        </div>
+        <div class="mid-panel">
+	  <div class="label" style="padding-left:5px;margin-top:0px;">
+	    <p>
+	    {% raw %}
+	    <pre style="color:turquoise;cursor:default;">{{panel | json}}</pre>
+	    {% endraw %}
+	    </p>
+	  </div>
+	</div>
+        <div class="btn-panel">
+	  <button ng-click="reset()" class="btn-reset">Reset</button>
+	  <button ng-click="apply()" class="btn-apply">Apply</button>
+        </div>
+      </form>
+    </div>
+    <!--div class="row">
+      <form class="container">
+	<span class="section"><hr/></span>
+	<span class="section">Model Upload(MMS):</span>
+	<div class="file-upload-panel">
+	  <input type="file" class="btn-browse" style="width:auto;">
+	</div>
+        <div class="btn-panel" style="float:right;">
+	  <button ng-click="upload()" class="btn-apply" style="margin-top:0px;">Upload</button>
+        </div>
+      </form>
+    </div-->
+  </body>
+</html>
+

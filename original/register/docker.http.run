@@ -1,0 +1,1 @@
+docker run -p 5000:5000 -e HZN_ORGANIZATION=my_org -e HZN_EXCHANGE_URL=url -e APP_VIEW_COLUMNS=1 -e APP_MMS_OBJECT_SERVICE_NAME_CONFIG=ng.edge.example.visual.mmsconfig -e APP_APIKEY_USERNAME=iamapikey -e APP_APIKEY_PASSWORD=- -e EVENTSTREAMS_BROKER_URLS=- -e EVENTSTREAMS_API_KEY=- -e EVENTSTREAMS_VISUAL_ML_TOPIC=- nikhilxgupta/ng.edge.example.visual.http_aarch64:0.0.1

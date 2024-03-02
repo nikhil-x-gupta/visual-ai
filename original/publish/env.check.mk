@@ -13,15 +13,15 @@ ifndef DOCKER_BASE
 $(error DOCKER_BASE is not set. export DOCKER_BASE=<your-docker-account-base> )
 endif
 
-ifndef HZN_ORG_ID
-$(error HZN_ORG_ID is not set. export HZN_ORG_ID=mycluster))
-endif
+# ifndef HZN_ORG_ID
+# $(error HZN_ORG_ID is not set. export HZN_ORG_ID=mycluster))
+# endif
 
-ifndef HZN_EXCHANGE_USER_AUTH
-$(error HZN_EXCHANGE_USER_AUTH is not set. export HZN_EXCHANGE_USER_AUTH=iamapikey:<your-iamapikey> )
-endif
+# ifndef HZN_EXCHANGE_USER_AUTH
+# $(error HZN_EXCHANGE_USER_AUTH is not set. export HZN_EXCHANGE_USER_AUTH=iamapikey:<your-iamapikey> )
+# endif
 
-ifndef APP_BIND_HORIZON_DIR
-$(error APP_BIND_HORIZON_DIR is not set. export APP_BIND_HORIZON_DIR=/var/local/horizon )
-endif
+# ifndef APP_BIND_HORIZON_DIR
+# $(error APP_BIND_HORIZON_DIR is not set. export APP_BIND_HORIZON_DIR=/var/local/horizon )
+# endif
 

@@ -1,0 +1,16 @@
+{
+    "MetadataVars": {
+        "IMAGE_NAME": "mms",
+        "DOCKER_IMAGE_BASE": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).mms",
+        "SERVICE_NAME": "$(EDGE_OWNER).$(EDGE_DEPLOY).mms",
+        "SERVICE_VERSION": "1.0.0",
+        "IMAGE_NAME_CONFIG": "mmsconfig",
+        "DOCKER_IMAGE_BASE_CONFIG": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).mmsconfig",
+        "SERVICE_NAME_CONFIG": "$(EDGE_OWNER).$(EDGE_DEPLOY).mmsconfig",
+        "SERVICE_VERSION_CONFIG": "1.0.0",
+        "IMAGE_NAME_MODEL": "mmsmodel",
+        "DOCKER_IMAGE_BASE_MODEL": "$(DOCKER_BASE)/$(EDGE_OWNER).$(EDGE_DEPLOY).mmsmodel",
+        "SERVICE_NAME_MODEL": "$(EDGE_OWNER).$(EDGE_DEPLOY).mmsmodel",
+        "SERVICE_VERSION_MODEL": "1.0.0"
+    }
+}

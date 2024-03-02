@@ -1,0 +1,58 @@
+FROM balenalib/raspberrypi3
+
+RUN apt-get update && apt-get --no-install-recommends -y install \
+    libjpeg-dev \
+    libjasper1 \
+    libatlas3-base \
+    libtiff5-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libv4l-dev \
+    libxvidcore-dev \
+    libx264-dev \
+    libilmbase-dev \
+    libopenexr-dev \
+    libgstreamer-plugins-base1.0-dev \
+    libqtgui4 libqt4-test \
+    libblas-dev liblapack-dev libatlas-base-dev \
+    gfortran \
+    python3-dev \
+    python3-pip	\
+    unzip \
+    wget
+
+RUN pip3 install https://www.piwheels.org/simple/opencv-python/opencv_python-4.1.0.25-cp37-cp37m-linux_armv7l.whl
+RUN pip3 install https://dl.google.com/coral/python/tflite_runtime-2.1.0.post1-cp37-cp37m-linux_armv7l.whl
+RUN pip3 install requests
+
+RUN rm -rf /var/lib/apt/lists/*
+
+# site-packages doesn't exist but required files are in dist-packages
+RUN ln -s /usr/local/lib/python3.7/dist-packages /usr/local/lib/python3.7/site-packages
+
+WORKDIR /
+ENV APP_MODEL_FMWK tflite
+ENV APP_MODEL_DIR /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/
+ENV APP_MODEL_TFLITE detect.tflite
+ENV APP_MODEL_LABELMAP labelmap.txt
+RUN mkdir -p /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/ && \
+    cd /opt/horizon/inference/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29/ && \
+    wget https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip && \
+    unzip coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip && \
+    rm coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+
+ENV APP_MI_MODEL coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip
+
+WORKDIR /
+RUN mkdir -p package/detect package/util package/video 
+COPY service/package/detect/*.py package/detect/
+COPY service/package/video/*.py package/video/
+COPY service/package/util/*.py package/util/
+COPY service/package/*.py package/
+COPY service/videoObjectDetector.py .
+
+WORKDIR /
+CMD /usr/bin/python3 videoObjectDetector.py
+
+

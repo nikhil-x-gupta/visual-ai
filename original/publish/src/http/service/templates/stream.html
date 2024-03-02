@@ -1,0 +1,20 @@
+<html ng-app="VisualApp">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </head>
+  <body ng-controller="FormCtrl">
+    <h1>IBM Edge Application Manager (IEAM)</h1>
+    <p>Edge deployment of container workload and ML model</p>
+    <div col="12"><img width="{{ width }}" height="{{ height }}" src="{{ url_for('stream_video') }}"/></div>
+    <h3>Machine Inferencing and Object Detection</h3> 
+    <h3><a href="../admin/env">Admin Env</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../admin/secret">Admin Secret</a></h3>
+    <div col="12" style="display:{{ show_warning }}">
+      <p style="color:#e22">MMS not setup. Register edge device using user_input or secret manager.</p>
+    </div>
+  </body>
+</html>
+
+ 

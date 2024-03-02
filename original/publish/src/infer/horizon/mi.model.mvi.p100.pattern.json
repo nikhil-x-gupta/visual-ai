@@ -1,0 +1,18 @@
+{
+    "name": "pattern-${SERVICE_NAME_MODEL_MVI_P100}",
+    "label": "Edge $SERVICE_NAME_MODEL_MVI_P100 Service",
+    "description": "Pattern for $SERVICE_NAME_MODEL_MVI_P100",
+    "public": false,
+    "services": [
+	{
+	    "serviceUrl": "$SERVICE_NAME_MODEL_MVI_P100",
+	    "serviceOrgid": "$HZN_ORG_ID",
+	    "serviceArch": "$ARCH",
+	    "serviceVersions": [
+		{ 
+		    "version": "$SERVICE_VERSION_MODEL_MVI_P100"
+		}
+	    ]
+	}
+    ]
+}

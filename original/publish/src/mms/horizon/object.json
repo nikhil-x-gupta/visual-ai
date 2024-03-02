@@ -1,0 +1,11 @@
+{
+    "objectID": "config.json", 
+    "objectType": "tflite-mmsconfig",
+    "destinationOrgID": "mycluster",
+    "destinationID": "",  
+    "destinationType": "pattern-$EDGE_OWNER.$EDGE_DEPLOY.tflite-amd64",
+    "expiration": "", 
+    "version": "",    
+    "description": "",
+    "activationTime": ""
+}

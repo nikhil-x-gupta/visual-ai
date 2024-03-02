@@ -1,0 +1,31 @@
+{
+    "org": "$HZN_ORG_ID",
+    "label": "$SERVICE_NAME_MODEL-$ARCH",
+    "url": "$SERVICE_NAME_MODEL",
+    "version": "$SERVICE_VERSION_MODEL",
+    "arch": "$ARCH",
+    "public": true,
+    "sharable": "singleton",
+    "requiredServices": [],
+    "userInput": [
+        { "name": "APP_BIND_HORIZON_DIR", "label": "app-bind-horizon-dir", "type": "string", "defaultValue": "" }
+    ],
+    "deployment": {
+	"services": {
+	    "$SERVICE_NAME_MODEL": {
+		"image": "${DOCKER_IMAGE_BASE_MODEL}_$ARCH:$SERVICE_VERSION_MODEL",
+		"network": "host",
+		"binds": [
+		    "$APP_BIND_HORIZON_DIR:$APP_BIND_HORIZON_DIR:rw"
+                ],
+		"ports": [
+		    {
+			"HostPort": "7772:7772/tcp",
+			"HostIP": "0.0.0.0"
+		    }
+		]
+	    }
+	}
+    }
+}
+
