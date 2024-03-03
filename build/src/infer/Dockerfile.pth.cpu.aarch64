@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.10-slim
 
 RUN apt-get update && apt-get --no-install-recommends -y install \
     build-essential \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get --no-install-recommends -y install \
     libtiff-dev \
     libavformat-dev \
     libswscale-dev \
-    libtbb2 \
+    libtbbmalloc2 \
     libtbb-dev \
     libpng-dev \
     libpq-dev \
@@ -20,11 +20,43 @@ RUN apt-get update && apt-get --no-install-recommends -y install \
 
 RUN pip install numpy torch torchvision requests
 
-RUN pip install https://files.pythonhosted.org/packages/3f/4e/ddf6591fff8522f04be6dc80162a7b67d29698af04e4f4185ad54c9d80f6/opencv_python_headless-4.5.1.48-cp38-cp38-manylinux2014_aarch64.whl
+ENV OPENCV_VERSION=4.8.1
+RUN wget https://github.com/opencv/opencv/archive/4.8.1.zip 
+#COPY opencv-4.3.0.zip /opencv-4.3.0.zip 
+
+WORKDIR /
+RUN unzip 4.8.1.zip && \
+    mkdir /opencv-4.8.1/cmake_binary && \
+    cd /opencv-4.8.1/cmake_binary && \
+    cmake -DBUILD_TIFF=ON \
+      -DBUILD_opencv_java=OFF \
+      -DWITH_CUDA=OFF \
+      -DWITH_OPENGL=ON \
+      -DWITH_OPENCL=ON \
+      -DWITH_IPP=OFF \
+      -DWITH_TBB=ON \
+      -DWITH_EIGEN=ON \
+      -DWITH_V4L=ON \
+      -DBUILD_TESTS=OFF \
+      -DBUILD_PERF_TESTS=OFF \
+      -DCMAKE_BUILD_TYPE=RELEASE \
+      -DCMAKE_INSTALL_PREFIX=$(python3.10 -c "import sys; print(sys.prefix)") \
+      -DPYTHON_EXECUTABLE=$(which python3.10) \
+      -DPYTHON_INCLUDE_DIR=$(python3.10 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+      -DPYTHON_PACKAGES_PATH=$(python3.10 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
+      .. && \					 
+      make install && \
+      rm /4.8.1.zip && \
+      rm -r /opencv-4.8.1
+
+#RUN pip install https://files.pythonhosted.org/packages/3f/4e/ddf6591fff8522f04be6dc80162a7b67d29698af04e4f4185ad54c9d80f6/opencv_python_headless-4.5.1.48-cp38-cp38-manylinux2014_aarch64.whl
 
 RUN ln -s \
-    /usr/local/python/cv2/python-3.8/cv2.cpython-38m-x86_64-linux-gnu.so \
-    /usr/local/lib/python3.8/site-packages/cv2.so
+    /usr/local/python/cv2/python-3.10/cv2.cpython-310m-x86_64-linux-gnu.so \
+    /usr/local/lib/python3.10/site-packages/cv2.so
+
+RUN mkdir -p /usr/local/lib/python3.10/site-packages/cv2/data && \
+    cp /usr/local/share/opencv4/haarcascades/*.xml /usr/local/lib/python3.10/site-packages/cv2/data/.
 
 # Install a pretrained model
 RUN wget https://download.pytorch.org/models/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth && \

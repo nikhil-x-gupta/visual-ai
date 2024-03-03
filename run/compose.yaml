@@ -50,6 +50,39 @@ services:
     secrets:
       - apikey_ro
 
+  infer-pth:
+    image: ${INFER_PTH_IMAGE}
+    environment:
+      APP_MODEL_FMWK: pth_cpu
+      APP_MODEL_DIR: /model/pth
+      APP_MI_MODEL: /model/pth/${PTH_MODEL}
+      APP_CAMERAS: all
+      APP_VIDEO_FILES: /video/sample/${FILE_INPUT}
+      APP_RTSPS: ${RTSP_INPUT}
+      APP_VIEW_COLUMNS: ${VIEW_COLUMNS}
+      DEVICE_ID: ${DEVICE_ID}
+      DEVICE_NAME: ${DEVICE_NAME}
+      DEVICE_IP_ADDRESS: ${HOST_IP_ADDRESS}
+      SHOW_OVERLAY: "true"
+      PUBLISH_KAFKA: "false"
+      PUBLISH_STREAM: "true"
+      DETECT_FACE: "true"
+      BLUR_FACE: "false"
+      MIN_CONFIDENCE_THRESHOLD: 0.6
+      HTTP_PUBLISH_KAFKA_URL: http://${HOST_IP_ADDRESS}:5000/publish/kafka
+      HTTP_PUBLISH_STREAM_URL: http://${HOST_IP_ADDRESS}:${HTTP_PORT}/publish/stream
+    volumes:
+      - type: bind
+        source: /home/user/model/pth
+        target: /model/pth
+      - type: bind
+        source: /home/user/video/sample
+        target: /video/sample
+    devices:
+      - "/dev/video0:/dev/video0"
+    secrets:
+      - apikey_ro
+
 secrets:
   apikey_ro:
     environment: "CR_DOCKER_APIKEY_RO"
