@@ -1,5 +1,5 @@
 
-## Edge deployment of container workload and ML model
+## Containerized Deployment of Machine Learning Image Processing Pipeline
 
 **Machine Inferencing and Object Detection** examples using `TensorFlow Lite and PyTorch` frameworks. Implemented with **OpenCV + Python + Docker**
 
@@ -18,14 +18,17 @@ This python based example implementation uses multiple containers and can be dep
 #### High level existing features:
 - Object detection using various frameworks 
 - OpenCV based image capture and annotation
-- MJPEG based streaming available on http:<edge-device-ip-address:5000> 
+- Supports device camera, file, and RTSP stream inputs
+- MJPEG based HTTP streaming
 - HTTP and kafka message bridge (TODO)
+- Pose detection models (TODO)
 
 #### Software
 - Python 3.10
 - OpenCV 4.8.1
 - Tensorflow-lite runtime v2.12
 - Docker compose v2.24
+- PyTorch (TODO)
 
 ### Contents
 #### Build
@@ -45,7 +48,7 @@ Reference code, not for use
    - Define the following required **ENVIRONMENT** variables
      - You will need to create two API keys in DockerHub for the two `CR_DOCKER_APIKEY` variables, one with read-write access (`..._RW_`) and one with read-only access (`..._RO`). This is to ensure the services run by Docker compose only have read-only access, while my development files can have read-write access to push images to Dockerhub.
        ```
-       #### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service. Change as needed to organize your service, policy names etc.
+       #### Enviornment variables EDGE_OWNER, EDGE_DEPLOY to identify service.
        export EDGE_OWNER=<change-as-needed> e.g sg.edge           
        export EDGE_DEPLOY=<change-as-needed> e.g example.visual 
 
