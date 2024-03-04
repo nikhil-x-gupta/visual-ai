@@ -22,7 +22,7 @@ services:
     environment:
       APP_MODEL_FMWK: tflite
       APP_MODEL_DIR: /model/tflite
-      APP_MI_MODEL: /model/tflite/${TFLITE_MODEL}
+      APP_MI_MODEL: /${TFLITE_MODEL}
       APP_CAMERAS: all
       APP_VIDEO_FILES: /video/sample/${FILE_INPUT}
       APP_RTSPS: ${RTSP_INPUT}
@@ -55,7 +55,7 @@ services:
     environment:
       APP_MODEL_FMWK: pth_cpu
       APP_MODEL_DIR: /model/pth
-      APP_MI_MODEL: /model/pth/${PTH_MODEL}
+      APP_MI_MODEL: /${PTH_MODEL}
       APP_CAMERAS: all
       APP_VIDEO_FILES: /video/sample/${FILE_INPUT}
       APP_RTSPS: ${RTSP_INPUT}
