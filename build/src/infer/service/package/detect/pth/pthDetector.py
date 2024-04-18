@@ -19,11 +19,13 @@ class PTHDetector:
         self.classes = ['__background__'] + classes
         self.device = self.getTorchDevice()
 
+        '''
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
         in_features = self.model.roi_heads.box_predictor.cls_score.in_features
         self.model.roi_heads.box_predictor = torchvision.models.detection.faster_rcnn.FastRCNNPredictor(in_features, len(classes) + 1)
         self.model.to(self.device)
         print ("{:.7f}V self.config.getModelPathPTH()=".format(time.time()), config.getModelPathPTH(), end="\n", flush=True)
+        '''
         self.model.load_state_dict(torch.load(config.getModelPathPTH(), map_location=self.device))
         self.model.eval()
         self.modelPath = config.getModelPathPTH()
